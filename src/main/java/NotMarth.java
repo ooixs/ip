@@ -4,6 +4,8 @@ import java.util.Scanner;
  * The main entry point for the NotMarth chatbot.
  */
 public class NotMarth {
+    private static final int MAX_TASKS = 100;
+
     public static void main(String[] args) {
         String separator = "_".repeat(60);
         String banner = " _   _  ___ _____ __  __    _    ____ _____ _   _\n"
@@ -19,37 +21,44 @@ public class NotMarth {
         System.out.println(separator);
 
         Scanner scanner = new Scanner(System.in);
+        String[] tasks = new String[MAX_TASKS];
+        int taskCount = 0;
+
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
 
             if (command.equals("bye")) {
                 System.out.println(separator);
-                System.out.println("The battle is over for today. Stay vigilant, Divine Dragon.");
+                System.out.println("Bye. Hope to see you again soon!");
                 System.out.println(separator);
                 break;
             }
 
             System.out.println(separator);
             System.out.println("     " + command);
-            System.out.println(getResponse(command));
+
+            if (command.equals("list")) {
+                printTasks(tasks, taskCount);
+            } else if (taskCount < MAX_TASKS) {
+                tasks[taskCount] = command;
+                taskCount++;
+                System.out.println("     added: " + command);
+            }
+
             System.out.println(separator);
         }
     }
 
     /**
-     * Returns NotMarth's response to a command.
+     * Prints all tasks in the order in which they were entered.
      *
-     * @param command the command entered by the user
-     * @return a tactical response for the command
+     * @param tasks the array containing the stored tasks
+     * @param taskCount the number of tasks currently stored
      */
-    private static String getResponse(String command) {
-        return switch (command) {
-        case "help" -> "Available commands: help, engage, status, marth, sombron, bye";
-        case "engage" -> "NotMarth and Marth, engage!";
-        case "status" -> "Current status: awake, determined, and still not Marth.";
-        case "marth" -> "Marth is currently fighting alongside me. Please stop confusing us.";
-        case "sombron" -> "Sombron detected. Tactical response recommended.";
-        default -> "That command is not in my battle plan.";
-        };
+    private static void printTasks(String[] tasks, int taskCount) {
+        for (int i = 0; i < taskCount; i++) {
+            System.out.println("     " + (i + 1) + ". " + tasks[i]);
+        }
     }
+
 }
