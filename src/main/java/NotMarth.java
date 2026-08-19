@@ -14,8 +14,8 @@ public class NotMarth {
 
         System.out.println(separator);
         System.out.print(banner);
-        System.out.println("Hello! I'm NotMarth.");
-        System.out.println("What can I do for you?");
+        System.out.println("Hello! I'm NotMarth, the definitely-not-Marth Divine Dragon.");
+        System.out.println("What tactical command can I assist with?");
         System.out.println(separator);
 
         Scanner scanner = new Scanner(System.in);
@@ -31,7 +31,25 @@ public class NotMarth {
 
             System.out.println(separator);
             System.out.println("     " + command);
+            System.out.println(getResponse(command));
             System.out.println(separator);
         }
+    }
+
+    /**
+     * Returns NotMarth's response to a command.
+     *
+     * @param command the command entered by the user
+     * @return a tactical response for the command
+     */
+    private static String getResponse(String command) {
+        return switch (command) {
+        case "help" -> "Available commands: help, engage, status, marth, sombron, bye";
+        case "engage" -> "NotMarth and Marth, engage!";
+        case "status" -> "Current status: awake, determined, and still not Marth.";
+        case "marth" -> "Marth is currently fighting alongside me. Please stop confusing us.";
+        case "sombron" -> "Sombron detected. Tactical response recommended.";
+        default -> "That command is not in my battle plan.";
+        };
     }
 }
