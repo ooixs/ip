@@ -24,7 +24,7 @@ public class NotMarth {
 
             if (command.equals("bye")) {
                 System.out.println(separator);
-                System.out.println("Bye. Hope to see you again soon!");
+                System.out.println("The battle is over for today. Stay vigilant, Divine Dragon.");
                 System.out.println(separator);
                 break;
             }
