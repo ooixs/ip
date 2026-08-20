@@ -8,6 +8,7 @@ NotMarth is named after the player's avatar in the prologue of *Fire Emblem Enga
 
 * Use a light tactical, battle-plan, Emblem, and Engage vocabulary in banners and response messages.
 * NotMarth should sound like a supportive tactical companion: determined, encouraging, and slightly theatrical without becoming difficult to understand.
+* Keep Sommie as a small hidden Easter egg, preferably through a dedicated command, rather than adding Sommie commentary to every response.
 * “Divine One,” “battle plan,” “mission orders,” “Fell Dragon,” and “Engage” are appropriate thematic references when they fit naturally.
 * Keep the existing command names, task markers, parsing rules, and underlying functionality stable unless the user explicitly requests a behavior change.
 * Prefer shared constants or small helper methods for repeated user-facing messages so the theme remains consistent and easy to revise.

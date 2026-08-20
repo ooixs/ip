@@ -569,3 +569,25 @@ The Fell Dragon may be gone, but every battle still needs a plan.
 What tactical command can I assist with?
 Until we meet again. Stay strong, Divine One!
 ```
+
+## Test case 17: Discover the Sommie Easter egg
+
+### Aim
+
+Verify that the hidden `sommie` command displays Sommie’s companion message without changing task functionality.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+sommie
+```
+
+### Expected output
+
+```text
+Sommie appears with a cheerful wag. Your battle plan has a loyal companion!
+```

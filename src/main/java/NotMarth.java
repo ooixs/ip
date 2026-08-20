@@ -13,6 +13,7 @@ public class NotMarth {
     private static final String UNMARK_TASK_MESSAGE = "     This order is back on the map:";
     private static final String DELETE_TASK_MESSAGE = "     This order has been withdrawn:";
     private static final String ERROR_MESSAGE_PREFIX = "     I couldn't process that, Divine One: ";
+    private static final String SOMMIE_MESSAGE = "     Sommie appears with a cheerful wag. Your battle plan has a loyal companion!";
 
     public static void main(String[] args) {
         String separator = "_".repeat(60);
@@ -46,7 +47,9 @@ public class NotMarth {
             System.out.println("     " + command);
 
             try {
-                if (command.equals("list")) {
+                if (command.equals("sommie")) {
+                    printSommieMessage();
+                } else if (command.equals("list")) {
                     printTasks(tasks);
                 } else if (isCommand(command, "mark")) {
                     markTask(command, tasks);
@@ -156,6 +159,13 @@ public class NotMarth {
      */
     private static void printError(String message) {
         System.out.println(ERROR_MESSAGE_PREFIX + message);
+    }
+
+    /**
+     * Displays the hidden Sommie Easter egg without changing the task list.
+     */
+    private static void printSommieMessage() {
+        System.out.println(SOMMIE_MESSAGE);
     }
 
     /**
