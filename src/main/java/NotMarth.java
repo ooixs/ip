@@ -21,8 +21,7 @@ public class NotMarth {
         System.out.println(separator);
 
         Scanner scanner = new Scanner(System.in);
-        String[] tasks = new String[MAX_TASKS];
-        boolean[] completedTasks = new boolean[MAX_TASKS];
+        Task[] tasks = new Task[MAX_TASKS];
         int taskCount = 0;
 
         while (scanner.hasNextLine()) {
@@ -39,13 +38,13 @@ public class NotMarth {
             System.out.println("     " + command);
 
             if (command.equals("list")) {
-                printTasks(tasks, completedTasks, taskCount);
+                printTasks(tasks, taskCount);
             } else if (command.startsWith("mark ")) {
-                markTask(command, tasks, completedTasks, taskCount);
+                markTask(command, tasks, taskCount);
             } else if (command.startsWith("unmark ")) {
-                unmarkTask(command, tasks, completedTasks, taskCount);
+                unmarkTask(command, tasks, taskCount);
             } else if (taskCount < MAX_TASKS) {
-                tasks[taskCount] = command;
+                tasks[taskCount] = new Task(command);
                 taskCount++;
                 System.out.println("     added: " + command);
             }
@@ -58,14 +57,12 @@ public class NotMarth {
      * Prints all tasks in the order in which they were entered.
      *
      * @param tasks the array containing the stored tasks
-     * @param completedTasks the array containing each task's completion state
      * @param taskCount the number of tasks currently stored
      */
-    private static void printTasks(String[] tasks, boolean[] completedTasks, int taskCount) {
+    private static void printTasks(Task[] tasks, int taskCount) {
         System.out.println("     Here are the tasks in your list:");
         for (int i = 0; i < taskCount; i++) {
-            String status = completedTasks[i] ? "X" : " ";
-            System.out.println("     " + (i + 1) + ".[" + status + "] " + tasks[i]);
+            System.out.println("     " + (i + 1) + "." + tasks[i]);
         }
     }
 
@@ -74,18 +71,17 @@ public class NotMarth {
      *
      * @param command the command containing the task number
      * @param tasks the array containing the stored tasks
-     * @param completedTasks the array containing each task's completion state
      * @param taskCount the number of tasks currently stored
      */
-    private static void markTask(String command, String[] tasks, boolean[] completedTasks, int taskCount) {
+    private static void markTask(String command, Task[] tasks, int taskCount) {
         try {
             int taskNumber = Integer.parseInt(command.substring("mark ".length()).trim());
             int taskIndex = taskNumber - 1;
 
             if (taskIndex >= 0 && taskIndex < taskCount) {
-                completedTasks[taskIndex] = true;
+                tasks[taskIndex].markAsDone();
                 System.out.println("     Nice! I've marked this task as done:");
-                System.out.println("       [X] " + tasks[taskIndex]);
+                System.out.println("       " + tasks[taskIndex]);
             }
         } catch (NumberFormatException exception) {
             // Ignore malformed mark commands instead of terminating the chatbot.
@@ -97,18 +93,17 @@ public class NotMarth {
      *
      * @param command the command containing the task number
      * @param tasks the array containing the stored tasks
-     * @param completedTasks the array containing each task's completion state
      * @param taskCount the number of tasks currently stored
      */
-    private static void unmarkTask(String command, String[] tasks, boolean[] completedTasks, int taskCount) {
+    private static void unmarkTask(String command, Task[] tasks, int taskCount) {
         try {
             int taskNumber = Integer.parseInt(command.substring("unmark ".length()).trim());
             int taskIndex = taskNumber - 1;
 
             if (taskIndex >= 0 && taskIndex < taskCount) {
-                completedTasks[taskIndex] = false;
+                tasks[taskIndex].markAsUndone();
                 System.out.println("     OK, I've marked this task as not done yet:");
-                System.out.println("       [ ] " + tasks[taskIndex]);
+                System.out.println("       " + tasks[taskIndex]);
             }
         } catch (NumberFormatException exception) {
             // Ignore malformed unmark commands instead of terminating the chatbot.
