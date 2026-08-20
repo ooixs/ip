@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -21,8 +22,7 @@ public class NotMarth {
         System.out.println(separator);
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[MAX_TASKS];
-        int taskCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine().trim();
@@ -39,23 +39,22 @@ public class NotMarth {
 
             try {
                 if (command.equals("list")) {
-                    printTasks(tasks, taskCount);
+                    printTasks(tasks);
                 } else if (isCommand(command, "mark")) {
-                    markTask(command, tasks, taskCount);
+                    markTask(command, tasks);
                 } else if (isCommand(command, "unmark")) {
-                    unmarkTask(command, tasks, taskCount);
+                    unmarkTask(command, tasks);
                 } else if (isCommand(command, "delete")) {
-                    taskCount = deleteTask(command, tasks, taskCount);
+                    deleteTask(command, tasks);
                 } else if (isTaskCommand(command)) {
                     Task task = createTask(command);
-                    if (taskCount == MAX_TASKS) {
+                    if (tasks.size() == MAX_TASKS) {
                         throw new NotMarthException("Your task list is full. Remove a task before adding another one.");
                     } else {
-                        tasks[taskCount] = task;
-                        taskCount++;
+                        tasks.add(task);
                         System.out.println("     Got it. I've added this task:");
                         System.out.println("       " + task);
-                        System.out.println("     Now you have " + taskCount + " tasks in the list.");
+                        System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
                     }
                 } else if (command.isEmpty()) {
                     throw new NotMarthException("Please enter a command. Try todo, deadline, event, list, mark, unmark, or delete.");
@@ -154,13 +153,12 @@ public class NotMarth {
     /**
      * Prints all tasks in the order in which they were entered.
      *
-     * @param tasks the array containing the stored tasks
-     * @param taskCount the number of tasks currently stored
+     * @param tasks the collection containing the stored tasks
      */
-    private static void printTasks(Task[] tasks, int taskCount) {
+    private static void printTasks(ArrayList<Task> tasks) {
         System.out.println("     Here are the tasks in your list:");
-        for (int i = 0; i < taskCount; i++) {
-            System.out.println("     " + (i + 1) + "." + tasks[i]);
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println("     " + (i + 1) + "." + tasks.get(i));
         }
     }
 
@@ -168,17 +166,16 @@ public class NotMarth {
      * Marks the task identified by a {@code mark n} command as completed.
      *
      * @param command the command containing the task number
-     * @param tasks the array containing the stored tasks
-     * @param taskCount the number of tasks currently stored
+     * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static void markTask(String command, Task[] tasks, int taskCount) throws NotMarthException {
+    private static void markTask(String command, ArrayList<Task> tasks) throws NotMarthException {
         int taskNumber = parseTaskNumber(command, "mark");
-        validateTaskNumber(taskNumber, taskCount, "marking");
+        validateTaskNumber(taskNumber, tasks, "marking");
 
-        tasks[taskNumber - 1].markAsDone();
+        tasks.get(taskNumber - 1).markAsDone();
         System.out.println("     Nice! I've marked this task as done:");
-        System.out.println("       " + tasks[taskNumber - 1]);
+        System.out.println("       " + tasks.get(taskNumber - 1));
     }
 
     /**
@@ -204,15 +201,15 @@ public class NotMarth {
      * Ensures that a requested task number identifies an existing task.
      *
      * @param taskNumber the requested one-based task number
-     * @param taskCount the number of tasks currently stored
      * @throws NotMarthException if there are no tasks or the number is out of range
      */
-    private static void validateTaskNumber(int taskNumber, int taskCount, String action) throws NotMarthException {
-        if (taskCount == 0) {
+    private static void validateTaskNumber(int taskNumber, ArrayList<Task> tasks, String action)
+            throws NotMarthException {
+        if (tasks.isEmpty()) {
             throw new NotMarthException("There are no tasks yet. Add a task before " + action + " it.");
         }
-        if (taskNumber < 1 || taskNumber > taskCount) {
-            throw new NotMarthException("That task number is not in your list. Use a number from 1 to " + taskCount + ".");
+        if (taskNumber < 1 || taskNumber > tasks.size()) {
+            throw new NotMarthException("That task number is not in your list. Use a number from 1 to " + tasks.size() + ".");
         }
     }
 
@@ -220,17 +217,16 @@ public class NotMarth {
      * Marks the task identified by an {@code unmark n} command as not completed.
      *
      * @param command the command containing the task number
-     * @param tasks the array containing the stored tasks
-     * @param taskCount the number of tasks currently stored
+     * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static void unmarkTask(String command, Task[] tasks, int taskCount) throws NotMarthException {
+    private static void unmarkTask(String command, ArrayList<Task> tasks) throws NotMarthException {
         int taskNumber = parseTaskNumber(command, "unmark");
-        validateTaskNumber(taskNumber, taskCount, "unmarking");
+        validateTaskNumber(taskNumber, tasks, "unmarking");
 
-        tasks[taskNumber - 1].markAsUndone();
+        tasks.get(taskNumber - 1).markAsUndone();
         System.out.println("     OK, I've marked this task as not done yet:");
-        System.out.println("       " + tasks[taskNumber - 1]);
+        System.out.println("       " + tasks.get(taskNumber - 1));
     }
 
     /**
@@ -238,26 +234,18 @@ public class NotMarth {
      * gap left behind so that the remaining tasks keep consecutive numbers.
      *
      * @param command the command containing the task number
-     * @param tasks the array containing the stored tasks
-     * @param taskCount the number of tasks currently stored
-     * @return the updated number of stored tasks
+     * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static int deleteTask(String command, Task[] tasks, int taskCount) throws NotMarthException {
+    private static void deleteTask(String command, ArrayList<Task> tasks) throws NotMarthException {
         int taskNumber = parseTaskNumber(command, "delete");
-        validateTaskNumber(taskNumber, taskCount, "deleting");
+        validateTaskNumber(taskNumber, tasks, "deleting");
 
-        Task deletedTask = tasks[taskNumber - 1];
-        for (int i = taskNumber - 1; i < taskCount - 1; i++) {
-            tasks[i] = tasks[i + 1];
-        }
-        tasks[taskCount - 1] = null;
-        taskCount--;
+        Task deletedTask = tasks.remove(taskNumber - 1);
 
         System.out.println("     Noted. I've removed this task:");
         System.out.println("       " + deletedTask);
-        System.out.println("     Now you have " + taskCount + " tasks in the list.");
-        return taskCount;
+        System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
     }
 
 }
