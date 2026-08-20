@@ -30,7 +30,6 @@ What behavior this case verifies.
 ```text
 command 1
 command 2
-bye
 ```
 
 ### Expected output
@@ -39,7 +38,7 @@ expected output
 ```
 ````
 
-`exact` compares the complete stdout after normalizing line endings. Preserve all meaningful whitespace. `contains` checks that each nonblank expected line appears in the actual output in the same order, after trimming only leading and trailing whitespace from both lines; internal spacing remains significant. Use it when the case is intentionally independent of banners or separators. The final `bye` is part of the input when the program needs it to terminate cleanly.
+`exact` compares the complete stdout after normalizing line endings. Preserve all meaningful whitespace. `contains` checks that each nonblank expected line appears in the actual output in the same order, after trimming only leading and trailing whitespace from both lines; internal spacing remains significant. Use it when the case is intentionally independent of banners or separators. Include `bye` only when the test is specifically checking the exit command; otherwise end the input at the last feature command and use end-of-input to terminate the process.
 
 ## Running the tests
 

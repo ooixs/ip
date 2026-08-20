@@ -24,7 +24,6 @@ Verify that a task without a date or time is stored and displayed as a ToDo.
 
 ```text
 todo borrow book
-bye
 ```
 
 ### Expected output
@@ -49,7 +48,6 @@ Verify that a deadline keeps its date/time text and displays the deadline marker
 
 ```text
 deadline return book /by Sunday
-bye
 ```
 
 ### Expected output
@@ -74,7 +72,6 @@ Verify that an event keeps its start and end text and displays the event marker 
 
 ```text
 event project meeting /from Mon 2pm /to 4pm
-bye
 ```
 
 ### Expected output
@@ -102,7 +99,6 @@ todo borrow book
 deadline return book /by Sunday
 event project meeting /from Mon 2pm /to 4pm
 list
-bye
 ```
 
 ### Expected output
