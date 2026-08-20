@@ -2,8 +2,9 @@
  * Represents a task in the chatbot's task list.
  */
 public class Task {
-    protected String description;
+    protected final String description;
     protected boolean isDone;
+    private final TaskType type;
 
     /**
      * Creates a task that is initially not done.
@@ -11,8 +12,19 @@ public class Task {
      * @param description the task description
      */
     public Task(String description) {
+        this(description, TaskType.GENERIC);
+    }
+
+    /**
+     * Creates a task with a specific task type.
+     *
+     * @param description the task description
+     * @param type the kind of task
+     */
+    protected Task(String description, TaskType type) {
         this.description = description;
         this.isDone = false;
+        this.type = type;
     }
 
     /**
@@ -41,10 +53,10 @@ public class Task {
     /**
      * Returns the task in the format used when displaying it.
      *
-     * @return the status icon followed by the task description
+     * @return the optional type marker, status icon, and task description
      */
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return type.getDisplayMarker() + "[" + getStatusIcon() + "] " + description;
     }
 }

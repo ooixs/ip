@@ -8,16 +8,6 @@ public class ToDo extends Task {
      * @param description the task description
      */
     public ToDo(String description) {
-        super(description);
-    }
-
-    /**
-     * Returns this task with the ToDo type marker.
-     *
-     * @return the formatted ToDo task
-     */
-    @Override
-    public String toString() {
-        return "[T]" + super.toString();
+        super(description, TaskType.TODO);
     }
 }
