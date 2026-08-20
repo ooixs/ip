@@ -219,7 +219,7 @@ list
 
 ```text
 Got it. I've added this task:
-I couldn't process that: I don't recognize that command. Try todo, deadline, event, list, mark, or unmark.
+I couldn't process that: I don't recognize that command. Try todo, deadline, event, list, mark, unmark, or delete.
 Got it. I've added this task:
 1.[T][ ] first task
 2.[D][ ] second task (by: tomorrow)
@@ -281,7 +281,7 @@ list
 
 ```text
 Got it. I've added this task:
-I couldn't process that: Please enter a command. Try todo, deadline, event, list, mark, or unmark.
+I couldn't process that: Please enter a command. Try todo, deadline, event, list, mark, unmark, or delete.
 Got it. I've added this task:
 1.[T][ ] first task
 2.[T][ ] second task
@@ -440,4 +440,65 @@ list
 Now you have 100 tasks in the list.
 I couldn't process that: Your task list is full. Remove a task before adding another one.
 100.[T][ ] task 100
+```
+
+## Test case 13: Delete a task and renumber the remaining tasks
+
+### Aim
+
+Verify that deleting a task removes it from the list and shifts later tasks so their numbering remains consecutive.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+todo read book
+deadline return book /by June 6th
+event project meeting /from Aug 6th 2pm /to 4pm
+todo join sports club
+todo borrow book
+delete 3
+list
+```
+
+### Expected output
+
+```text
+Noted. I've removed this task:
+[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+Now you have 4 tasks in the list.
+1.[T][ ] read book
+2.[D][ ] return book (by: June 6th)
+3.[T][ ] join sports club
+4.[T][ ] borrow book
+```
+
+## Test case 14: Reject invalid delete commands without changing state
+
+### Aim
+
+Verify that delete requires a task number and does not change the list when the number is missing or out of range.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+todo keep this task
+delete nope
+delete 2
+list
+```
+
+### Expected output
+
+```text
+I couldn't process that: Delete needs a task number, for example: delete 1
+I couldn't process that: That task number is not in your list. Use a number from 1 to 1.
+1.[T][ ] keep this task
 ```
