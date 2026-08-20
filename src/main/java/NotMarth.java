@@ -44,13 +44,63 @@ public class NotMarth {
             } else if (command.startsWith("unmark ")) {
                 unmarkTask(command, tasks, taskCount);
             } else if (taskCount < MAX_TASKS) {
-                tasks[taskCount] = new Task(command);
-                taskCount++;
-                System.out.println("     added: " + command);
+                Task task = createTask(command);
+                if (task != null) {
+                    tasks[taskCount] = task;
+                    taskCount++;
+                    System.out.println("     Got it. I've added this task:");
+                    System.out.println("       " + task);
+                    System.out.println("     Now you have " + taskCount + " tasks in the list.");
+                }
             }
 
             System.out.println(separator);
         }
+    }
+
+    /**
+     * Creates a task from a user command. Dates and times remain strings so
+     * that the chatbot can display whatever format the user entered.
+     *
+     * @param command the command entered by the user
+     * @return the parsed task, or {@code null} for an incomplete typed command
+     */
+    private static Task createTask(String command) {
+        if (command.startsWith("todo ")) {
+            String description = command.substring("todo ".length()).trim();
+            return description.isEmpty() ? null : new ToDo(description);
+        }
+
+        if (command.startsWith("deadline ")) {
+            String details = command.substring("deadline ".length()).trim();
+            int byMarker = details.indexOf("/by");
+            if (byMarker > 0) {
+                String description = details.substring(0, byMarker).trim();
+                String by = details.substring(byMarker + "/by".length()).trim();
+                if (!description.isEmpty() && !by.isEmpty()) {
+                    return new Deadline(description, by);
+                }
+            }
+            return null;
+        }
+
+        if (command.startsWith("event ")) {
+            String details = command.substring("event ".length()).trim();
+            int fromMarker = details.indexOf("/from");
+            int toMarker = details.indexOf("/to");
+            if (fromMarker > 0 && toMarker > fromMarker) {
+                String description = details.substring(0, fromMarker).trim();
+                String from = details.substring(fromMarker + "/from".length(), toMarker).trim();
+                String to = details.substring(toMarker + "/to".length()).trim();
+                if (!description.isEmpty() && !from.isEmpty() && !to.isEmpty()) {
+                    return new Event(description, from, to);
+                }
+            }
+            return null;
+        }
+
+        // Keep the original behaviour for commands that are not typed tasks.
+        return new Task(command);
     }
 
     /**
