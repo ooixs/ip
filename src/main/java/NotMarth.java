@@ -6,6 +6,13 @@ import java.util.Scanner;
  */
 public class NotMarth {
     private static final int MAX_TASKS = 100;
+    private static final String ADD_TASK_MESSAGE = "     Order received. I've added it to the battle plan:";
+    private static final String LIST_TASKS_MESSAGE = "     Here are your current mission orders:";
+    private static final String MARK_TASK_MESSAGE = "     Well fought! This order is complete:";
+    private static final String ENGAGE_MESSAGE = "     Together, we can accomplish this. Engage!";
+    private static final String UNMARK_TASK_MESSAGE = "     This order is back on the map:";
+    private static final String DELETE_TASK_MESSAGE = "     This order has been withdrawn:";
+    private static final String ERROR_MESSAGE_PREFIX = "     I couldn't process that, Divine One: ";
 
     public static void main(String[] args) {
         String separator = "_".repeat(60);
@@ -17,7 +24,8 @@ public class NotMarth {
 
         System.out.println(separator);
         System.out.print(banner);
-        System.out.println("Hello! I'm NotMarth, the definitely-not-Marth Divine Dragon.");
+        System.out.println("Hello! I'm NotMarth, your not-quite-Emblem tactical assistant.");
+        System.out.println("The Fell Dragon may be gone, but every battle still needs a plan.");
         System.out.println("What tactical command can I assist with?");
         System.out.println(separator);
 
@@ -29,7 +37,7 @@ public class NotMarth {
 
             if (command.equals("bye")) {
                 System.out.println(separator);
-                System.out.println("Bye. Hope to see you again soon!");
+                System.out.println("Until we meet again. Stay strong, Divine One!");
                 System.out.println(separator);
                 break;
             }
@@ -52,7 +60,7 @@ public class NotMarth {
                         throw new NotMarthException("Your task list is full. Remove a task before adding another one.");
                     } else {
                         tasks.add(task);
-                        System.out.println("     Got it. I've added this task:");
+                        System.out.println(ADD_TASK_MESSAGE);
                         System.out.println("       " + task);
                         System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
                     }
@@ -147,7 +155,7 @@ public class NotMarth {
      * @param message the explanation of what went wrong
      */
     private static void printError(String message) {
-        System.out.println("     I couldn't process that: " + message);
+        System.out.println(ERROR_MESSAGE_PREFIX + message);
     }
 
     /**
@@ -156,7 +164,7 @@ public class NotMarth {
      * @param tasks the collection containing the stored tasks
      */
     private static void printTasks(ArrayList<Task> tasks) {
-        System.out.println("     Here are the tasks in your list:");
+        System.out.println(LIST_TASKS_MESSAGE);
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println("     " + (i + 1) + "." + tasks.get(i));
         }
@@ -174,7 +182,8 @@ public class NotMarth {
         validateTaskNumber(taskNumber, tasks, "marking");
 
         tasks.get(taskNumber - 1).markAsDone();
-        System.out.println("     Nice! I've marked this task as done:");
+        System.out.println(MARK_TASK_MESSAGE);
+        System.out.println(ENGAGE_MESSAGE);
         System.out.println("       " + tasks.get(taskNumber - 1));
     }
 
@@ -225,7 +234,7 @@ public class NotMarth {
         validateTaskNumber(taskNumber, tasks, "unmarking");
 
         tasks.get(taskNumber - 1).markAsUndone();
-        System.out.println("     OK, I've marked this task as not done yet:");
+        System.out.println(UNMARK_TASK_MESSAGE);
         System.out.println("       " + tasks.get(taskNumber - 1));
     }
 
@@ -243,7 +252,7 @@ public class NotMarth {
 
         Task deletedTask = tasks.remove(taskNumber - 1);
 
-        System.out.println("     Noted. I've removed this task:");
+        System.out.println(DELETE_TASK_MESSAGE);
         System.out.println("       " + deletedTask);
         System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
     }

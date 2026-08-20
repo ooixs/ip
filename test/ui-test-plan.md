@@ -30,7 +30,7 @@ todo borrow book
 ### Expected output
 
 ```text
-Got it. I've added this task:
+Order received. I've added it to the battle plan:
 [T][ ] borrow book
 Now you have 1 tasks in the list.
 ```
@@ -54,7 +54,7 @@ deadline return book /by Sunday
 ### Expected output
 
 ```text
-Got it. I've added this task:
+Order received. I've added it to the battle plan:
 [D][ ] return book (by: Sunday)
 Now you have 1 tasks in the list.
 ```
@@ -78,7 +78,7 @@ event project meeting /from Mon 2pm /to 4pm
 ### Expected output
 
 ```text
-Got it. I've added this task:
+Order received. I've added it to the battle plan:
 [E][ ] project meeting (from: Mon 2pm to: 4pm)
 Now you have 1 tasks in the list.
 ```
@@ -132,9 +132,9 @@ list
 ### Expected output
 
 ```text
-Got it. I've added this task:
-I couldn't process that: A todo needs a description. Try: todo <description>
-Got it. I've added this task:
+Order received. I've added it to the battle plan:
+I couldn't process that, Divine One: A todo needs a description. Try: todo <description>
+Order received. I've added it to the battle plan:
 1.[T][ ] buy milk
 2.[T][ ] read book
 ```
@@ -163,11 +163,11 @@ list
 ### Expected output
 
 ```text
-Got it. I've added this task:
-I couldn't process that: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
-I couldn't process that: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
-I couldn't process that: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
-Got it. I've added this task:
+Order received. I've added it to the battle plan:
+I couldn't process that, Divine One: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
+I couldn't process that, Divine One: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
+I couldn't process that, Divine One: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
+Order received. I've added it to the battle plan:
 1.[D][ ] submit report (by: Friday)
 2.[D][ ] prepare presentation (by: Monday)
 ```
@@ -196,11 +196,11 @@ list
 ### Expected output
 
 ```text
-Got it. I've added this task:
-I couldn't process that: An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>
-I couldn't process that: An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>
-I couldn't process that: An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>
-Got it. I've added this task:
+Order received. I've added it to the battle plan:
+I couldn't process that, Divine One: An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>
+I couldn't process that, Divine One: An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>
+I couldn't process that, Divine One: An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>
+Order received. I've added it to the battle plan:
 1.[E][ ] team meeting (from: 10am to: 11am)
 2.[T][ ] pack presentation materials
 ```
@@ -227,9 +227,9 @@ list
 ### Expected output
 
 ```text
-Got it. I've added this task:
-I couldn't process that: I don't recognize that command. Try todo, deadline, event, list, mark, unmark, or delete.
-Got it. I've added this task:
+Order received. I've added it to the battle plan:
+I couldn't process that, Divine One: I don't recognize that command. Try todo, deadline, event, list, mark, unmark, or delete.
+Order received. I've added it to the battle plan:
 1.[T][ ] first task
 2.[D][ ] second task (by: tomorrow)
 ```
@@ -259,12 +259,13 @@ list
 ### Expected output
 
 ```text
-Got it. I've added this task:
-I couldn't process that: Mark needs a task number, for example: mark 1
-I couldn't process that: That task number is not in your list. Use a number from 1 to 1.
-Nice! I've marked this task as done:
+Order received. I've added it to the battle plan:
+I couldn't process that, Divine One: Mark needs a task number, for example: mark 1
+I couldn't process that, Divine One: That task number is not in your list. Use a number from 1 to 1.
+Well fought! This order is complete:
+Together, we can accomplish this. Engage!
 [T][X] finish assignment
-OK, I've marked this task as not done yet:
+This order is back on the map:
 [T][ ] finish assignment
 1.[T][ ] finish assignment
 ```
@@ -291,9 +292,9 @@ list
 ### Expected output
 
 ```text
-Got it. I've added this task:
-I couldn't process that: Please enter a command. Try todo, deadline, event, list, mark, unmark, or delete.
-Got it. I've added this task:
+Order received. I've added it to the battle plan:
+I couldn't process that, Divine One: Please enter a command. Try todo, deadline, event, list, mark, unmark, or delete.
+Order received. I've added it to the battle plan:
 1.[T][ ] first task
 2.[T][ ] second task
 ```
@@ -321,10 +322,10 @@ list
 ### Expected output
 
 ```text
-Got it. I've added this task:
-I couldn't process that: Mark needs a task number, for example: mark 1
-I couldn't process that: Unmark needs a task number, for example: unmark 1
-I couldn't process that: Mark needs a task number, for example: mark 1
+Order received. I've added it to the battle plan:
+I couldn't process that, Divine One: Mark needs a task number, for example: mark 1
+I couldn't process that, Divine One: Unmark needs a task number, for example: unmark 1
+I couldn't process that, Divine One: Mark needs a task number, for example: mark 1
 1.[T][ ] keep task unchanged
 ```
 
@@ -449,7 +450,7 @@ list
 
 ```text
 Now you have 100 tasks in the list.
-I couldn't process that: Your task list is full. Remove a task before adding another one.
+I couldn't process that, Divine One: Your task list is full. Remove a task before adding another one.
 1.[T][ ] task 1
 50.[T][ ] task 50
 100.[T][ ] task 100
@@ -480,7 +481,7 @@ list
 ### Expected output
 
 ```text
-Noted. I've removed this task:
+This order has been withdrawn:
 [E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
 Now you have 4 tasks in the list.
 1.[T][ ] read book
@@ -511,8 +512,8 @@ list
 ### Expected output
 
 ```text
-I couldn't process that: Delete needs a task number, for example: delete 1
-I couldn't process that: That task number is not in your list. Use a number from 1 to 1.
+I couldn't process that, Divine One: Delete needs a task number, for example: delete 1
+I couldn't process that, Divine One: That task number is not in your list. Use a number from 1 to 1.
 1.[T][ ] keep this task
 ```
 
@@ -538,10 +539,10 @@ list
 ### Expected output
 
 ```text
-I couldn't process that: There are no tasks yet. Add a task before marking it.
-I couldn't process that: There are no tasks yet. Add a task before unmarking it.
-I couldn't process that: There are no tasks yet. Add a task before deleting it.
-Here are the tasks in your list:
+I couldn't process that, Divine One: There are no tasks yet. Add a task before marking it.
+I couldn't process that, Divine One: There are no tasks yet. Add a task before unmarking it.
+I couldn't process that, Divine One: There are no tasks yet. Add a task before deleting it.
+Here are your current mission orders:
 ```
 
 ## Test case 16: Exit the chatbot
@@ -563,7 +564,8 @@ bye
 ### Expected output
 
 ```text
-Hello! I'm NotMarth, the definitely-not-Marth Divine Dragon.
+Hello! I'm NotMarth, your not-quite-Emblem tactical assistant.
+The Fell Dragon may be gone, but every battle still needs a plan.
 What tactical command can I assist with?
-Bye. Hope to see you again soon!
+Until we meet again. Stay strong, Divine One!
 ```
