@@ -2,6 +2,17 @@
 
 This repository is a starter template for a greenfield Java project used in an introductory software engineering course in an undergraduate computer science program. Students use it as the starting point for their own projects.
 
+# Product identity and voice
+
+NotMarth is named after the player's avatar in the prologue of *Fire Emblem Engage*, where the avatar fights alongside Emblem Marth against the Fell Dragon Sombron. Preserve this identity when changing the chatbot's user-facing experience.
+
+* Use a light tactical, battle-plan, Emblem, and Engage vocabulary in banners and response messages.
+* NotMarth should sound like a supportive tactical companion: determined, encouraging, and slightly theatrical without becoming difficult to understand.
+* “Divine One,” “battle plan,” “mission orders,” “Fell Dragon,” and “Engage” are appropriate thematic references when they fit naturally.
+* Keep the existing command names, task markers, parsing rules, and underlying functionality stable unless the user explicitly requests a behavior change.
+* Prefer shared constants or small helper methods for repeated user-facing messages so the theme remains consistent and easy to revise.
+* When console wording changes, update the corresponding expected output in `test/ui-test-plan.md` and run the complete UI test plan.
+
 # Default user context
 
 Unless the user says otherwise, assume that you are assisting a student working on a project in this repository. If the user identifies themselves as an instructor or another project stakeholder, adapt your response to that role.
