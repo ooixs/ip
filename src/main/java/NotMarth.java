@@ -25,7 +25,7 @@ public class NotMarth {
         int taskCount = 0;
 
         while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
+            String command = scanner.nextLine().trim();
 
             if (command.equals("bye")) {
                 System.out.println(separator);
@@ -39,19 +39,27 @@ public class NotMarth {
 
             if (command.equals("list")) {
                 printTasks(tasks, taskCount);
-            } else if (command.startsWith("mark ")) {
+            } else if (isCommand(command, "mark")) {
                 markTask(command, tasks, taskCount);
-            } else if (command.startsWith("unmark ")) {
+            } else if (isCommand(command, "unmark")) {
                 unmarkTask(command, tasks, taskCount);
-            } else if (taskCount < MAX_TASKS) {
+            } else if (isTaskCommand(command)) {
                 Task task = createTask(command);
                 if (task != null) {
-                    tasks[taskCount] = task;
-                    taskCount++;
-                    System.out.println("     Got it. I've added this task:");
-                    System.out.println("       " + task);
-                    System.out.println("     Now you have " + taskCount + " tasks in the list.");
+                    if (taskCount == MAX_TASKS) {
+                        printError("Your task list is full. Remove a task before adding another one.");
+                    } else {
+                        tasks[taskCount] = task;
+                        taskCount++;
+                        System.out.println("     Got it. I've added this task:");
+                        System.out.println("       " + task);
+                        System.out.println("     Now you have " + taskCount + " tasks in the list.");
+                    }
                 }
+            } else if (command.isEmpty()) {
+                printError("Please enter a command. Try todo, deadline, event, list, mark, or unmark.");
+            } else {
+                printError("I don't recognize that command. Try todo, deadline, event, list, mark, or unmark.");
             }
 
             System.out.println(separator);
@@ -66,13 +74,17 @@ public class NotMarth {
      * @return the parsed task, or {@code null} for an incomplete typed command
      */
     private static Task createTask(String command) {
-        if (command.startsWith("todo ")) {
-            String description = command.substring("todo ".length()).trim();
-            return description.isEmpty() ? null : new ToDo(description);
+        if (isCommand(command, "todo")) {
+            String description = command.substring("todo".length()).trim();
+            if (description.isEmpty()) {
+                printError("A todo needs a description. Try: todo <description>");
+                return null;
+            }
+            return new ToDo(description);
         }
 
-        if (command.startsWith("deadline ")) {
-            String details = command.substring("deadline ".length()).trim();
+        if (isCommand(command, "deadline")) {
+            String details = command.substring("deadline".length()).trim();
             int byMarker = details.indexOf("/by");
             if (byMarker > 0) {
                 String description = details.substring(0, byMarker).trim();
@@ -81,11 +93,12 @@ public class NotMarth {
                     return new Deadline(description, by);
                 }
             }
+            printError("A deadline needs a description and a due time. Try: deadline <description> /by <date or time>");
             return null;
         }
 
-        if (command.startsWith("event ")) {
-            String details = command.substring("event ".length()).trim();
+        if (isCommand(command, "event")) {
+            String details = command.substring("event".length()).trim();
             int fromMarker = details.indexOf("/from");
             int toMarker = details.indexOf("/to");
             if (fromMarker > 0 && toMarker > fromMarker) {
@@ -96,11 +109,44 @@ public class NotMarth {
                     return new Event(description, from, to);
                 }
             }
+            printError("An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>");
             return null;
         }
 
-        // Keep the original behaviour for commands that are not typed tasks.
-        return new Task(command);
+        return null;
+    }
+
+    /**
+     * Checks whether a command is exactly a keyword or starts with that keyword
+     * followed by at least one space.
+     *
+     * @param command the complete command entered by the user
+     * @param keyword the command keyword to look for
+     * @return whether the command uses the keyword at its beginning
+     */
+    private static boolean isCommand(String command, String keyword) {
+        return command.equals(keyword) || command.startsWith(keyword + " ");
+    }
+
+    /**
+     * Checks whether the command is one of the supported task-creation commands.
+     *
+     * @param command the complete command entered by the user
+     * @return whether the command starts with a supported task keyword
+     */
+    private static boolean isTaskCommand(String command) {
+        return isCommand(command, "todo")
+                || isCommand(command, "deadline")
+                || isCommand(command, "event");
+    }
+
+    /**
+     * Prints a consistent, user-facing error message.
+     *
+     * @param message the explanation of what went wrong
+     */
+    private static void printError(String message) {
+        System.out.println("     I couldn't process that: " + message);
     }
 
     /**
@@ -125,16 +171,18 @@ public class NotMarth {
      */
     private static void markTask(String command, Task[] tasks, int taskCount) {
         try {
-            int taskNumber = Integer.parseInt(command.substring("mark ".length()).trim());
+            int taskNumber = Integer.parseInt(command.substring("mark".length()).trim());
             int taskIndex = taskNumber - 1;
 
             if (taskIndex >= 0 && taskIndex < taskCount) {
                 tasks[taskIndex].markAsDone();
                 System.out.println("     Nice! I've marked this task as done:");
                 System.out.println("       " + tasks[taskIndex]);
+            } else {
+                printInvalidTaskNumber(taskCount);
             }
         } catch (NumberFormatException exception) {
-            // Ignore malformed mark commands instead of terminating the chatbot.
+            printError("Mark needs a task number, for example: mark 1");
         }
     }
 
@@ -147,16 +195,31 @@ public class NotMarth {
      */
     private static void unmarkTask(String command, Task[] tasks, int taskCount) {
         try {
-            int taskNumber = Integer.parseInt(command.substring("unmark ".length()).trim());
+            int taskNumber = Integer.parseInt(command.substring("unmark".length()).trim());
             int taskIndex = taskNumber - 1;
 
             if (taskIndex >= 0 && taskIndex < taskCount) {
                 tasks[taskIndex].markAsUndone();
                 System.out.println("     OK, I've marked this task as not done yet:");
                 System.out.println("       " + tasks[taskIndex]);
+            } else {
+                printInvalidTaskNumber(taskCount);
             }
         } catch (NumberFormatException exception) {
-            // Ignore malformed unmark commands instead of terminating the chatbot.
+            printError("Unmark needs a task number, for example: unmark 1");
+        }
+    }
+
+    /**
+     * Explains why a task number cannot be used, including the empty-list case.
+     *
+     * @param taskCount the number of tasks currently stored
+     */
+    private static void printInvalidTaskNumber(int taskCount) {
+        if (taskCount == 0) {
+            printError("There are no tasks yet. Add a task before marking it.");
+        } else {
+            printError("That task number is not in your list. Use a number from 1 to " + taskCount + ".");
         }
     }
 
