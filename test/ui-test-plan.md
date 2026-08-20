@@ -9,6 +9,7 @@
 - Run command: `java -cp <temporary-output-directory> NotMarth`
 - Each test case runs in a fresh process.
 - The test runner records the complete console input and output for each case.
+- A nonzero exit status or unexpected standard-error output fails the current test case.
 
 ## Test case 1: Add a ToDo
 
@@ -138,11 +139,11 @@ Got it. I've added this task:
 2.[T][ ] read book
 ```
 
-## Test case 6: Reject an incomplete Deadline between valid Deadlines
+## Test case 6: Reject incomplete Deadlines between valid Deadlines
 
 ### Aim
 
-Verify that a Deadline without a `/by` value is rejected and does not affect the numbering of later valid tasks.
+Verify that a Deadline without its description, `/by` marker, or due-time value is rejected and does not affect the numbering of later valid tasks.
 
 ### Comparison
 
@@ -153,6 +154,8 @@ Verify that a Deadline without a `/by` value is rejected and does not affect the
 ```text
 deadline submit report /by Friday
 deadline missing due date
+deadline /by Sunday
+deadline missing due value /by
 deadline prepare presentation /by Monday
 list
 ```
@@ -162,16 +165,18 @@ list
 ```text
 Got it. I've added this task:
 I couldn't process that: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
+I couldn't process that: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
+I couldn't process that: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
 Got it. I've added this task:
 1.[D][ ] submit report (by: Friday)
 2.[D][ ] prepare presentation (by: Monday)
 ```
 
-## Test case 7: Reject an incomplete Event without affecting later tasks
+## Test case 7: Reject incomplete Events without affecting later tasks
 
 ### Aim
 
-Verify that an Event missing its end time is rejected while a valid Event and ToDo remain in the list.
+Verify that Events missing a description, start time, or end time are rejected while valid tasks remain in the list.
 
 ### Comparison
 
@@ -182,6 +187,8 @@ Verify that an Event missing its end time is rejected while a valid Event and To
 ```text
 event team meeting /from 10am /to 11am
 event missing end time /from 2pm
+event /from 2pm /to 3pm
+event missing start time /from /to 3pm
 todo pack presentation materials
 list
 ```
@@ -190,6 +197,8 @@ list
 
 ```text
 Got it. I've added this task:
+I couldn't process that: An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>
+I couldn't process that: An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>
 I couldn't process that: An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>
 Got it. I've added this task:
 1.[E][ ] team meeting (from: 10am to: 11am)
@@ -254,7 +263,9 @@ Got it. I've added this task:
 I couldn't process that: Mark needs a task number, for example: mark 1
 I couldn't process that: That task number is not in your list. Use a number from 1 to 1.
 Nice! I've marked this task as done:
+[T][X] finish assignment
 OK, I've marked this task as not done yet:
+[T][ ] finish assignment
 1.[T][ ] finish assignment
 ```
 
@@ -321,7 +332,7 @@ I couldn't process that: Mark needs a task number, for example: mark 1
 
 ### Aim
 
-Verify that the 101st task is rejected and that all 100 previously stored tasks remain available.
+Verify that the 101st task is rejected and that the first, middle, and last entries among the 100 stored tasks remain available.
 
 ### Comparison
 
@@ -439,6 +450,8 @@ list
 ```text
 Now you have 100 tasks in the list.
 I couldn't process that: Your task list is full. Remove a task before adding another one.
+1.[T][ ] task 1
+50.[T][ ] task 50
 100.[T][ ] task 100
 ```
 
@@ -501,4 +514,56 @@ list
 I couldn't process that: Delete needs a task number, for example: delete 1
 I couldn't process that: That task number is not in your list. Use a number from 1 to 1.
 1.[T][ ] keep this task
+```
+
+## Test case 15: Reject task operations on an empty list
+
+### Aim
+
+Verify that mark, unmark, and delete commands report clear errors instead of failing when no tasks exist.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+mark 1
+unmark 1
+delete 1
+list
+```
+
+### Expected output
+
+```text
+I couldn't process that: There are no tasks yet. Add a task before marking it.
+I couldn't process that: There are no tasks yet. Add a task before unmarking it.
+I couldn't process that: There are no tasks yet. Add a task before deleting it.
+Here are the tasks in your list:
+```
+
+## Test case 16: Exit the chatbot
+
+### Aim
+
+Verify that the `bye` command prints the farewell message and terminates normally.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+bye
+```
+
+### Expected output
+
+```text
+Hello! I'm NotMarth, the definitely-not-Marth Divine Dragon.
+What tactical command can I assist with?
+Bye. Hope to see you again soon!
 ```
