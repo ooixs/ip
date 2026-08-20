@@ -24,6 +24,14 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 # Project-specific requirements
 
+## Required test workflow after code updates:
+
+After every code update:
+
+1. Review `test/ui-test-plan.md` and update it when the change affects console behavior or introduces relevant edge cases. Preserve existing cases when adding new coverage.
+2. Invoke the project `test-ui` skill from `skills/test-ui/SKILL.md` to compile and run the complete UI test plan in fresh processes.
+3. Use Java 25 for the test run and report the completed cases and any failures before considering the update complete.
+
 ## Java version:
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
