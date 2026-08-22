@@ -29,3 +29,7 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    ```
 
 **Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+## AI Usage Declaration
+
+A usage of level AI-5 is used throughout the entire project. I used AI to create the multiple functionalities of this project, while doing a manual check through of the code using git diff and making tweaks where necessary. Each AI output description is also manually checked through to ensure that AI is producing the output in which I desire. After every commit, the code is tested using AI and also manually tested using testcases in the ui-test-plan.md file, before being pushed to the remote.
