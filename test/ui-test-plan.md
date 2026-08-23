@@ -639,13 +639,12 @@ event|open|missing end time|only one field
 
 ### Input
 
-```text
-list
-```
+There is no input, the programme should exit with the error message immediately after starting up.
 
 ### Expected output
 
 ```text
+
 I couldn't process that, Divine One: The saved battle plan is corrupted. Repair or remove the file before starting NotMarth again.
 ```
 

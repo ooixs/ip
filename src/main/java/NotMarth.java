@@ -13,7 +13,8 @@ public class NotMarth {
     private static final String ENGAGE_MESSAGE = "     Together, we can accomplish this. Engage!";
     private static final String UNMARK_TASK_MESSAGE = "     This order is back on the map:";
     private static final String DELETE_TASK_MESSAGE = "     This order has been withdrawn:";
-    private static final String ERROR_MESSAGE_PREFIX = "     I couldn't process that, Divine One: ";
+    private static final String ERROR_MESSAGE_TEXT_PREFIX = "I couldn't process that, Divine One: ";
+    private static final String ERROR_MESSAGE_PREFIX = "     " + ERROR_MESSAGE_TEXT_PREFIX;
     private static final String SOMMIE_MESSAGE = "     Sommie appears with a cheerful wag. Your battle plan has a loyal companion!";
 
     public static void main(String[] args) {
@@ -31,7 +32,7 @@ public class NotMarth {
         System.out.println("Hello! I'm NotMarth, your not-quite-Emblem tactical assistant.");
         System.out.println("The Fell Dragon may be gone, but every battle still needs a plan.");
         if (loadResult.hasWarning()) {
-            printError(loadResult.getWarning());
+            printStartupWarning(loadResult.getWarning());
             return;
         }
         System.out.println("What tactical command can I assist with?");
@@ -166,6 +167,17 @@ public class NotMarth {
      */
     private static void printError(String message) {
         System.out.println(ERROR_MESSAGE_PREFIX + message);
+    }
+
+    /**
+     * Prints a startup storage warning on its own line after a blank line so
+     * it is visually distinct from the normal command prompt messages.
+     *
+     * @param message the startup problem to explain
+     */
+    private static void printStartupWarning(String message) {
+        System.out.println();
+        System.out.println(ERROR_MESSAGE_TEXT_PREFIX + message);
     }
 
     /**
