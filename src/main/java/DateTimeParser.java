@@ -17,12 +17,12 @@ final class DateTimeParser {
     private static final List<DateTimeFormatter> DATE_TIME_FORMATTERS = List.of(
             formatter("d/M/uuuu HHmm"),
             formatter("d/M/uuuu H:mm"),
-            formatter("uuuu-MM-dd HHmm"),
-            formatter("uuuu-MM-dd H:mm"),
+            formatter("uuuu-M-d HHmm"),
+            formatter("uuuu-M-d H:mm"),
             DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     private static final List<DateTimeFormatter> DATE_FORMATTERS = List.of(
             formatter("d/M/uuuu"),
-            formatter("uuuu-MM-dd"),
+            formatter("uuuu-M-d"),
             DateTimeFormatter.ISO_LOCAL_DATE);
 
     private DateTimeParser() {
