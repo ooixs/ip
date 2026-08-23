@@ -1,3 +1,5 @@
+package notmarth.parser;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,7 +11,7 @@ import java.util.Locale;
 /**
  * Parses and formats the date and time values used by NotMarth tasks.
  */
-final class DateTimeParser {
+public final class DateTimeParser {
     private static final DateTimeFormatter DISPLAY_DATE_FORMATTER =
             DateTimeFormatter.ofPattern("MMM dd uuuu", Locale.ENGLISH);
     private static final DateTimeFormatter DISPLAY_DATE_TIME_FORMATTER =
@@ -36,7 +38,7 @@ final class DateTimeParser {
      * @return the parsed value and whether the input included a time
      * @throws DateTimeParseException if the value is not supported
      */
-    static ParsedDateTime parse(String input) {
+    public static ParsedDateTime parse(String input) {
         for (DateTimeFormatter formatter : DATE_TIME_FORMATTERS) {
             try {
                 return new ParsedDateTime(LocalDateTime.parse(input, formatter), true);
@@ -61,7 +63,7 @@ final class DateTimeParser {
      * @return the parsed calendar date
      * @throws DateTimeParseException if the value is not a supported date-only format
      */
-    static LocalDate parseDate(String input) {
+    public static LocalDate parseDate(String input) {
         ParsedDateTime parsedDateTime = parse(input);
         if (parsedDateTime.includesTime()) {
             throw new DateTimeParseException("A date-only value is required", input, 0);
@@ -76,7 +78,7 @@ final class DateTimeParser {
      * @param includesTime whether the original value included a time
      * @return the readable console representation
      */
-    static String format(LocalDateTime value, boolean includesTime) {
+    public static String format(LocalDateTime value, boolean includesTime) {
         return (includesTime ? DISPLAY_DATE_TIME_FORMATTER : DISPLAY_DATE_FORMATTER).format(value);
     }
 
@@ -87,7 +89,7 @@ final class DateTimeParser {
      * @param includesTime whether the original value included a time
      * @return an ISO date or ISO local date-time
      */
-    static String formatForStorage(LocalDateTime value, boolean includesTime) {
+    public static String formatForStorage(LocalDateTime value, boolean includesTime) {
         return includesTime ? value.toString() : value.toLocalDate().toString();
     }
 
@@ -97,6 +99,6 @@ final class DateTimeParser {
     }
 
     /** Contains a parsed value and whether the source included a time. */
-    record ParsedDateTime(LocalDateTime value, boolean includesTime) {
+    public record ParsedDateTime(LocalDateTime value, boolean includesTime) {
     }
 }

@@ -1,3 +1,11 @@
+package notmarth.command;
+
+import notmarth.exception.NotMarthException;
+import notmarth.model.Task;
+import notmarth.model.TaskList;
+import notmarth.storage.Storage;
+import notmarth.ui.Ui;
+
 /** Executes a command that adds a parsed task to the battle plan. */
 public final class AddCommand extends Command {
     private final Task task;

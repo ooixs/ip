@@ -1,3 +1,5 @@
+package notmarth.model;
+
 /**
  * Represents a task that has no date or time attached to it.
  */

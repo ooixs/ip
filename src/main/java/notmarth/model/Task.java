@@ -1,3 +1,5 @@
+package notmarth.model;
+
 /**
  * Represents a task in the chatbot's task list.
  */

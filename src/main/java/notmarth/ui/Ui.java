@@ -1,4 +1,9 @@
+package notmarth.ui;
+
 import java.util.Scanner;
+
+import notmarth.model.Task;
+import notmarth.model.TaskList;
 
 /**
  * Handles console input and output for the NotMarth chatbot.

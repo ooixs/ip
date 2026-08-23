@@ -1,3 +1,12 @@
+package notmarth;
+
+import notmarth.command.Command;
+import notmarth.exception.NotMarthException;
+import notmarth.model.TaskList;
+import notmarth.parser.Parser;
+import notmarth.storage.Storage;
+import notmarth.ui.Ui;
+
 /**
  * The main entry point for the NotMarth chatbot.
  */

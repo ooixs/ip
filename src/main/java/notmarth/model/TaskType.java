@@ -1,3 +1,5 @@
+package notmarth.model;
+
 /**
  * Identifies the kind of task and its display marker.
  */

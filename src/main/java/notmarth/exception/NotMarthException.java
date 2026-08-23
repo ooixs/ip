@@ -1,3 +1,5 @@
+package notmarth.exception;
+
 /**
  * Represents an error caused by an invalid command entered in NotMarth.
  *

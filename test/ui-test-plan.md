@@ -5,8 +5,8 @@
 - Program: `NotMarth`
 - Source directory: `src/main/java`
 - Runtime: Java 25
-- Build command: `javac -d <temporary-output-directory> src/main/java/*.java`
-- Run command: `java -cp <temporary-output-directory> NotMarth`
+- Build command: `javac -d <temporary-output-directory> $(find src/main/java -name '*.java')`
+- Run command: `java -cp <temporary-output-directory> notmarth.NotMarth`
 - Each test case runs in a fresh process.
 - The test runner records the complete console input and output for each case.
 - A nonzero exit status or unexpected standard-error output fails the current test case.

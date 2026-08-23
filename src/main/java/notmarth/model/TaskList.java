@@ -1,6 +1,10 @@
+package notmarth.model;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import notmarth.exception.NotMarthException;
 
 /**
  * Stores the tasks in their display order and provides task-list operations.
