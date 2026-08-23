@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.IOException;
 
 /**
  * The main entry point for the NotMarth chatbot.
@@ -31,7 +32,7 @@ public class NotMarth {
         System.out.println(separator);
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks = TaskStorage.load(MAX_TASKS);
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine().trim();
@@ -63,6 +64,7 @@ public class NotMarth {
                         throw new NotMarthException("Your task list is full. Remove a task before adding another one.");
                     } else {
                         tasks.add(task);
+                        saveTasks(tasks);
                         System.out.println(ADD_TASK_MESSAGE);
                         System.out.println("       " + task);
                         System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
@@ -192,6 +194,7 @@ public class NotMarth {
         validateTaskNumber(taskNumber, tasks, "marking");
 
         tasks.get(taskNumber - 1).markAsDone();
+        saveTasks(tasks);
         System.out.println(MARK_TASK_MESSAGE);
         System.out.println(ENGAGE_MESSAGE);
         System.out.println("       " + tasks.get(taskNumber - 1));
@@ -244,6 +247,7 @@ public class NotMarth {
         validateTaskNumber(taskNumber, tasks, "unmarking");
 
         tasks.get(taskNumber - 1).markAsUndone();
+        saveTasks(tasks);
         System.out.println(UNMARK_TASK_MESSAGE);
         System.out.println("       " + tasks.get(taskNumber - 1));
     }
@@ -261,10 +265,25 @@ public class NotMarth {
         validateTaskNumber(taskNumber, tasks, "deleting");
 
         Task deletedTask = tasks.remove(taskNumber - 1);
+        saveTasks(tasks);
 
         System.out.println(DELETE_TASK_MESSAGE);
         System.out.println("       " + deletedTask);
         System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
+    }
+
+    /**
+     * Persists a successful task-list change without interrupting the command
+     * flow if the operating system temporarily refuses the write.
+     *
+     * @param tasks the changed task list
+     */
+    private static void saveTasks(ArrayList<Task> tasks) {
+        try {
+            TaskStorage.save(tasks);
+        } catch (IOException exception) {
+            printError("I couldn't save the battle plan to disk. Your current session is still active.");
+        }
     }
 
 }

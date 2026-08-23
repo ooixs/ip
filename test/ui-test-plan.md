@@ -591,3 +591,84 @@ sommie
 ```text
 Sommie appears with a cheerful wag. Your battle plan has a loyal companion!
 ```
+
+## Test case 18: Load a saved battle plan at startup
+
+### Aim
+
+Verify that NotMarth loads task types, descriptions, date/time fields, and completion state from its archive when it starts. Before running this case, create `data/notmarth.txt` relative to the project root with the following contents:
+
+```text
+# NotMarth battle plan v1
+todo|done|review \| plan
+deadline|open|return book|June 6th
+```
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+list
+```
+
+### Expected output
+
+```text
+Here are your current mission orders:
+1.[T][X] review | plan
+2.[D][ ] return book (by: June 6th)
+```
+
+## Test case 19: Recover from a corrupted archive
+
+### Aim
+
+Verify that malformed saved data does not prevent startup and is treated as an empty battle plan. Before running this case, create `data/notmarth.txt` relative to the project root with the following contents:
+
+```text
+# NotMarth battle plan v1
+event|open|missing end time|only one field
+```
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+list
+```
+
+### Expected output
+
+```text
+Here are your current mission orders:
+```
+
+## Test case 20: Create the storage folder automatically
+
+### Aim
+
+Verify that a first launch can save a task when the `data/` folder and archive do not exist. Before running this case, remove `data/` relative to the project root.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+todo first launch task
+```
+
+### Expected output
+
+```text
+Order received. I've added it to the battle plan:
+[T][ ] first launch task
+Now you have 1 tasks in the list.
+```

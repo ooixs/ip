@@ -51,6 +51,33 @@ public class Task {
     }
 
     /**
+     * Returns whether this task is complete.
+     *
+     * @return {@code true} when this task has been marked as done
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
+     * Returns the task's description for persistence.
+     *
+     * @return the task description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * Returns the task's kind for persistence.
+     *
+     * @return the task type
+     */
+    public TaskType getTaskType() {
+        return type;
+    }
+
+    /**
      * Returns the task in the format used when displaying it.
      *
      * @return the optional type marker, status icon, and task description

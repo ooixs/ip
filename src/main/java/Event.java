@@ -19,6 +19,24 @@ public class Event extends Task {
     }
 
     /**
+     * Returns the event start text for persistence.
+     *
+     * @return the event start date or time
+     */
+    public String getFrom() {
+        return from;
+    }
+
+    /**
+     * Returns the event end text for persistence.
+     *
+     * @return the event end date or time
+     */
+    public String getTo() {
+        return to;
+    }
+
+    /**
      * Returns this task with its event range and type marker.
      *
      * @return the formatted event task
