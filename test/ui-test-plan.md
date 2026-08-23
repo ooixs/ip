@@ -622,11 +622,11 @@ Here are your current mission orders:
 2.[D][ ] return book (by: June 6th)
 ```
 
-## Test case 19: Recover from a corrupted archive
+## Test case 19: Stop when the archive is corrupted
 
 ### Aim
 
-Verify that malformed saved data does not prevent startup and is treated as an empty battle plan. Before running this case, create `data/notmarth.txt` relative to the project root with the following contents:
+Verify that malformed saved data shows a clear warning and stops NotMarth before it accepts commands or overwrites the file. Before running this case, create `data/notmarth.txt` relative to the project root with the following contents:
 
 ```text
 # NotMarth battle plan v1
@@ -646,7 +646,7 @@ list
 ### Expected output
 
 ```text
-Here are your current mission orders:
+I couldn't process that, Divine One: The saved battle plan is corrupted. Repair or remove the file before starting NotMarth again.
 ```
 
 ## Test case 20: Create the storage folder automatically

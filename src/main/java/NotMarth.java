@@ -1,6 +1,6 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.io.IOException;
 
 /**
  * The main entry point for the NotMarth chatbot.
@@ -17,6 +17,8 @@ public class NotMarth {
     private static final String SOMMIE_MESSAGE = "     Sommie appears with a cheerful wag. Your battle plan has a loyal companion!";
 
     public static void main(String[] args) {
+        TaskStorage.LoadResult loadResult = TaskStorage.load(MAX_TASKS);
+        ArrayList<Task> tasks = loadResult.getTasks();
         String separator = "_".repeat(60);
         String banner = " _   _  ___ _____ __  __    _    ____ _____ _   _\n"
                 + "| \\ | |/ _ \\_   _|  \\/  |  / \\  |  _ \\_   _| | | |\n"
@@ -28,11 +30,14 @@ public class NotMarth {
         System.out.print(banner);
         System.out.println("Hello! I'm NotMarth, your not-quite-Emblem tactical assistant.");
         System.out.println("The Fell Dragon may be gone, but every battle still needs a plan.");
+        if (loadResult.hasWarning()) {
+            printError(loadResult.getWarning());
+            return;
+        }
         System.out.println("What tactical command can I assist with?");
         System.out.println(separator);
 
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = TaskStorage.load(MAX_TASKS);
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine().trim();

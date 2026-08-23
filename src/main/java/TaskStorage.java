@@ -23,21 +23,21 @@ public final class TaskStorage {
     }
 
     /**
-     * Loads the saved tasks, returning an empty list when no archive exists or
-     * when the archive is corrupted.
+     * Loads the saved tasks and reports whether startup had to recover from a
+     * storage problem.
      *
      * @param maximumTasks the largest valid number of tasks
-     * @return the recovered task list
+     * @return the loaded tasks and an optional startup warning
      */
-    public static ArrayList<Task> load(int maximumTasks) {
+    public static LoadResult load(int maximumTasks) {
         if (!Files.exists(DATA_FILE)) {
-            return new ArrayList<>();
+            return new LoadResult(new ArrayList<>(), null);
         }
 
         try {
             List<String> lines = Files.readAllLines(DATA_FILE, StandardCharsets.UTF_8);
             if (lines.isEmpty() || !HEADER.equals(lines.get(0))) {
-                return new ArrayList<>();
+                throw new CorruptTaskDataException();
             }
 
             ArrayList<Task> tasks = new ArrayList<>();
@@ -46,14 +46,57 @@ public final class TaskStorage {
                     continue;
                 }
                 if (tasks.size() == maximumTasks) {
-                    return new ArrayList<>();
+                    throw new CorruptTaskDataException();
                 }
                 tasks.add(parseTask(lines.get(i)));
             }
+            return new LoadResult(tasks, null);
+        } catch (CorruptTaskDataException exception) {
+            return new LoadResult(new ArrayList<>(),
+                    "The saved battle plan is corrupted. Repair or remove the file before starting NotMarth again.");
+        } catch (IOException exception) {
+            return new LoadResult(new ArrayList<>(),
+                    "I couldn't read the saved battle plan from disk. Fix the file before starting NotMarth again.");
+        }
+    }
+
+    /**
+     * Contains tasks loaded at startup and an optional warning for the user.
+     */
+    public static final class LoadResult {
+        private final ArrayList<Task> tasks;
+        private final String warning;
+
+        private LoadResult(ArrayList<Task> tasks, String warning) {
+            this.tasks = tasks;
+            this.warning = warning;
+        }
+
+        /**
+         * Returns the tasks recovered from disk.
+         *
+         * @return the loaded tasks, or an empty list after a storage problem
+         */
+        public ArrayList<Task> getTasks() {
             return tasks;
-        } catch (IOException | CorruptTaskDataException exception) {
-            // A damaged save file must not prevent the chatbot from starting.
-            return new ArrayList<>();
+        }
+
+        /**
+         * Returns whether startup should show a storage warning.
+         *
+         * @return {@code true} when the archive could not be used
+         */
+        public boolean hasWarning() {
+            return warning != null;
+        }
+
+        /**
+         * Returns the warning that explains a storage problem.
+         *
+         * @return the warning text, or {@code null} when loading succeeded
+         */
+        public String getWarning() {
+            return warning;
         }
     }
 

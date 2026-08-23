@@ -1,2 +1,2 @@
 # NotMarth battle plan v1
-event|open|missing end time|only one field
+todo|open|xxx
