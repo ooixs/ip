@@ -1,93 +1,62 @@
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.Scanner;
 
 /**
  * The main entry point for the NotMarth chatbot.
  */
 public class NotMarth {
     private static final int MAX_TASKS = 100;
-    private static final String ADD_TASK_MESSAGE = "     Order received. I've added it to the battle plan:";
-    private static final String LIST_TASKS_MESSAGE = "     Here are your current mission orders:";
-    private static final String MARK_TASK_MESSAGE = "     Well fought! This order is complete:";
-    private static final String ENGAGE_MESSAGE = "     Together, we can accomplish this. Engage!";
-    private static final String UNMARK_TASK_MESSAGE = "     This order is back on the map:";
-    private static final String DELETE_TASK_MESSAGE = "     This order has been withdrawn:";
-    private static final String AVAILABLE_COMMANDS_MESSAGE = "Available commands: todo, deadline, event, list, on, mark, unmark, delete, bye";
-    private static final String ERROR_MESSAGE_TEXT_PREFIX = "I couldn't process that, Divine One: ";
-    private static final String ERROR_MESSAGE_PREFIX = "     " + ERROR_MESSAGE_TEXT_PREFIX;
-    private static final String SOMMIE_MESSAGE = "     Sommie appears with a cheerful wag. Your battle plan has a loyal companion!";
-
     public static void main(String[] args) {
+        Ui ui = new Ui();
         TaskStorage.LoadResult loadResult = TaskStorage.load(MAX_TASKS);
         TaskList tasks = new TaskList(loadResult.getTasks(), MAX_TASKS);
-        String separator = "_".repeat(60);
-        String banner = " _   _  ___ _____ __  __    _    ____ _____ _   _\n"
-                + "| \\ | |/ _ \\_   _|  \\/  |  / \\  |  _ \\_   _| | | |\n"
-                + "|  \\| | | | || | | |\\/| | / _ \\ | |_) || | | |_| |\n"
-                + "| |\\  | |_| || | | |  | |/ ___ \\|  _ < | | |  _  |\n"
-                + "|_| \\_|\\___/ |_| |_|  |_/_/   \\_\\_| \\_\\|_| |_| |_|\n";
 
-        System.out.println(separator);
-        System.out.print(banner);
-        System.out.println("Hello! I'm NotMarth, your not-quite-Emblem tactical assistant.");
-        System.out.println("The Fell Dragon may be gone, but every battle still needs a plan.");
-        System.out.println();
+        ui.showWelcome();
         if (loadResult.hasWarning()) {
-            printStartupWarning(loadResult.getWarning());
+            ui.showStartupWarning(loadResult.getWarning());
             return;
         }
-        System.out.println("What tactical command can I assist with?");
-        System.out.println(AVAILABLE_COMMANDS_MESSAGE);
-        System.out.println("Please enter dates in the format yyyy-mm-dd or dd/MM/yyyy HHmm");
-        System.out.println(separator);
+        ui.showPrompt();
 
-        Scanner scanner = new Scanner(System.in);
-
-        while (scanner.hasNextLine()) {
-            String command = scanner.nextLine().trim();
+        while (ui.hasNextLine()) {
+            String command = ui.readCommand();
 
             if (command.equals("bye")) {
-                System.out.println(separator);
-                System.out.println("Until we meet again. Stay strong, Divine One!");
-                System.out.println(separator);
+                ui.showFarewell();
                 break;
             }
 
-            System.out.println(separator);
-            System.out.println("     " + command);
+            ui.showCommand(command);
 
             try {
                 if (command.equals("sommie")) {
-                    printSommieMessage();
+                    ui.showSommieMessage();
                 } else if (command.equals("list")) {
-                    printTasks(tasks);
+                    ui.showTasks(tasks);
                 } else if (isCommand(command, "on")) {
-                    printTasksOnDate(command, tasks);
+                    printTasksOnDate(command, tasks, ui);
                 } else if (isCommand(command, "mark")) {
-                    markTask(command, tasks);
+                    markTask(command, tasks, ui);
                 } else if (isCommand(command, "unmark")) {
-                    unmarkTask(command, tasks);
+                    unmarkTask(command, tasks, ui);
                 } else if (isCommand(command, "delete")) {
-                    deleteTask(command, tasks);
+                    deleteTask(command, tasks, ui);
                 } else if (isTaskCommand(command)) {
                     Task task = createTask(command);
                     tasks.add(task);
-                    saveTasks(tasks);
-                    System.out.println(ADD_TASK_MESSAGE);
-                    System.out.println("       " + task);
-                    System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
+                    saveTasks(tasks, ui);
+                    ui.showTaskAdded(task, tasks.size());
                 } else if (command.isEmpty()) {
                     throw new NotMarthException("Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.");
                 } else {
                     throw new NotMarthException("I don't recognize that command. Try todo, deadline, event, list, on, mark, unmark, or delete.");
                 }
             } catch (NotMarthException exception) {
-                printError(exception.getMessage());
+                ui.showError(exception.getMessage());
             }
 
-            System.out.println(separator);
+            ui.showSeparator();
         }
     }
 
@@ -180,45 +149,6 @@ public class NotMarth {
     }
 
     /**
-     * Prints a consistent, user-facing error message.
-     *
-     * @param message the explanation of what went wrong
-     */
-    private static void printError(String message) {
-        System.out.println(ERROR_MESSAGE_PREFIX + message);
-    }
-
-    /**
-     * Prints a startup storage warning on its own line after a blank line so
-     * it is visually distinct from the normal command prompt messages.
-     *
-     * @param message the startup problem to explain
-     */
-    private static void printStartupWarning(String message) {
-        System.out.println();
-        System.out.println(ERROR_MESSAGE_TEXT_PREFIX + message);
-    }
-
-    /**
-     * Displays the hidden Sommie Easter egg without changing the task list.
-     */
-    private static void printSommieMessage() {
-        System.out.println(SOMMIE_MESSAGE);
-    }
-
-    /**
-     * Prints all tasks in the order in which they were entered.
-     *
-     * @param tasks the collection containing the stored tasks
-     */
-    private static void printTasks(TaskList tasks) {
-        System.out.println(LIST_TASKS_MESSAGE);
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("     " + (i + 1) + "." + tasks.get(i));
-        }
-    }
-
-    /**
      * Prints deadlines and events occurring on the date from an {@code on}
      * command. Original task numbers are retained so the results can still be
      * used with commands such as {@code mark} and {@code delete}.
@@ -227,7 +157,7 @@ public class NotMarth {
      * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the command has no valid date
      */
-    private static void printTasksOnDate(String command, TaskList tasks) throws NotMarthException {
+    private static void printTasksOnDate(String command, TaskList tasks, Ui ui) throws NotMarthException {
         String dateText = command.substring("on".length()).trim();
         if (dateText.isEmpty()) {
             throw new NotMarthException("The on command needs a date. Try: on <date>");
@@ -250,14 +180,14 @@ public class NotMarth {
                     || task instanceof Event event && event.occursOn(date);
             if (matches) {
                 if (!foundMatch) {
-                    System.out.println("     Here are the deadlines and events for " + displayDate + ":");
+                    ui.showDateTasksHeader(displayDate);
                     foundMatch = true;
                 }
-                System.out.println("     " + (i + 1) + "." + task);
+                ui.showNumberedTask(i + 1, task);
             }
         }
         if (!foundMatch) {
-            System.out.println("     No deadlines or events are scheduled for " + displayDate + ".");
+            ui.showNoDateTasks(displayDate);
         }
     }
 
@@ -268,14 +198,12 @@ public class NotMarth {
      * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static void markTask(String command, TaskList tasks) throws NotMarthException {
+    private static void markTask(String command, TaskList tasks, Ui ui) throws NotMarthException {
         int taskNumber = parseTaskNumber(command, "mark");
 
         Task task = tasks.mark(taskNumber);
-        saveTasks(tasks);
-        System.out.println(MARK_TASK_MESSAGE);
-        System.out.println(ENGAGE_MESSAGE);
-        System.out.println("       " + task);
+        saveTasks(tasks, ui);
+        ui.showTaskMarked(task);
     }
 
     /**
@@ -298,25 +226,18 @@ public class NotMarth {
     }
 
     /**
-     * Ensures that a requested task number identifies an existing task.
-     *
-     * @param taskNumber the requested one-based task number
-     * @throws NotMarthException if there are no tasks or the number is out of range
-     */
-    /**
      * Marks the task identified by an {@code unmark n} command as not completed.
      *
      * @param command the command containing the task number
      * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static void unmarkTask(String command, TaskList tasks) throws NotMarthException {
+    private static void unmarkTask(String command, TaskList tasks, Ui ui) throws NotMarthException {
         int taskNumber = parseTaskNumber(command, "unmark");
 
         Task task = tasks.unmark(taskNumber);
-        saveTasks(tasks);
-        System.out.println(UNMARK_TASK_MESSAGE);
-        System.out.println("       " + task);
+        saveTasks(tasks, ui);
+        ui.showTaskUnmarked(task);
     }
 
     /**
@@ -327,15 +248,12 @@ public class NotMarth {
      * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static void deleteTask(String command, TaskList tasks) throws NotMarthException {
+    private static void deleteTask(String command, TaskList tasks, Ui ui) throws NotMarthException {
         int taskNumber = parseTaskNumber(command, "delete");
 
         Task deletedTask = tasks.delete(taskNumber);
-        saveTasks(tasks);
-
-        System.out.println(DELETE_TASK_MESSAGE);
-        System.out.println("       " + deletedTask);
-        System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
+        saveTasks(tasks, ui);
+        ui.showTaskDeleted(deletedTask, tasks.size());
     }
 
     /**
@@ -344,11 +262,11 @@ public class NotMarth {
      *
      * @param tasks the changed task list
      */
-    private static void saveTasks(TaskList tasks) {
+    private static void saveTasks(TaskList tasks, Ui ui) {
         try {
             TaskStorage.save(tasks.asList());
         } catch (IOException exception) {
-            printError("I couldn't save the battle plan to disk. Your current session is still active.");
+            ui.showError("I couldn't save the battle plan to disk. Your current session is still active.");
         }
     }
 
