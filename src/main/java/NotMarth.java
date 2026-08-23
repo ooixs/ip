@@ -10,7 +10,8 @@ public class NotMarth {
     public static void main(String[] args) {
         Ui ui = new Ui();
         Parser parser = new Parser();
-        TaskStorage.LoadResult loadResult = TaskStorage.load(MAX_TASKS);
+        Storage storage = new Storage("data/notmarth.txt");
+        Storage.LoadResult loadResult = storage.load(MAX_TASKS);
         TaskList tasks = new TaskList(loadResult.getTasks(), MAX_TASKS);
 
         ui.showWelcome();
@@ -38,15 +39,15 @@ public class NotMarth {
                 } else if (parser.isCommand(command, "on")) {
                     printTasksOnDate(command, tasks, ui, parser);
                 } else if (parser.isCommand(command, "mark")) {
-                    markTask(command, tasks, ui, parser);
+                    markTask(command, tasks, ui, parser, storage);
                 } else if (parser.isCommand(command, "unmark")) {
-                    unmarkTask(command, tasks, ui, parser);
+                    unmarkTask(command, tasks, ui, parser, storage);
                 } else if (parser.isCommand(command, "delete")) {
-                    deleteTask(command, tasks, ui, parser);
+                    deleteTask(command, tasks, ui, parser, storage);
                 } else if (parser.isTaskCommand(command)) {
                     Task task = parser.createTask(command);
                     tasks.add(task);
-                    saveTasks(tasks, ui);
+                    saveTasks(tasks, ui, storage);
                     ui.showTaskAdded(task, tasks.size());
                 } else if (command.isEmpty()) {
                     throw new NotMarthException("Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.");
@@ -100,12 +101,12 @@ public class NotMarth {
      * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static void markTask(String command, TaskList tasks, Ui ui, Parser parser)
+    private static void markTask(String command, TaskList tasks, Ui ui, Parser parser, Storage storage)
             throws NotMarthException {
         int taskNumber = parser.parseTaskNumber(command, "mark");
 
         Task task = tasks.mark(taskNumber);
-        saveTasks(tasks, ui);
+        saveTasks(tasks, ui, storage);
         ui.showTaskMarked(task);
     }
 
@@ -116,12 +117,12 @@ public class NotMarth {
      * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static void unmarkTask(String command, TaskList tasks, Ui ui, Parser parser)
+    private static void unmarkTask(String command, TaskList tasks, Ui ui, Parser parser, Storage storage)
             throws NotMarthException {
         int taskNumber = parser.parseTaskNumber(command, "unmark");
 
         Task task = tasks.unmark(taskNumber);
-        saveTasks(tasks, ui);
+        saveTasks(tasks, ui, storage);
         ui.showTaskUnmarked(task);
     }
 
@@ -133,12 +134,12 @@ public class NotMarth {
      * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static void deleteTask(String command, TaskList tasks, Ui ui, Parser parser)
+    private static void deleteTask(String command, TaskList tasks, Ui ui, Parser parser, Storage storage)
             throws NotMarthException {
         int taskNumber = parser.parseTaskNumber(command, "delete");
 
         Task deletedTask = tasks.delete(taskNumber);
-        saveTasks(tasks, ui);
+        saveTasks(tasks, ui, storage);
         ui.showTaskDeleted(deletedTask, tasks.size());
     }
 
@@ -148,9 +149,9 @@ public class NotMarth {
      *
      * @param tasks the changed task list
      */
-    private static void saveTasks(TaskList tasks, Ui ui) {
+    private static void saveTasks(TaskList tasks, Ui ui, Storage storage) {
         try {
-            TaskStorage.save(tasks.asList());
+            storage.save(tasks.asList());
         } catch (IOException exception) {
             ui.showError("I couldn't save the battle plan to disk. Your current session is still active.");
         }

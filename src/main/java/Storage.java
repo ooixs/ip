@@ -11,16 +11,32 @@ import java.util.List;
 /**
  * Reads and writes the task list in a small, versioned text archive.
  *
- * <p>The path is deliberately relative to the directory from which NotMarth
- * is launched, so the project can be moved to another computer or operating
- * system without changing any source code.</p>
+ * <p>The default path is relative to the directory from which NotMarth is
+ * launched, so the project can be moved to another computer or operating
+ * system without changing any source code. A different path can be supplied
+ * when creating the storage object.</p>
  */
-public final class TaskStorage {
-    private static final Path DATA_FILE = Path.of("data", "notmarth.txt");
+public final class Storage {
+    private static final Path DEFAULT_DATA_FILE = Path.of("data", "notmarth.txt");
     private static final String HEADER = "# NotMarth battle plan v1";
+    private final Path dataFile;
 
-    private TaskStorage() {
-        // Utility class; do not create instances.
+    /** Creates storage using the default NotMarth archive path. */
+    public Storage() {
+        this(DEFAULT_DATA_FILE);
+    }
+
+    /**
+     * Creates storage using a caller-supplied archive path.
+     *
+     * @param filePath the path of the task archive
+     */
+    public Storage(String filePath) {
+        this(Path.of(filePath));
+    }
+
+    private Storage(Path dataFile) {
+        this.dataFile = dataFile;
     }
 
     /**
@@ -30,13 +46,13 @@ public final class TaskStorage {
      * @param maximumTasks the largest valid number of tasks
      * @return the loaded tasks and an optional startup warning
      */
-    public static LoadResult load(int maximumTasks) {
-        if (!Files.exists(DATA_FILE)) {
+    public LoadResult load(int maximumTasks) {
+        if (!Files.exists(dataFile)) {
             return new LoadResult(new ArrayList<>(), null);
         }
 
         try {
-            List<String> lines = Files.readAllLines(DATA_FILE, StandardCharsets.UTF_8);
+            List<String> lines = Files.readAllLines(dataFile, StandardCharsets.UTF_8);
             if (lines.isEmpty() || !HEADER.equals(lines.get(0))) {
                 throw new CorruptTaskDataException();
             }
@@ -109,8 +125,11 @@ public final class TaskStorage {
      * @param tasks the current task list
      * @throws IOException if the archive cannot be written
      */
-    public static void save(List<Task> tasks) throws IOException {
-        Path parent = DATA_FILE.getParent();
+    public void save(List<Task> tasks) throws IOException {
+        Path parent = dataFile.getParent();
+        if (parent == null) {
+            parent = Path.of(".");
+        }
         Files.createDirectories(parent);
 
         ArrayList<String> lines = new ArrayList<>();
@@ -123,11 +142,11 @@ public final class TaskStorage {
         try {
             Files.write(temporaryFile, lines, StandardCharsets.UTF_8);
             try {
-                Files.move(temporaryFile, DATA_FILE,
+                Files.move(temporaryFile, dataFile,
                         StandardCopyOption.ATOMIC_MOVE,
                         StandardCopyOption.REPLACE_EXISTING);
             } catch (AtomicMoveNotSupportedException | UnsupportedOperationException exception) {
-                Files.move(temporaryFile, DATA_FILE, StandardCopyOption.REPLACE_EXISTING);
+                Files.move(temporaryFile, dataFile, StandardCopyOption.REPLACE_EXISTING);
             }
         } finally {
             Files.deleteIfExists(temporaryFile);
