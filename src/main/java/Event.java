@@ -100,6 +100,19 @@ public class Event extends Task {
     }
 
     /**
+     * Checks whether this event is in progress on a calendar date. An event
+     * spanning multiple dates matches every date in its inclusive range.
+     *
+     * @param date the date to check
+     * @return {@code true} when the event occurs on the date
+     */
+    public boolean occursOn(LocalDate date) {
+        LocalDate startDate = from.toLocalDate();
+        LocalDate endDate = to.toLocalDate();
+        return !date.isBefore(startDate) && !date.isAfter(endDate);
+    }
+
+    /**
      * Ensures the event's end does not occur before its start.
      *
      * @throws IllegalArgumentException if the event range travels backwards

@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -14,7 +15,7 @@ public class NotMarth {
     private static final String ENGAGE_MESSAGE = "     Together, we can accomplish this. Engage!";
     private static final String UNMARK_TASK_MESSAGE = "     This order is back on the map:";
     private static final String DELETE_TASK_MESSAGE = "     This order has been withdrawn:";
-    private static final String AVAILABLE_COMMANDS_MESSAGE = "Available commands: todo, deadline, event, list, mark, unmark, delete, bye";
+    private static final String AVAILABLE_COMMANDS_MESSAGE = "Available commands: todo, deadline, event, list, on, mark, unmark, delete, bye";
     private static final String ERROR_MESSAGE_TEXT_PREFIX = "I couldn't process that, Divine One: ";
     private static final String ERROR_MESSAGE_PREFIX = "     " + ERROR_MESSAGE_TEXT_PREFIX;
     private static final String SOMMIE_MESSAGE = "     Sommie appears with a cheerful wag. Your battle plan has a loyal companion!";
@@ -63,6 +64,8 @@ public class NotMarth {
                     printSommieMessage();
                 } else if (command.equals("list")) {
                     printTasks(tasks);
+                } else if (isCommand(command, "on")) {
+                    printTasksOnDate(command, tasks);
                 } else if (isCommand(command, "mark")) {
                     markTask(command, tasks);
                 } else if (isCommand(command, "unmark")) {
@@ -81,9 +84,9 @@ public class NotMarth {
                         System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
                     }
                 } else if (command.isEmpty()) {
-                    throw new NotMarthException("Please enter a command. Try todo, deadline, event, list, mark, unmark, or delete.");
+                    throw new NotMarthException("Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.");
                 } else {
-                    throw new NotMarthException("I don't recognize that command. Try todo, deadline, event, list, mark, unmark, or delete.");
+                    throw new NotMarthException("I don't recognize that command. Try todo, deadline, event, list, on, mark, unmark, or delete.");
                 }
             } catch (NotMarthException exception) {
                 printError(exception.getMessage());
@@ -217,6 +220,49 @@ public class NotMarth {
         System.out.println(LIST_TASKS_MESSAGE);
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println("     " + (i + 1) + "." + tasks.get(i));
+        }
+    }
+
+    /**
+     * Prints deadlines and events occurring on the date from an {@code on}
+     * command. Original task numbers are retained so the results can still be
+     * used with commands such as {@code mark} and {@code delete}.
+     *
+     * @param command the command containing the requested date
+     * @param tasks the collection containing the stored tasks
+     * @throws NotMarthException if the command has no valid date
+     */
+    private static void printTasksOnDate(String command, ArrayList<Task> tasks) throws NotMarthException {
+        String dateText = command.substring("on".length()).trim();
+        if (dateText.isEmpty()) {
+            throw new NotMarthException("The on command needs a date. Try: on <date>");
+        }
+
+        LocalDate date;
+        try {
+            date = DateTimeParser.parseDate(dateText);
+        } catch (DateTimeParseException exception) {
+            throw new NotMarthException(
+                    "That date is not valid. Try yyyy-mm-dd or dd/MM/yyyy, for example: 2019-10-15 or 15/10/2019",
+                    exception);
+        }
+
+        String displayDate = DateTimeParser.format(date.atStartOfDay(), false);
+        boolean foundMatch = false;
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            boolean matches = task instanceof Deadline deadline && deadline.isDueOn(date)
+                    || task instanceof Event event && event.occursOn(date);
+            if (matches) {
+                if (!foundMatch) {
+                    System.out.println("     Here are the deadlines and events for " + displayDate + ":");
+                    foundMatch = true;
+                }
+                System.out.println("     " + (i + 1) + "." + task);
+            }
+        }
+        if (!foundMatch) {
+            System.out.println("     No deadlines or events are scheduled for " + displayDate + ".");
         }
     }
 

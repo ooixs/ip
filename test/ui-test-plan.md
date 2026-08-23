@@ -228,7 +228,7 @@ list
 
 ```text
 Order received. I've added it to the battle plan:
-I couldn't process that, Divine One: I don't recognize that command. Try todo, deadline, event, list, mark, unmark, or delete.
+I couldn't process that, Divine One: I don't recognize that command. Try todo, deadline, event, list, on, mark, unmark, or delete.
 Order received. I've added it to the battle plan:
 1.[T][ ] first task
 2.[D][ ] second task (by: Oct 16 2019)
@@ -293,7 +293,7 @@ list
 
 ```text
 Order received. I've added it to the battle plan:
-I couldn't process that, Divine One: Please enter a command. Try todo, deadline, event, list, mark, unmark, or delete.
+I couldn't process that, Divine One: Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.
 Order received. I've added it to the battle plan:
 1.[T][ ] first task
 2.[T][ ] second task
@@ -742,4 +742,78 @@ list
 ```text
 I couldn't process that, Divine One: An event cannot end before it starts. Check the /from and /to values.
 Here are your current mission orders:
+```
+
+## Test case 24: Find deadlines and events on a date
+
+### Aim
+
+Verify that `on <date>` lists deadlines due on the date and events spanning the date, while excluding ToDos and tasks from other dates.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+todo read book
+deadline return book /by 2019-10-15
+event project meeting /from 2019-10-14 1400 /to 2019-10-16 1600
+deadline submit report /by 2019-10-20
+on 2019-10-15
+```
+
+### Expected output
+
+```text
+Here are the deadlines and events for Oct 15 2019:
+2.[D][ ] return book (by: Oct 15 2019)
+3.[E][ ] project meeting (from: Oct 14 2019 2:00 PM to: Oct 16 2019 4:00 PM)
+```
+
+## Test case 25: Show when no deadlines or events match
+
+### Aim
+
+Verify that a valid date with no matching deadline or event produces a clear message. This also checks the `dd/MM/yyyy` date input form.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+on 15/10/2020
+```
+
+### Expected output
+
+```text
+No deadlines or events are scheduled for Oct 15 2020.
+```
+
+## Test case 26: Reject invalid date queries
+
+### Aim
+
+Verify that an impossible query date and a missing query date are rejected without changing the task list.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+on 2019-02-30
+on
+```
+
+### Expected output
+
+```text
+I couldn't process that, Divine One: That date is not valid. Try yyyy-mm-dd or dd/MM/yyyy, for example: 2019-10-15 or 15/10/2019
+I couldn't process that, Divine One: The on command needs a date. Try: on <date>
 ```

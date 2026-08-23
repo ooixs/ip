@@ -67,6 +67,16 @@ public class Deadline extends Task {
     }
 
     /**
+     * Checks whether this deadline falls on a calendar date.
+     *
+     * @param date the date to check
+     * @return {@code true} when the deadline is due on the date
+     */
+    public boolean isDueOn(LocalDate date) {
+        return by.toLocalDate().equals(date);
+    }
+
+    /**
      * Returns this task with its formatted deadline and type marker.
      *
      * @return the formatted deadline task

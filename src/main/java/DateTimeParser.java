@@ -55,6 +55,21 @@ final class DateTimeParser {
     }
 
     /**
+     * Parses a date without accepting a time component.
+     *
+     * @param input the date entered by the user
+     * @return the parsed calendar date
+     * @throws DateTimeParseException if the value is not a supported date-only format
+     */
+    static LocalDate parseDate(String input) {
+        ParsedDateTime parsedDateTime = parse(input);
+        if (parsedDateTime.includesTime()) {
+            throw new DateTimeParseException("A date-only value is required", input, 0);
+        }
+        return parsedDateTime.value().toLocalDate();
+    }
+
+    /**
      * Formats a parsed value for the console.
      *
      * @param value the date and time to format
