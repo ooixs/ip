@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -22,7 +21,7 @@ public class NotMarth {
 
     public static void main(String[] args) {
         TaskStorage.LoadResult loadResult = TaskStorage.load(MAX_TASKS);
-        ArrayList<Task> tasks = loadResult.getTasks();
+        TaskList tasks = new TaskList(loadResult.getTasks(), MAX_TASKS);
         String separator = "_".repeat(60);
         String banner = " _   _  ___ _____ __  __    _    ____ _____ _   _\n"
                 + "| \\ | |/ _ \\_   _|  \\/  |  / \\  |  _ \\_   _| | | |\n"
@@ -74,15 +73,11 @@ public class NotMarth {
                     deleteTask(command, tasks);
                 } else if (isTaskCommand(command)) {
                     Task task = createTask(command);
-                    if (tasks.size() == MAX_TASKS) {
-                        throw new NotMarthException("Your task list is full. Remove a task before adding another one.");
-                    } else {
-                        tasks.add(task);
-                        saveTasks(tasks);
-                        System.out.println(ADD_TASK_MESSAGE);
-                        System.out.println("       " + task);
-                        System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
-                    }
+                    tasks.add(task);
+                    saveTasks(tasks);
+                    System.out.println(ADD_TASK_MESSAGE);
+                    System.out.println("       " + task);
+                    System.out.println("     Now you have " + tasks.size() + " tasks in the list.");
                 } else if (command.isEmpty()) {
                     throw new NotMarthException("Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.");
                 } else {
@@ -216,7 +211,7 @@ public class NotMarth {
      *
      * @param tasks the collection containing the stored tasks
      */
-    private static void printTasks(ArrayList<Task> tasks) {
+    private static void printTasks(TaskList tasks) {
         System.out.println(LIST_TASKS_MESSAGE);
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println("     " + (i + 1) + "." + tasks.get(i));
@@ -232,7 +227,7 @@ public class NotMarth {
      * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the command has no valid date
      */
-    private static void printTasksOnDate(String command, ArrayList<Task> tasks) throws NotMarthException {
+    private static void printTasksOnDate(String command, TaskList tasks) throws NotMarthException {
         String dateText = command.substring("on".length()).trim();
         if (dateText.isEmpty()) {
             throw new NotMarthException("The on command needs a date. Try: on <date>");
@@ -273,15 +268,14 @@ public class NotMarth {
      * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static void markTask(String command, ArrayList<Task> tasks) throws NotMarthException {
+    private static void markTask(String command, TaskList tasks) throws NotMarthException {
         int taskNumber = parseTaskNumber(command, "mark");
-        validateTaskNumber(taskNumber, tasks, "marking");
 
-        tasks.get(taskNumber - 1).markAsDone();
+        Task task = tasks.mark(taskNumber);
         saveTasks(tasks);
         System.out.println(MARK_TASK_MESSAGE);
         System.out.println(ENGAGE_MESSAGE);
-        System.out.println("       " + tasks.get(taskNumber - 1));
+        System.out.println("       " + task);
     }
 
     /**
@@ -309,16 +303,6 @@ public class NotMarth {
      * @param taskNumber the requested one-based task number
      * @throws NotMarthException if there are no tasks or the number is out of range
      */
-    private static void validateTaskNumber(int taskNumber, ArrayList<Task> tasks, String action)
-            throws NotMarthException {
-        if (tasks.isEmpty()) {
-            throw new NotMarthException("There are no tasks yet. Add a task before " + action + " it.");
-        }
-        if (taskNumber < 1 || taskNumber > tasks.size()) {
-            throw new NotMarthException("That task number is not in your list. Use a number from 1 to " + tasks.size() + ".");
-        }
-    }
-
     /**
      * Marks the task identified by an {@code unmark n} command as not completed.
      *
@@ -326,14 +310,13 @@ public class NotMarth {
      * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static void unmarkTask(String command, ArrayList<Task> tasks) throws NotMarthException {
+    private static void unmarkTask(String command, TaskList tasks) throws NotMarthException {
         int taskNumber = parseTaskNumber(command, "unmark");
-        validateTaskNumber(taskNumber, tasks, "unmarking");
 
-        tasks.get(taskNumber - 1).markAsUndone();
+        Task task = tasks.unmark(taskNumber);
         saveTasks(tasks);
         System.out.println(UNMARK_TASK_MESSAGE);
-        System.out.println("       " + tasks.get(taskNumber - 1));
+        System.out.println("       " + task);
     }
 
     /**
@@ -344,11 +327,10 @@ public class NotMarth {
      * @param tasks the collection containing the stored tasks
      * @throws NotMarthException if the task number is invalid or out of range
      */
-    private static void deleteTask(String command, ArrayList<Task> tasks) throws NotMarthException {
+    private static void deleteTask(String command, TaskList tasks) throws NotMarthException {
         int taskNumber = parseTaskNumber(command, "delete");
-        validateTaskNumber(taskNumber, tasks, "deleting");
 
-        Task deletedTask = tasks.remove(taskNumber - 1);
+        Task deletedTask = tasks.delete(taskNumber);
         saveTasks(tasks);
 
         System.out.println(DELETE_TASK_MESSAGE);
@@ -362,9 +344,9 @@ public class NotMarth {
      *
      * @param tasks the changed task list
      */
-    private static void saveTasks(ArrayList<Task> tasks) {
+    private static void saveTasks(TaskList tasks) {
         try {
-            TaskStorage.save(tasks);
+            TaskStorage.save(tasks.asList());
         } catch (IOException exception) {
             printError("I couldn't save the battle plan to disk. Your current session is still active.");
         }

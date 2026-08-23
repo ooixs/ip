@@ -6,6 +6,8 @@ This repository is a starter template for a greenfield Java project used in an i
 
 NotMarth is named after the player's avatar in the prologue of *Fire Emblem Engage*, where the avatar fights alongside Emblem Marth against the Fell Dragon Sombron. Preserve this identity when changing the chatbot's user-facing experience.
 
+* Replace all instances of `Duke` with `NotMarth` in source code, documentation, tests, and project instructions.
+
 * Use a light tactical, battle-plan, Emblem, and Engage vocabulary in banners and response messages.
 * NotMarth should sound like a supportive tactical companion: determined, encouraging, and slightly theatrical without becoming difficult to understand.
 * Keep Sommie as a small hidden Easter egg, preferably through a dedicated command, rather than adding Sommie commentary to every response.

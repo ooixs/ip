@@ -1,0 +1,133 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Stores the tasks in their display order and provides task-list operations.
+ */
+public final class TaskList implements Iterable<Task> {
+    private final int maximumTasks;
+    private final ArrayList<Task> tasks;
+
+    /**
+     * Creates a task list from tasks loaded at startup.
+     *
+     * @param loadedTasks the tasks recovered from storage
+     * @param maximumTasks the largest number of tasks this list can contain
+     */
+    public TaskList(List<Task> loadedTasks, int maximumTasks) {
+        if (maximumTasks < 1) {
+            throw new IllegalArgumentException("The maximum number of tasks must be positive.");
+        }
+        if (loadedTasks.size() > maximumTasks) {
+            throw new IllegalArgumentException("The loaded task list is too large.");
+        }
+        this.maximumTasks = maximumTasks;
+        this.tasks = new ArrayList<>(loadedTasks);
+    }
+
+    /**
+     * Adds a task if the list still has room.
+     *
+     * @param task the task to add
+     * @throws NotMarthException if the task list is full
+     */
+    public void add(Task task) throws NotMarthException {
+        if (tasks.size() == maximumTasks) {
+            throw new NotMarthException(
+                    "Your task list is full. Remove a task before adding another one.");
+        }
+        tasks.add(task);
+    }
+
+    /**
+     * Marks a task as complete.
+     *
+     * @param taskNumber the one-based task number
+     * @return the task that was marked
+     * @throws NotMarthException if the task number is invalid
+     */
+    public Task mark(int taskNumber) throws NotMarthException {
+        Task task = requireTask(taskNumber, "marking");
+        task.markAsDone();
+        return task;
+    }
+
+    /**
+     * Marks a task as incomplete.
+     *
+     * @param taskNumber the one-based task number
+     * @return the task that was unmarked
+     * @throws NotMarthException if the task number is invalid
+     */
+    public Task unmark(int taskNumber) throws NotMarthException {
+        Task task = requireTask(taskNumber, "unmarking");
+        task.markAsUndone();
+        return task;
+    }
+
+    /**
+     * Removes a task and closes the numbering gap left behind.
+     *
+     * @param taskNumber the one-based task number
+     * @return the removed task
+     * @throws NotMarthException if the task number is invalid
+     */
+    public Task delete(int taskNumber) throws NotMarthException {
+        requireTask(taskNumber, "deleting");
+        return tasks.remove(taskNumber - 1);
+    }
+
+    /**
+     * Returns a task by its zero-based position for display and date filtering.
+     *
+     * @param index the zero-based position
+     * @return the task at that position
+     */
+    public Task get(int index) {
+        return tasks.get(index);
+    }
+
+    /**
+     * Returns the number of stored tasks.
+     *
+     * @return the current task count
+     */
+    public int size() {
+        return tasks.size();
+    }
+
+    /**
+     * Returns whether this list has no tasks.
+     *
+     * @return {@code true} when no tasks are stored
+     */
+    public boolean isEmpty() {
+        return tasks.isEmpty();
+    }
+
+    /**
+     * Exposes a read-only view for persistence without exposing list mutation.
+     *
+     * @return the tasks in their current order
+     */
+    public List<Task> asList() {
+        return Collections.unmodifiableList(tasks);
+    }
+
+    private Task requireTask(int taskNumber, String action) throws NotMarthException {
+        if (tasks.isEmpty()) {
+            throw new NotMarthException("There are no tasks yet. Add a task before " + action + " it.");
+        }
+        if (taskNumber < 1 || taskNumber > tasks.size()) {
+            throw new NotMarthException(
+                    "That task number is not in your list. Use a number from 1 to " + tasks.size() + ".");
+        }
+        return tasks.get(taskNumber - 1);
+    }
+
+    @Override
+    public java.util.Iterator<Task> iterator() {
+        return asList().iterator();
+    }
+}
