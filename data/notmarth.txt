@@ -10,3 +10,4 @@ deadline|open|yyy|2028-02-29
 event|open|xxx|2029-02-28|2029-02-28
 event|open|xxx|2029-02-28T14:00|2029-02-28T16:00
 event|open|xxx|2029-02-28T14:00|2029-02-28T14:00
+event|open|xxx|2029-06-30|2029-07-01

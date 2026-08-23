@@ -692,7 +692,7 @@ list
 ### Expected output
 
 ```text
-I couldn't process that, Divine One: That deadline date or time is not valid. Try yyyy-mm-dd or d/M/yyyy HHmm, for example: 2019-10-15 or 2/12/2019 1800
+I couldn't process that, Divine One: That deadline date or time is not valid. Try yyyy-mm-dd or dd/MM/yyyy HHmm, for example: 2019-10-15 or 02/12/2019 1800
 Here are your current mission orders:
 ```
 
@@ -716,7 +716,7 @@ list
 ### Expected output
 
 ```text
-I couldn't process that, Divine One: That event date or time is not valid. Try yyyy-mm-dd or d/M/yyyy HHmm, for example: 2019-10-15 or 2/12/2019 1800
+I couldn't process that, Divine One: That event date or time is not valid. Try yyyy-mm-dd or dd/MM/yyyy HHmm, for example: 2019-10-15 or 02/12/2019 1800
 Here are your current mission orders:
 ```
 

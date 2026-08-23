@@ -33,12 +33,14 @@ public class NotMarth {
         System.out.print(banner);
         System.out.println("Hello! I'm NotMarth, your not-quite-Emblem tactical assistant.");
         System.out.println("The Fell Dragon may be gone, but every battle still needs a plan.");
+        System.out.println();
         if (loadResult.hasWarning()) {
             printStartupWarning(loadResult.getWarning());
             return;
         }
         System.out.println("What tactical command can I assist with?");
         System.out.println(AVAILABLE_COMMANDS_MESSAGE);
+        System.out.println("Please enter dates in the format yyyy-mm-dd or dd/MM/yyyy HHmm");
         System.out.println(separator);
 
         Scanner scanner = new Scanner(System.in);
@@ -119,7 +121,7 @@ public class NotMarth {
                         return new Deadline(description, by);
                     } catch (DateTimeParseException exception) {
                         throw new NotMarthException(
-                                "That deadline date or time is not valid. Try yyyy-mm-dd or d/M/yyyy HHmm, for example: 2019-10-15 or 2/12/2019 1800",
+                                "That deadline date or time is not valid. Try yyyy-mm-dd or dd/MM/yyyy HHmm, for example: 2019-10-15 or 02/12/2019 1800",
                                 exception);
                     }
                 }
@@ -140,7 +142,7 @@ public class NotMarth {
                         return new Event(description, from, to);
                     } catch (DateTimeParseException exception) {
                         throw new NotMarthException(
-                                "That event date or time is not valid. Try yyyy-mm-dd or d/M/yyyy HHmm, for example: 2019-10-15 or 2/12/2019 1800",
+                                "That event date or time is not valid. Try yyyy-mm-dd or dd/MM/yyyy HHmm, for example: 2019-10-15 or 02/12/2019 1800",
                                 exception);
                     } catch (IllegalArgumentException exception) {
                         throw new NotMarthException(
