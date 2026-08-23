@@ -1,0 +1,12 @@
+# NotMarth battle plan v1
+todo|open|read book
+deadline|open|return book|2019-06-06
+todo|open|join sports club
+todo|open|borrow book
+event|open|project meeting|2019-06-06|2019-06-07
+deadline|open|xxx|2026-09-02
+deadline|open|yyy|2026-09-02T18:00
+deadline|open|yyy|2028-02-29
+event|open|xxx|2029-02-28|2029-02-28
+event|open|xxx|2029-02-28T14:00|2029-02-28T16:00
+event|open|xxx|2029-02-28T14:00|2029-02-28T14:00

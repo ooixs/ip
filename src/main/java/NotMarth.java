@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -91,8 +92,8 @@ public class NotMarth {
     }
 
     /**
-     * Creates a task from a user command. Dates and times remain strings so
-     * that the chatbot can display whatever format the user entered.
+     * Creates a task from a user command. Deadline values are parsed into
+     * typed {@code java.time} values before the task is created.
      *
      * @param command the command entered by the user
      * @return the parsed task
@@ -114,7 +115,13 @@ public class NotMarth {
                 String description = details.substring(0, byMarker).trim();
                 String by = details.substring(byMarker + "/by".length()).trim();
                 if (!description.isEmpty() && !by.isEmpty()) {
-                    return new Deadline(description, by);
+                    try {
+                        return new Deadline(description, by);
+                    } catch (DateTimeParseException exception) {
+                        throw new NotMarthException(
+                                "That deadline date or time is not valid. Try yyyy-mm-dd or d/M/yyyy HHmm, for example: 2019-10-15 or 2/12/2019 1800",
+                                exception);
+                    }
                 }
             }
             throw new NotMarthException("A deadline needs a description and a due time. Try: deadline <description> /by <date or time>");
@@ -129,7 +136,17 @@ public class NotMarth {
                 String from = details.substring(fromMarker + "/from".length(), toMarker).trim();
                 String to = details.substring(toMarker + "/to".length()).trim();
                 if (!description.isEmpty() && !from.isEmpty() && !to.isEmpty()) {
-                    return new Event(description, from, to);
+                    try {
+                        return new Event(description, from, to);
+                    } catch (DateTimeParseException exception) {
+                        throw new NotMarthException(
+                                "That event date or time is not valid. Try yyyy-mm-dd or d/M/yyyy HHmm, for example: 2019-10-15 or 2/12/2019 1800",
+                                exception);
+                    } catch (IllegalArgumentException exception) {
+                        throw new NotMarthException(
+                                "An event cannot end before it starts. Check the /from and /to values.",
+                                exception);
+                    }
                 }
             }
             throw new NotMarthException("An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>");

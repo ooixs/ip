@@ -1,39 +1,113 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+
 /**
  * Represents a task that takes place between a start and an end date or time.
  */
 public class Event extends Task {
-    private final String from;
-    private final String to;
+    private final LocalDateTime from;
+    private final LocalDateTime to;
+    private final boolean fromIncludesTime;
+    private final boolean toIncludesTime;
 
     /**
-     * Creates an unfinished event task.
+     * Creates an unfinished event task from supported date or time text.
      *
      * @param description the task description
      * @param from the date or time when the event starts
      * @param to the date or time when the event ends
+     * @throws DateTimeParseException if either endpoint is not supported
+     * @throws IllegalArgumentException if the event ends before it starts
      */
     public Event(String description, String from, String to) {
         super(description, TaskType.EVENT);
-        this.from = from;
-        this.to = to;
+        DateTimeParser.ParsedDateTime parsedFrom = DateTimeParser.parse(from);
+        DateTimeParser.ParsedDateTime parsedTo = DateTimeParser.parse(to);
+        this.from = parsedFrom.value();
+        this.to = parsedTo.value();
+        this.fromIncludesTime = parsedFrom.includesTime();
+        this.toIncludesTime = parsedTo.includesTime();
+        validateRange();
     }
 
     /**
-     * Returns the event start text for persistence.
+     * Creates an event from already parsed date and time values.
      *
-     * @return the event start date or time
+     * @param description the event description
+     * @param from the event start date and time
+     * @param to the event end date and time
      */
-    public String getFrom() {
+    public Event(String description, LocalDateTime from, LocalDateTime to) {
+        super(description, TaskType.EVENT);
+        this.from = from;
+        this.to = to;
+        this.fromIncludesTime = true;
+        this.toIncludesTime = true;
+        validateRange();
+    }
+
+    /**
+     * Creates a date-only event from already parsed dates.
+     *
+     * @param description the event description
+     * @param from the event start date
+     * @param to the event end date
+     */
+    public Event(String description, LocalDate from, LocalDate to) {
+        super(description, TaskType.EVENT);
+        this.from = from.atStartOfDay();
+        this.to = to.atStartOfDay();
+        this.fromIncludesTime = false;
+        this.toIncludesTime = false;
+        validateRange();
+    }
+
+    /**
+     * Returns the typed event start value.
+     *
+     * @return the event start date and time, at midnight for a date-only value
+     */
+    public LocalDateTime getFrom() {
         return from;
     }
 
     /**
-     * Returns the event end text for persistence.
+     * Returns the typed event end value.
      *
-     * @return the event end date or time
+     * @return the event end date and time, at midnight for a date-only value
      */
-    public String getTo() {
+    public LocalDateTime getTo() {
         return to;
+    }
+
+    /**
+     * Returns the event start value in the task archive format.
+     *
+     * @return an ISO date or ISO local date-time
+     */
+    public String getFromForStorage() {
+        return DateTimeParser.formatForStorage(from, fromIncludesTime);
+    }
+
+    /**
+     * Returns the event end value in the task archive format.
+     *
+     * @return an ISO date or ISO local date-time
+     */
+    public String getToForStorage() {
+        return DateTimeParser.formatForStorage(to, toIncludesTime);
+    }
+
+    /**
+     * Ensures the event's end does not occur before its start.
+     *
+     * @throws IllegalArgumentException if the event range travels backwards
+     */
+    private void validateRange() {
+        if (from.isAfter(to)) {
+            throw new IllegalArgumentException("An event cannot end before it starts.");
+        }
     }
 
     /**
@@ -43,6 +117,7 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return super.toString() + " (from: " + from + " to: " + to + ")";
+        return super.toString() + " (from: " + DateTimeParser.format(from, fromIncludesTime)
+                + " to: " + DateTimeParser.format(to, toIncludesTime) + ")";
     }
 }

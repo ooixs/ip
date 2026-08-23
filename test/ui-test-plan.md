@@ -39,7 +39,7 @@ Now you have 1 tasks in the list.
 
 ### Aim
 
-Verify that a deadline keeps its date/time text and displays the deadline marker and `(by: ...)` field.
+Verify that a deadline parses a day/month date and compact time into a typed date-time, then displays it in a readable format.
 
 ### Comparison
 
@@ -48,14 +48,14 @@ Verify that a deadline keeps its date/time text and displays the deadline marker
 ### Input
 
 ```text
-deadline return book /by Sunday
+deadline return book /by 2/12/2019 1800
 ```
 
 ### Expected output
 
 ```text
 Order received. I've added it to the battle plan:
-[D][ ] return book (by: Sunday)
+[D][ ] return book (by: Dec 02 2019 6:00 PM)
 Now you have 1 tasks in the list.
 ```
 
@@ -63,7 +63,7 @@ Now you have 1 tasks in the list.
 
 ### Aim
 
-Verify that an event keeps its start and end text and displays the event marker and range.
+Verify that an event parses typed start and end date-time values and displays the event marker and formatted range.
 
 ### Comparison
 
@@ -72,14 +72,14 @@ Verify that an event keeps its start and end text and displays the event marker 
 ### Input
 
 ```text
-event project meeting /from Mon 2pm /to 4pm
+event project meeting /from 2019-10-15 1400 /to 2019-10-15 1600
 ```
 
 ### Expected output
 
 ```text
 Order received. I've added it to the battle plan:
-[E][ ] project meeting (from: Mon 2pm to: 4pm)
+[E][ ] project meeting (from: Oct 15 2019 2:00 PM to: Oct 15 2019 4:00 PM)
 Now you have 1 tasks in the list.
 ```
 
@@ -97,8 +97,8 @@ Verify that ToDos, Deadlines, and Events can be stored together and listed throu
 
 ```text
 todo borrow book
-deadline return book /by Sunday
-event project meeting /from Mon 2pm /to 4pm
+deadline return book /by 2019-10-15
+event project meeting /from 2019-10-15 1400 /to 2019-10-15 1600
 list
 ```
 
@@ -106,8 +106,8 @@ list
 
 ```text
 1.[T][ ] borrow book
-2.[D][ ] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+2.[D][ ] return book (by: Oct 15 2019)
+3.[E][ ] project meeting (from: Oct 15 2019 2:00 PM to: Oct 15 2019 4:00 PM)
 ```
 
 ## Test case 5: Reject an empty ToDo without changing state
@@ -152,11 +152,11 @@ Verify that a Deadline without its description, `/by` marker, or due-time value 
 ### Input
 
 ```text
-deadline submit report /by Friday
+deadline submit report /by 2019-10-10
 deadline missing due date
-deadline /by Sunday
+deadline /by 2019-10-12
 deadline missing due value /by
-deadline prepare presentation /by Monday
+deadline prepare presentation /by 2019-10-15
 list
 ```
 
@@ -168,8 +168,8 @@ I couldn't process that, Divine One: A deadline needs a description and a due ti
 I couldn't process that, Divine One: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
 I couldn't process that, Divine One: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
 Order received. I've added it to the battle plan:
-1.[D][ ] submit report (by: Friday)
-2.[D][ ] prepare presentation (by: Monday)
+1.[D][ ] submit report (by: Oct 10 2019)
+2.[D][ ] prepare presentation (by: Oct 15 2019)
 ```
 
 ## Test case 7: Reject incomplete Events without affecting later tasks
@@ -185,7 +185,7 @@ Verify that Events missing a description, start time, or end time are rejected w
 ### Input
 
 ```text
-event team meeting /from 10am /to 11am
+event team meeting /from 2019-10-15 1000 /to 2019-10-15 1100
 event missing end time /from 2pm
 event /from 2pm /to 3pm
 event missing start time /from /to 3pm
@@ -201,7 +201,7 @@ I couldn't process that, Divine One: An event needs a description, start time, a
 I couldn't process that, Divine One: An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>
 I couldn't process that, Divine One: An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>
 Order received. I've added it to the battle plan:
-1.[E][ ] team meeting (from: 10am to: 11am)
+1.[E][ ] team meeting (from: Oct 15 2019 10:00 AM to: Oct 15 2019 11:00 AM)
 2.[T][ ] pack presentation materials
 ```
 
@@ -220,7 +220,7 @@ Verify that an unknown command is rejected rather than stored as a generic task,
 ```text
 todo first task
 blah
-deadline second task /by tomorrow
+deadline second task /by 2019-10-16
 list
 ```
 
@@ -231,7 +231,7 @@ Order received. I've added it to the battle plan:
 I couldn't process that, Divine One: I don't recognize that command. Try todo, deadline, event, list, mark, unmark, or delete.
 Order received. I've added it to the battle plan:
 1.[T][ ] first task
-2.[D][ ] second task (by: tomorrow)
+2.[D][ ] second task (by: Oct 16 2019)
 ```
 
 ## Test case 9: Preserve completion state after invalid mark commands
@@ -470,8 +470,8 @@ Verify that deleting a task removes it from the list and shifts later tasks so t
 
 ```text
 todo read book
-deadline return book /by June 6th
-event project meeting /from Aug 6th 2pm /to 4pm
+deadline return book /by 2019-06-06
+event project meeting /from 2019-08-06 1400 /to 2019-08-06 1600
 todo join sports club
 todo borrow book
 delete 3
@@ -482,10 +482,10 @@ list
 
 ```text
 This order has been withdrawn:
-[E][ ] project meeting (from: Aug 6th 2pm to: 4pm)
+[E][ ] project meeting (from: Aug 06 2019 2:00 PM to: Aug 06 2019 4:00 PM)
 Now you have 4 tasks in the list.
 1.[T][ ] read book
-2.[D][ ] return book (by: June 6th)
+2.[D][ ] return book (by: Jun 06 2019)
 3.[T][ ] join sports club
 4.[T][ ] borrow book
 ```
@@ -598,7 +598,8 @@ Verify that NotMarth loads task types, descriptions, date/time fields, and compl
 ```text
 # NotMarth battle plan v1
 todo|done|review \| plan
-deadline|open|return book|June 6th
+deadline|open|return book|2019-06-06
+event|done|planning|2019-10-15T14:00|2019-10-15T16:00
 ```
 
 ### Comparison
@@ -616,7 +617,8 @@ list
 ```text
 Here are your current mission orders:
 1.[T][X] review | plan
-2.[D][ ] return book (by: June 6th)
+2.[D][ ] return book (by: Jun 06 2019)
+3.[E][X] planning (from: Oct 15 2019 2:00 PM to: Oct 15 2019 4:00 PM)
 ```
 
 ## Test case 19: Stop when the archive is corrupted
@@ -668,4 +670,76 @@ todo first launch task
 Order received. I've added it to the battle plan:
 [T][ ] first launch task
 Now you have 1 tasks in the list.
+```
+
+## Test case 21: Reject impossible deadline dates
+
+### Aim
+
+Verify that impossible calendar dates are rejected instead of being stored as text or normalized silently. Before running this case, remove `data/` relative to the project root.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+deadline submit report /by 2019-02-30
+list
+```
+
+### Expected output
+
+```text
+I couldn't process that, Divine One: That deadline date or time is not valid. Try yyyy-mm-dd or d/M/yyyy HHmm, for example: 2019-10-15 or 2/12/2019 1800
+Here are your current mission orders:
+```
+
+## Test case 22: Reject impossible event dates
+
+### Aim
+
+Verify that an event with an impossible start date is rejected instead of being stored as text or normalized silently. Before running this case, remove `data/` relative to the project root.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+event planning /from 2019-02-30 1400 /to 2019-02-30 1600
+list
+```
+
+### Expected output
+
+```text
+I couldn't process that, Divine One: That event date or time is not valid. Try yyyy-mm-dd or d/M/yyyy HHmm, for example: 2019-10-15 or 2/12/2019 1800
+Here are your current mission orders:
+```
+
+## Test case 23: Reject backwards event ranges
+
+### Aim
+
+Verify that an event ending before its start is rejected and does not enter the task list. Before running this case, remove `data/` relative to the project root.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+event backwards /from 2019-02-05 /to 2019-01-04
+list
+```
+
+### Expected output
+
+```text
+I couldn't process that, Divine One: An event cannot end before it starts. Check the /from and /to values.
+Here are your current mission orders:
 ```

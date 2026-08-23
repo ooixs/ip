@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -149,20 +150,24 @@ public final class TaskStorage {
         String type = fields.get(0);
         boolean isDone = parseCompletion(fields.get(1));
         Task task;
-        switch (type) {
-        case "todo":
-            requireFieldCount(fields, 3);
-            task = new ToDo(requireText(fields.get(2)));
-            break;
-        case "deadline":
-            requireFieldCount(fields, 4);
-            task = new Deadline(requireText(fields.get(2)), requireText(fields.get(3)));
-            break;
-        case "event":
-            requireFieldCount(fields, 5);
-            task = new Event(requireText(fields.get(2)), requireText(fields.get(3)), requireText(fields.get(4)));
-            break;
-        default:
+        try {
+            switch (type) {
+            case "todo":
+                requireFieldCount(fields, 3);
+                task = new ToDo(requireText(fields.get(2)));
+                break;
+            case "deadline":
+                requireFieldCount(fields, 4);
+                task = new Deadline(requireText(fields.get(2)), requireText(fields.get(3)));
+                break;
+            case "event":
+                requireFieldCount(fields, 5);
+                task = new Event(requireText(fields.get(2)), requireText(fields.get(3)), requireText(fields.get(4)));
+                break;
+            default:
+                throw new CorruptTaskDataException();
+            }
+        } catch (DateTimeException | IllegalArgumentException exception) {
             throw new CorruptTaskDataException();
         }
 
@@ -186,11 +191,12 @@ public final class TaskStorage {
             return String.join("|", "todo", status, escape(task.getDescription()));
         case DEADLINE:
             Deadline deadline = (Deadline) task;
-            return String.join("|", "deadline", status, escape(task.getDescription()), escape(deadline.getBy()));
+            return String.join("|", "deadline", status, escape(task.getDescription()),
+                    escape(deadline.getByForStorage()));
         case EVENT:
             Event event = (Event) task;
             return String.join("|", "event", status, escape(task.getDescription()),
-                    escape(event.getFrom()), escape(event.getTo()));
+                    escape(event.getFromForStorage()), escape(event.getToForStorage()));
         default:
             throw new IllegalStateException("Unsupported task type");
         }
