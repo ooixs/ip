@@ -564,9 +564,6 @@ bye
 ### Expected output
 
 ```text
-Hello! I'm NotMarth, your not-quite-Emblem tactical assistant.
-The Fell Dragon may be gone, but every battle still needs a plan.
-What tactical command can I assist with?
 Until we meet again. Stay strong, Divine One!
 ```
 
@@ -626,7 +623,7 @@ Here are your current mission orders:
 
 ### Aim
 
-Verify that malformed saved data shows a clear warning and stops NotMarth before it accepts commands or overwrites the file. Before running this case, create `data/notmarth.txt` relative to the project root with the following contents:
+Verify that malformed saved data shows a clear warning and stops NotMarth before it accepts commands or overwrites the file. There is no input; the programme should exit with the error message immediately after starting up. Before running this case, create `data/notmarth.txt` relative to the project root with the following contents:
 
 ```text
 # NotMarth battle plan v1
@@ -639,7 +636,8 @@ event|open|missing end time|only one field
 
 ### Input
 
-There is no input, the programme should exit with the error message immediately after starting up.
+```text
+```
 
 ### Expected output
 

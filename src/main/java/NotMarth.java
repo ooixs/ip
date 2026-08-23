@@ -13,6 +13,7 @@ public class NotMarth {
     private static final String ENGAGE_MESSAGE = "     Together, we can accomplish this. Engage!";
     private static final String UNMARK_TASK_MESSAGE = "     This order is back on the map:";
     private static final String DELETE_TASK_MESSAGE = "     This order has been withdrawn:";
+    private static final String AVAILABLE_COMMANDS_MESSAGE = "Available commands: todo, deadline, event, list, mark, unmark, delete, bye";
     private static final String ERROR_MESSAGE_TEXT_PREFIX = "I couldn't process that, Divine One: ";
     private static final String ERROR_MESSAGE_PREFIX = "     " + ERROR_MESSAGE_TEXT_PREFIX;
     private static final String SOMMIE_MESSAGE = "     Sommie appears with a cheerful wag. Your battle plan has a loyal companion!";
@@ -36,6 +37,7 @@ public class NotMarth {
             return;
         }
         System.out.println("What tactical command can I assist with?");
+        System.out.println(AVAILABLE_COMMANDS_MESSAGE);
         System.out.println(separator);
 
         Scanner scanner = new Scanner(System.in);
