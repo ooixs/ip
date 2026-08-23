@@ -6,6 +6,46 @@ import java.time.format.DateTimeParseException;
  */
 public final class Parser {
     /**
+     * Converts a complete user command into an executable command object.
+     *
+     * @param fullCommand the trimmed command entered by the user
+     * @return the command represented by the input
+     * @throws NotMarthException if the input is empty, unknown, or malformed
+     */
+    public Command parse(String fullCommand) throws NotMarthException {
+        if (fullCommand.equals("bye")) {
+            return new ExitCommand();
+        }
+        if (fullCommand.equals("sommie")) {
+            return new SommieCommand();
+        }
+        if (fullCommand.equals("list")) {
+            return new ListCommand();
+        }
+        if (isCommand(fullCommand, "on")) {
+            return new OnCommand(parseOnDate(fullCommand));
+        }
+        if (isCommand(fullCommand, "mark")) {
+            return new MarkCommand(parseTaskNumber(fullCommand, "mark"));
+        }
+        if (isCommand(fullCommand, "unmark")) {
+            return new UnmarkCommand(parseTaskNumber(fullCommand, "unmark"));
+        }
+        if (isCommand(fullCommand, "delete")) {
+            return new DeleteCommand(parseTaskNumber(fullCommand, "delete"));
+        }
+        if (isTaskCommand(fullCommand)) {
+            return new AddCommand(createTask(fullCommand));
+        }
+        if (fullCommand.isEmpty()) {
+            throw new NotMarthException(
+                    "Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.");
+        }
+        throw new NotMarthException(
+                "I don't recognize that command. Try todo, deadline, event, list, on, mark, unmark, or delete.");
+    }
+
+    /**
      * Checks whether a command is exactly a keyword or starts with that keyword
      * followed by at least one space.
      *
@@ -13,7 +53,7 @@ public final class Parser {
      * @param keyword the command keyword to look for
      * @return whether the command uses the keyword at its beginning
      */
-    public boolean isCommand(String command, String keyword) {
+    private boolean isCommand(String command, String keyword) {
         return command.equals(keyword) || command.startsWith(keyword + " ");
     }
 
@@ -23,7 +63,7 @@ public final class Parser {
      * @param command the complete command entered by the user
      * @return whether the command starts with a supported task keyword
      */
-    public boolean isTaskCommand(String command) {
+    private boolean isTaskCommand(String command) {
         return isCommand(command, "todo")
                 || isCommand(command, "deadline")
                 || isCommand(command, "event");
@@ -37,7 +77,7 @@ public final class Parser {
      * @return the parsed task
      * @throws NotMarthException if the command is missing or has invalid information
      */
-    public Task createTask(String command) throws NotMarthException {
+    private Task createTask(String command) throws NotMarthException {
         if (isCommand(command, "todo")) {
             String description = command.substring("todo".length()).trim();
             if (description.isEmpty()) {
@@ -100,7 +140,7 @@ public final class Parser {
      * @return the requested calendar date
      * @throws NotMarthException if the command has no valid date
      */
-    public LocalDate parseOnDate(String command) throws NotMarthException {
+    private LocalDate parseOnDate(String command) throws NotMarthException {
         String dateText = command.substring("on".length()).trim();
         if (dateText.isEmpty()) {
             throw new NotMarthException("The on command needs a date. Try: on <date>");
@@ -123,7 +163,7 @@ public final class Parser {
      * @return the requested task number
      * @throws NotMarthException if the command does not contain an integer
      */
-    public int parseTaskNumber(String command, String commandName) throws NotMarthException {
+    private int parseTaskNumber(String command, String commandName) throws NotMarthException {
         try {
             return Integer.parseInt(command.substring(commandName.length()).trim());
         } catch (NumberFormatException exception) {

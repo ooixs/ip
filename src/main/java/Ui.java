@@ -88,9 +88,14 @@ public final class Ui {
         showSeparator();
     }
 
-    /** Displays the separator used between console sections. */
-    public void showSeparator() {
+    /** Displays the divider line used between console sections. */
+    public void showLine() {
         System.out.println(SEPARATOR);
+    }
+
+    /** Displays the divider using the original descriptive method name. */
+    public void showSeparator() {
+        showLine();
     }
 
     /**

@@ -1,0 +1,20 @@
+/** Executes a command that adds a parsed task to the battle plan. */
+public final class AddCommand extends Command {
+    private final Task task;
+
+    /**
+     * Creates an add command for a parsed task.
+     *
+     * @param task the task to add
+     */
+    public AddCommand(Task task) {
+        this.task = task;
+    }
+
+    @Override
+    public void execute(TaskList tasks, Ui ui, Storage storage) throws NotMarthException {
+        tasks.add(task);
+        saveTasks(tasks, ui, storage);
+        ui.showTaskAdded(task, tasks.size());
+    }
+}
