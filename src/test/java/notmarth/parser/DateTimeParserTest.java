@@ -1,0 +1,53 @@
+package notmarth.parser;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+
+import org.junit.jupiter.api.Test;
+
+/** Tests the supported date/time input formats and archive/display formats. */
+class DateTimeParserTest {
+    @Test
+    void parseSupportsCompactDateTimeAndDateOnlyValues() {
+        DateTimeParser.ParsedDateTime dateTime = DateTimeParser.parse("2/12/2019 1800");
+        DateTimeParser.ParsedDateTime date = DateTimeParser.parse("2019-10-15");
+
+        assertEquals(LocalDateTime.of(2019, 12, 2, 18, 0), dateTime.value());
+        assertTrue(dateTime.includesTime());
+        assertEquals(LocalDateTime.of(2019, 10, 15, 0, 0), date.value());
+        assertFalse(date.includesTime());
+    }
+
+    @Test
+    void parseSupportsIsoDateTimeAndClockWithColon() {
+        assertEquals(LocalDateTime.of(2019, 10, 15, 14, 5),
+                DateTimeParser.parse("2019-10-15 14:05").value());
+        assertEquals(LocalDateTime.of(2019, 10, 15, 14, 5),
+                DateTimeParser.parse("2019-10-15T14:05").value());
+    }
+
+    @Test
+    void parseDateRejectsDateTimeInputAndInvalidValues() {
+        assertThrows(DateTimeParseException.class,
+                () -> DateTimeParser.parseDate("2019-10-15 1400"));
+        assertThrows(DateTimeParseException.class,
+                () -> DateTimeParser.parse("31/2/2019"));
+    }
+
+    @Test
+    void formatPreservesWhetherTimeWasProvided() {
+        LocalDateTime value = LocalDateTime.of(2019, 10, 15, 14, 0);
+
+        assertEquals("Oct 15 2019", DateTimeParser.format(value, false));
+        assertEquals("Oct 15 2019 2:00 PM", DateTimeParser.format(value, true));
+        assertEquals("2019-10-15", DateTimeParser.formatForStorage(value, false));
+        assertEquals("2019-10-15T14:00", DateTimeParser.formatForStorage(value, true));
+        assertEquals(LocalDate.of(2019, 10, 15), DateTimeParser.parseDate("15/10/2019"));
+    }
+}

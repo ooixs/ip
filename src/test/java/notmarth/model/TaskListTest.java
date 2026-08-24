@@ -1,0 +1,94 @@
+package notmarth.model;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Iterator;
+import java.util.List;
+
+import notmarth.exception.NotMarthException;
+
+import org.junit.jupiter.api.Test;
+
+/** Tests task-list capacity, ordering, completion, and deletion behavior. */
+class TaskListTest {
+    @Test
+    void addMarkUnmarkAndDeleteMaintainTaskStateAndOrder() throws NotMarthException {
+        Task first = new ToDo("first");
+        Task second = new ToDo("second");
+        TaskList tasks = new TaskList(List.of(), 2);
+
+        tasks.add(first);
+        tasks.add(second);
+        assertEquals(2, tasks.size());
+        assertEquals(first, tasks.get(0));
+        assertEquals(second, tasks.get(1));
+
+        assertEquals(first, tasks.mark(1));
+        assertTrue(first.isDone());
+        assertEquals(first, tasks.unmark(1));
+        assertFalse(first.isDone());
+        assertEquals(first, tasks.delete(1));
+        assertEquals(1, tasks.size());
+        assertEquals(second, tasks.get(0));
+    }
+
+    @Test
+    void addRejectsTasksBeyondTheConfiguredCapacity() throws NotMarthException {
+        TaskList tasks = new TaskList(List.of(), 1);
+        tasks.add(new ToDo("only task"));
+
+        NotMarthException exception = assertThrows(NotMarthException.class,
+                () -> tasks.add(new ToDo("extra task")));
+
+        assertEquals("Your task list is full. Remove a task before adding another one.", exception.getMessage());
+        assertEquals(1, tasks.size());
+    }
+
+    @Test
+    void taskOperationsRejectEmptyAndOutOfRangeNumbers() {
+        TaskList empty = new TaskList(List.of(), 2);
+        assertThrows(NotMarthException.class, () -> empty.mark(1));
+        assertThrows(NotMarthException.class, () -> empty.unmark(1));
+        assertThrows(NotMarthException.class, () -> empty.delete(1));
+
+        TaskList tasks = new TaskList(List.of(new ToDo("task")), 2);
+        assertThrows(NotMarthException.class, () -> tasks.mark(0));
+        assertThrows(NotMarthException.class, () -> tasks.unmark(2));
+        assertThrows(NotMarthException.class, () -> tasks.delete(-1));
+    }
+
+    @Test
+    void constructorAndListViewProtectTaskListInvariants() throws NotMarthException {
+        assertThrows(IllegalArgumentException.class, () -> new TaskList(List.of(), 0));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TaskList(List.of(new ToDo("one")), 0));
+
+        TaskList tasks = new TaskList(List.of(new ToDo("one")), 2);
+        assertFalse(tasks.isEmpty());
+        assertThrows(UnsupportedOperationException.class,
+                () -> tasks.asList().add(new ToDo("not allowed")));
+        tasks.delete(1);
+        assertTrue(tasks.isEmpty());
+    }
+
+    @Test
+    void iterator_tasksAdded_returnsTasksInDisplayOrder() throws NotMarthException {
+        Task first = new ToDo("first");
+        Task second = new ToDo("second");
+        TaskList tasks = new TaskList(List.of(), 2);
+        tasks.add(first);
+        tasks.add(second);
+
+        Iterator<Task> iterator = tasks.iterator();
+
+        assertTrue(iterator.hasNext());
+        assertSame(first, iterator.next());
+        assertTrue(iterator.hasNext());
+        assertSame(second, iterator.next());
+        assertFalse(iterator.hasNext());
+    }
+}

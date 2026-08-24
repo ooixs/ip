@@ -1,0 +1,84 @@
+package notmarth.storage;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import notmarth.model.Deadline;
+import notmarth.model.Event;
+import notmarth.model.Task;
+import notmarth.model.ToDo;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+/** Tests persistence of every supported task type and recovery from bad files. */
+class StorageTest {
+    @TempDir
+    Path temporaryDirectory;
+
+    @Test
+    void saveAndLoadRoundTripPreservesTypesStateAndEscapedText() throws Exception {
+        Path archive = temporaryDirectory.resolve("nested").resolve("battle-plan.txt");
+        Storage storage = new Storage(archive.toString());
+        ToDo todo = new ToDo("borrow | book\\bag\nsoon");
+        Deadline deadline = new Deadline("return book", "2/12/2019 1800");
+        Event event = new Event("project meeting", LocalDateTime.of(2019, 10, 15, 14, 0),
+                LocalDateTime.of(2019, 10, 15, 16, 0));
+        deadline.markAsDone();
+
+        storage.save(List.of(todo, deadline, event));
+        Storage.LoadResult result = storage.load(3);
+
+        assertFalse(result.hasWarning());
+        assertNull(result.getWarning());
+        assertEquals(3, result.getTasks().size());
+        assertEquals(todo.getDescription(), result.getTasks().get(0).getDescription());
+        assertTrue(result.getTasks().get(1).isDone());
+        assertEquals(deadline.getBy(), ((Deadline) result.getTasks().get(1)).getBy());
+        assertEquals(event.getFrom(), ((Event) result.getTasks().get(2)).getFrom());
+        assertEquals(event.getTo(), ((Event) result.getTasks().get(2)).getTo());
+        assertTrue(Files.exists(archive));
+    }
+
+    @Test
+    void loadMissingArchiveReturnsAnEmptyPlanWithoutWarning() {
+        Storage.LoadResult result = new Storage(temporaryDirectory.resolve("missing.txt").toString()).load(10);
+
+        assertTrue(result.getTasks().isEmpty());
+        assertFalse(result.hasWarning());
+        assertNull(result.getWarning());
+    }
+
+    @Test
+    void loadReportsCorruptArchiveAndReturnsNoTasks() throws Exception {
+        Path archive = temporaryDirectory.resolve("corrupt.txt");
+        Files.writeString(archive, "not a NotMarth archive\n");
+
+        Storage.LoadResult result = new Storage(archive.toString()).load(10);
+
+        assertTrue(result.getTasks().isEmpty());
+        assertTrue(result.hasWarning());
+        assertEquals("The saved battle plan is corrupted. Repair or remove the file before starting NotMarth again.",
+                result.getWarning());
+    }
+
+    @Test
+    void loadRejectsArchivesThatExceedTheMaximumTaskCount() throws Exception {
+        Path archive = temporaryDirectory.resolve("too-many.txt");
+        Files.writeString(archive, "# NotMarth battle plan v1\n"
+                + "todo|open|one\n"
+                + "todo|open|two\n");
+
+        Storage.LoadResult result = new Storage(archive.toString()).load(1);
+
+        assertTrue(result.hasWarning());
+        assertTrue(result.getTasks().isEmpty());
+    }
+}
