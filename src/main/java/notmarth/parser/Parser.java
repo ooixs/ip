@@ -7,6 +7,7 @@ import notmarth.command.AddCommand;
 import notmarth.command.Command;
 import notmarth.command.DeleteCommand;
 import notmarth.command.ExitCommand;
+import notmarth.command.FindCommand;
 import notmarth.command.ListCommand;
 import notmarth.command.MarkCommand;
 import notmarth.command.OnCommand;
@@ -42,6 +43,9 @@ public final class Parser {
         if (fullCommand.equals("list")) {
             return new ListCommand();
         }
+        if (isCommand(fullCommand, "find")) {
+            return new FindCommand(parseFindKeyword(fullCommand));
+        }
         if (isCommand(fullCommand, "on")) {
             return new OnCommand(parseOnDate(fullCommand));
         }
@@ -59,10 +63,10 @@ public final class Parser {
         }
         if (fullCommand.isEmpty()) {
             throw new NotMarthException(
-                    "Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.");
+                    "Please enter a command. Try todo, deadline, event, list, find, on, mark, unmark, or delete.");
         }
         throw new NotMarthException(
-                "I don't recognize that command. Try todo, deadline, event, list, on, mark, unmark, "
+                "I don't recognize that command. Try todo, deadline, event, list, find, on, mark, unmark, "
                         + "or delete.");
     }
 
@@ -179,6 +183,21 @@ public final class Parser {
                             + "2019-10-15 or 15/10/2019",
                     exception);
         }
+    }
+
+    /**
+     * Parses the keyword from a {@code find <keyword>} command.
+     *
+     * @param command the command containing the search keyword
+     * @return the keyword to search for
+     * @throws NotMarthException if the command has no keyword
+     */
+    private String parseFindKeyword(String command) throws NotMarthException {
+        String keyword = command.substring("find".length()).trim();
+        if (keyword.isEmpty()) {
+            throw new NotMarthException("The find command needs a keyword. Try: find <keyword>");
+        }
+        return keyword;
     }
 
     /**

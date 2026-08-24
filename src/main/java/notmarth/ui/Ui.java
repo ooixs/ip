@@ -11,12 +11,13 @@ import notmarth.model.TaskList;
 public final class Ui {
     private static final String ADD_TASK_MESSAGE = "     Order received. I've added it to the battle plan:";
     private static final String LIST_TASKS_MESSAGE = "     Here are your current mission orders:";
+    private static final String FIND_TASKS_MESSAGE = "     Here are the matching tasks in your list:";
     private static final String MARK_TASK_MESSAGE = "     Well fought! This order is complete:";
     private static final String ENGAGE_MESSAGE = "     Together, we can accomplish this. Engage!";
     private static final String UNMARK_TASK_MESSAGE = "     This order is back on the map:";
     private static final String DELETE_TASK_MESSAGE = "     This order has been withdrawn:";
     private static final String AVAILABLE_COMMANDS_MESSAGE =
-            "Available commands: todo, deadline, event, list, on, mark, unmark, delete, bye";
+            "Available commands: todo, deadline, event, list, find, on, mark, unmark, delete, bye";
     private static final String ERROR_MESSAGE_TEXT_PREFIX = "I couldn't process that, Divine One: ";
     private static final String ERROR_MESSAGE_PREFIX = "     " + ERROR_MESSAGE_TEXT_PREFIX;
     private static final String SOMMIE_MESSAGE =
@@ -143,6 +144,20 @@ public final class Ui {
         for (int i = 0; i < tasks.size(); i++) {
             showNumberedTask(i + 1, tasks.get(i));
         }
+    }
+
+    /** Displays the heading for tasks matching a find keyword. */
+    public void showFindTasksHeader() {
+        System.out.println(FIND_TASKS_MESSAGE);
+    }
+
+    /**
+     * Displays the result for a keyword with no matching tasks.
+     *
+     * @param keyword the keyword that was searched for
+     */
+    public void showNoFindTasks(String keyword) {
+        System.out.println("     No tasks in your list match \"" + keyword + "\".");
     }
 
     /**

@@ -228,7 +228,7 @@ list
 
 ```text
 Order received. I've added it to the battle plan:
-I couldn't process that, Divine One: I don't recognize that command. Try todo, deadline, event, list, on, mark, unmark, or delete.
+I couldn't process that, Divine One: I don't recognize that command. Try todo, deadline, event, list, find, on, mark, unmark, or delete.
 Order received. I've added it to the battle plan:
 1.[T][ ] first task
 2.[D][ ] second task (by: Oct 16 2019)
@@ -293,7 +293,7 @@ list
 
 ```text
 Order received. I've added it to the battle plan:
-I couldn't process that, Divine One: Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.
+I couldn't process that, Divine One: Please enter a command. Try todo, deadline, event, list, find, on, mark, unmark, or delete.
 Order received. I've added it to the battle plan:
 1.[T][ ] first task
 2.[T][ ] second task
@@ -816,4 +816,60 @@ on
 ```text
 I couldn't process that, Divine One: That date is not valid. Try yyyy-mm-dd or dd/MM/yyyy, for example: 2019-10-15 or 15/10/2019
 I couldn't process that, Divine One: The on command needs a date. Try: on <date>
+```
+
+## Test case 27: Find tasks by description keyword
+
+### Aim
+
+Verify that `find <keyword>` displays every task whose description contains the keyword,
+ignoring letter case, while preserving the original task numbers.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+todo read book
+todo plan mission
+deadline return BOOK /by 2019-06-06
+find Book
+```
+
+### Expected output
+
+```text
+Here are the matching tasks in your list:
+1.[T][ ] read book
+3.[D][ ] return BOOK (by: Jun 06 2019)
+```
+
+## Test case 28: Handle unsuccessful task searches
+
+### Aim
+
+Verify that a search with no matches reports the keyword and that a missing keyword is rejected
+without changing the task list.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+todo plan mission
+find dragon
+find
+list
+```
+
+### Expected output
+
+```text
+No tasks in your list match "dragon".
+I couldn't process that, Divine One: The find command needs a keyword. Try: find <keyword>
+1.[T][ ] plan mission
 ```
