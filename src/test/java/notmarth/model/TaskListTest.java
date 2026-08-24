@@ -44,7 +44,8 @@ class TaskListTest {
         NotMarthException exception = assertThrows(NotMarthException.class,
                 () -> tasks.add(new ToDo("extra task")));
 
-        assertEquals("Your task list is full. Remove a task before adding another one.", exception.getMessage());
+        assertEquals(
+                "Your task list is full. Remove a task before adding another one.", exception.getMessage());
         assertEquals(1, tasks.size());
     }
 

@@ -49,7 +49,8 @@ class StorageTest {
 
     @Test
     void loadMissingArchiveReturnsAnEmptyPlanWithoutWarning() {
-        Storage.LoadResult result = new Storage(temporaryDirectory.resolve("missing.txt").toString()).load(10);
+        Storage.LoadResult result = new Storage(
+                temporaryDirectory.resolve("missing.txt").toString()).load(10);
 
         assertTrue(result.getTasks().isEmpty());
         assertFalse(result.hasWarning());
@@ -65,7 +66,9 @@ class StorageTest {
 
         assertTrue(result.getTasks().isEmpty());
         assertTrue(result.hasWarning());
-        assertEquals("The saved battle plan is corrupted. Repair or remove the file before starting NotMarth again.",
+        assertEquals(
+                "The saved battle plan is corrupted. Repair or remove the file before starting "
+                        + "NotMarth again.",
                 result.getWarning());
     }
 
