@@ -49,6 +49,11 @@ jar {
 
 shadowJar {
     archiveFileName = 'notmarth.jar'
+
+    // Keep the fat JAR directly executable with `java -jar`.
+    manifest {
+        attributes 'Main-Class': application.mainClass.get()
+    }
 }
 
 run {
