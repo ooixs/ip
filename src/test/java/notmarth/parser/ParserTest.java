@@ -71,7 +71,7 @@ class ParserTest {
         NotMarthException unknown = assertThrows(
                 NotMarthException.class, () -> parser.parse("launch mission"));
 
-        assertEquals("Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.",
+        assertEquals("Please enter a command. Try todo, deadline, event, list, find, on, mark, unmark, or delete.",
                 empty.getMessage());
         assertEquals(
                 "I don't recognize that command. Try todo, deadline, event, list, find, on, mark, unmark, "
