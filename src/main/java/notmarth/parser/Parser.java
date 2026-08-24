@@ -22,9 +22,8 @@ import notmarth.model.ToDo;
  * Interprets user commands and converts their arguments into typed values.
  */
 public final class Parser {
-    /** Creates a parser for NotMarth commands. */
-    public Parser() {
-    }
+    private static final String DATE_TIME_FORMAT_HINT =
+            " Try yyyy-mm-dd or dd/MM/yyyy HHmm, for example: 2019-10-15 or 02/12/2019 1800";
 
     /**
      * Converts a complete user command into an executable command object.
@@ -63,7 +62,8 @@ public final class Parser {
                     "Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.");
         }
         throw new NotMarthException(
-                "I don't recognize that command. Try todo, deadline, event, list, on, mark, unmark, or delete.");
+                "I don't recognize that command. Try todo, deadline, event, list, on, mark, unmark, "
+                        + "or delete.");
     }
 
     /**
@@ -118,12 +118,14 @@ public final class Parser {
                         return new Deadline(description, by);
                     } catch (DateTimeParseException exception) {
                         throw new NotMarthException(
-                                "That deadline date or time is not valid. Try yyyy-mm-dd or dd/MM/yyyy HHmm, for example: 2019-10-15 or 02/12/2019 1800",
+                                "That deadline date or time is not valid." + DATE_TIME_FORMAT_HINT,
                                 exception);
                     }
                 }
             }
-            throw new NotMarthException("A deadline needs a description and a due time. Try: deadline <description> /by <date or time>");
+            throw new NotMarthException(
+                    "A deadline needs a description and a due time. Try: deadline <description> "
+                            + "/by <date or time>");
         }
 
         if (isCommand(command, "event")) {
@@ -139,7 +141,7 @@ public final class Parser {
                         return new Event(description, from, to);
                     } catch (DateTimeParseException exception) {
                         throw new NotMarthException(
-                                "That event date or time is not valid. Try yyyy-mm-dd or dd/MM/yyyy HHmm, for example: 2019-10-15 or 02/12/2019 1800",
+                                "That event date or time is not valid." + DATE_TIME_FORMAT_HINT,
                                 exception);
                     } catch (IllegalArgumentException exception) {
                         throw new NotMarthException(
@@ -148,7 +150,9 @@ public final class Parser {
                     }
                 }
             }
-            throw new NotMarthException("An event needs a description, start time, and end time. Try: event <description> /from <start> /to <end>");
+            throw new NotMarthException(
+                    "An event needs a description, start time, and end time. Try: event <description> "
+                            + "/from <start> /to <end>");
         }
 
         throw new NotMarthException("I don't recognize that task type.");
@@ -171,7 +175,8 @@ public final class Parser {
             return DateTimeParser.parseDate(dateText);
         } catch (DateTimeParseException exception) {
             throw new NotMarthException(
-                    "That date is not valid. Try yyyy-mm-dd or dd/MM/yyyy, for example: 2019-10-15 or 15/10/2019",
+                    "That date is not valid. Try yyyy-mm-dd or dd/MM/yyyy, for example: "
+                            + "2019-10-15 or 15/10/2019",
                     exception);
         }
     }

@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.LocalDateTime;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import notmarth.command.Command;
@@ -66,11 +66,14 @@ class ParserTest {
     @Test
     void parseRejectsMissingAndUnknownCommands() {
         NotMarthException empty = assertThrows(NotMarthException.class, () -> parser.parse(""));
-        NotMarthException unknown = assertThrows(NotMarthException.class, () -> parser.parse("launch mission"));
+        NotMarthException unknown = assertThrows(
+                NotMarthException.class, () -> parser.parse("launch mission"));
 
         assertEquals("Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.",
                 empty.getMessage());
-        assertEquals("I don't recognize that command. Try todo, deadline, event, list, on, mark, unmark, or delete.",
+        assertEquals(
+                "I don't recognize that command. Try todo, deadline, event, list, on, mark, unmark, "
+                        + "or delete.",
                 unknown.getMessage());
     }
 

@@ -36,6 +36,8 @@ Unless the user says otherwise, assume that you are assisting a student working 
   * Make generated code as self-explanatory as possible, and include explanatory comments where they improve understanding.
   * When faced with a design choice, choose the simplest option that is sufficient for the requirements, while briefly explaining relevant more advanced alternatives.
 
+* Apply the project skill in `skills/seedu-java-coding-standard/SKILL.md` to all Java production code and tests. Follow the SE-EDU basic and intermediate Java coding standard, including its naming, layout, import, statement, variable, and Javadoc conventions. Keep lines at or below 120 characters, preferably below 110, and review both source and test files after every code change.
+
 # Project-specific requirements
 
 ## Required test workflow after code updates:
@@ -52,6 +54,7 @@ Ensure that Java 25 is used when running the application or build tasks. On macO
 
 ## Git
 
+Apply `skills/seedu-git-standard/SKILL.md` whenever creating, proposing, reviewing, or amending a commit message or branch name. Follow the [SE-EDU Git conventions](https://se-education.org/guides/conventions/git.html) for all future commits: use a capitalized imperative subject, target 50 characters and never exceed 72, omit a final period, and add a 72-column body explaining what and why for non-trivial changes. Use meaningful kebab-case branch names, or the issue-number format when applicable.
 Use lightweight tags unless the user requests an annotated tag.
 When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.

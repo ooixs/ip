@@ -1,12 +1,12 @@
 package notmarth.storage;
 
 import java.io.IOException;
-import java.time.DateTimeException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.StandardCopyOption;
+import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,10 +77,12 @@ public final class Storage {
             return new LoadResult(tasks, null);
         } catch (CorruptTaskDataException exception) {
             return new LoadResult(new ArrayList<>(),
-                    "The saved battle plan is corrupted. Repair or remove the file before starting NotMarth again.");
+                    "The saved battle plan is corrupted. Repair or remove the file before starting "
+                            + "NotMarth again.");
         } catch (IOException exception) {
             return new LoadResult(new ArrayList<>(),
-                    "I couldn't read the saved battle plan from disk. Fix the file before starting NotMarth again.");
+                    "I couldn't read the saved battle plan from disk. Fix the file before starting "
+                            + "NotMarth again.");
         }
     }
 
@@ -188,7 +190,8 @@ public final class Storage {
                 break;
             case "event":
                 requireFieldCount(fields, 5);
-                task = new Event(requireText(fields.get(2)), requireText(fields.get(3)), requireText(fields.get(4)));
+                task = new Event(
+                        requireText(fields.get(2)), requireText(fields.get(3)), requireText(fields.get(4)));
                 break;
             default:
                 throw new CorruptTaskDataException();
