@@ -10,6 +10,7 @@ import java.util.List;
 
 import notmarth.command.Command;
 import notmarth.command.ExitCommand;
+import notmarth.command.FindCommand;
 import notmarth.command.MarkCommand;
 import notmarth.command.OnCommand;
 import notmarth.exception.NotMarthException;
@@ -56,6 +57,7 @@ class ParserTest {
     @Test
     void parseRecognizesControlCommandsAndDateQueries() throws NotMarthException {
         assertInstanceOf(ExitCommand.class, parser.parse("bye"));
+        assertInstanceOf(FindCommand.class, parser.parse("find book"));
         assertInstanceOf(MarkCommand.class, parser.parse("mark 2"));
         assertInstanceOf(OnCommand.class, parser.parse("on 2019-10-15"));
     }
@@ -65,9 +67,11 @@ class ParserTest {
         NotMarthException empty = assertThrows(NotMarthException.class, () -> parser.parse(""));
         NotMarthException unknown = assertThrows(NotMarthException.class, () -> parser.parse("launch mission"));
 
-        assertEquals("Please enter a command. Try todo, deadline, event, list, on, mark, unmark, or delete.",
+        assertEquals("Please enter a command. Try todo, deadline, event, list, find, on, mark, unmark, or delete.",
                 empty.getMessage());
-        assertEquals("I don't recognize that command. Try todo, deadline, event, list, on, mark, unmark, or delete.",
+        assertEquals(
+                "I don't recognize that command. Try todo, deadline, event, list, find, on, mark, unmark, "
+                        + "or delete.",
                 unknown.getMessage());
     }
 
@@ -79,6 +83,7 @@ class ParserTest {
                 () -> parser.parse("event meeting /from 2019-10-15 1400 /to 2019-10-14 1400"));
         assertThrows(NotMarthException.class, () -> parser.parse("mark two"));
         assertThrows(NotMarthException.class, () -> parser.parse("on 2019-10-15 1400"));
+        assertThrows(NotMarthException.class, () -> parser.parse("find"));
     }
 
     private void execute(Command command, TaskList tasks, Ui ui, Storage storage) throws NotMarthException {
