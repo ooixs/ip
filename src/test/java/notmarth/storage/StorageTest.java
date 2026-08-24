@@ -23,6 +23,7 @@ class StorageTest {
     @TempDir
     Path temporaryDirectory;
 
+    /** Verifies that saving and loading preserves task data, state, and escaped text. */
     @Test
     void saveAndLoadRoundTripPreservesTypesStateAndEscapedText() throws Exception {
         Path archive = temporaryDirectory.resolve("nested").resolve("battle-plan.txt");
@@ -47,6 +48,7 @@ class StorageTest {
         assertTrue(Files.exists(archive));
     }
 
+    /** Verifies that a missing archive starts as an empty plan without a warning. */
     @Test
     void loadMissingArchiveReturnsAnEmptyPlanWithoutWarning() {
         Storage.LoadResult result = new Storage(temporaryDirectory.resolve("missing.txt").toString()).load(10);
@@ -56,6 +58,7 @@ class StorageTest {
         assertNull(result.getWarning());
     }
 
+    /** Verifies that a corrupt archive produces a warning and no loaded tasks. */
     @Test
     void loadReportsCorruptArchiveAndReturnsNoTasks() throws Exception {
         Path archive = temporaryDirectory.resolve("corrupt.txt");
@@ -69,6 +72,7 @@ class StorageTest {
                 result.getWarning());
     }
 
+    /** Verifies that archives exceeding the configured capacity are rejected. */
     @Test
     void loadRejectsArchivesThatExceedTheMaximumTaskCount() throws Exception {
         Path archive = temporaryDirectory.resolve("too-many.txt");

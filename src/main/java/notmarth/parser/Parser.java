@@ -22,6 +22,10 @@ import notmarth.model.ToDo;
  * Interprets user commands and converts their arguments into typed values.
  */
 public final class Parser {
+    /** Creates a parser for NotMarth commands. */
+    public Parser() {
+    }
+
     /**
      * Converts a complete user command into an executable command object.
      *

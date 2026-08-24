@@ -130,6 +130,11 @@ public final class TaskList implements Iterable<Task> {
         return tasks.get(taskNumber - 1);
     }
 
+    /**
+     * Returns a read-only iterator over tasks in display order.
+     *
+     * @return an iterator that cannot modify this task list
+     */
     @Override
     public java.util.Iterator<Task> iterator() {
         return asList().iterator();

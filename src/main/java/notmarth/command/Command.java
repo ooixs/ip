@@ -11,6 +11,10 @@ import notmarth.ui.Ui;
  * Represents one executable NotMarth command.
  */
 public abstract class Command {
+    /** Creates a command. */
+    public Command() {
+    }
+
     /**
      * Executes this command against the application state.
      *

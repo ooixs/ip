@@ -23,6 +23,13 @@ public final class OnCommand extends Command {
         this.date = date;
     }
 
+    /**
+     * Displays deadlines and events that match the command's requested date.
+     *
+     * @param tasks the task list to search
+     * @param ui the console interaction handler
+     * @param storage the task archive handler, which is unused
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         String displayDate = DateTimeParser.format(date.atStartOfDay(), false);

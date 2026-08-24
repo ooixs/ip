@@ -93,12 +93,23 @@ public final class DateTimeParser {
         return includesTime ? value.toString() : value.toLocalDate().toString();
     }
 
+    /**
+     * Creates a strict, English-locale formatter for one supported input pattern.
+     *
+     * @param pattern the date or date-time pattern
+     * @return a formatter that rejects invalid calendar values
+     */
     private static DateTimeFormatter formatter(String pattern) {
         return DateTimeFormatter.ofPattern(pattern, Locale.ENGLISH)
                 .withResolverStyle(ResolverStyle.STRICT);
     }
 
-    /** Contains a parsed value and whether the source included a time. */
+    /**
+     * Contains a parsed value and whether the source included a time.
+     *
+     * @param value the parsed date and time, at midnight for date-only input
+     * @param includesTime whether the source text included a time component
+     */
     public record ParsedDateTime(LocalDateTime value, boolean includesTime) {
     }
 }

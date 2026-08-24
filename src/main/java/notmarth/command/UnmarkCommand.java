@@ -19,6 +19,14 @@ public final class UnmarkCommand extends Command {
         this.taskNumber = taskNumber;
     }
 
+    /**
+     * Reopens the selected task, persists the change, and reports the result.
+     *
+     * @param tasks the current task list
+     * @param ui the console interaction handler
+     * @param storage the task archive handler
+     * @throws NotMarthException if the task number is invalid
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws NotMarthException {
         Task task = tasks.unmark(taskNumber);

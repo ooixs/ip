@@ -63,7 +63,11 @@ public class NotMarth {
         }
     }
 
-    /** Starts NotMarth with its default battle-plan archive. */
+    /**
+     * Starts NotMarth with its default battle-plan archive.
+     *
+     * @param args command-line arguments, which are currently unused
+     */
     public static void main(String[] args) {
         new NotMarth("data/notmarth.txt").run();
     }

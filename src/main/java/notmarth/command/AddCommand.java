@@ -19,6 +19,14 @@ public final class AddCommand extends Command {
         this.task = task;
     }
 
+    /**
+     * Adds the task, persists the updated battle plan, and reports the result.
+     *
+     * @param tasks the current task list
+     * @param ui the console interaction handler
+     * @param storage the task archive handler
+     * @throws NotMarthException if the task list cannot accept another task
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws NotMarthException {
         tasks.add(task);

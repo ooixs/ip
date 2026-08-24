@@ -4,7 +4,10 @@ package notmarth.model;
  * Represents a task in the chatbot's task list.
  */
 public class Task {
+    /** The text shown for this task and saved in the archive. */
     protected final String description;
+
+    /** Whether this task has been marked as complete. */
     protected boolean isDone;
     private final TaskType type;
 

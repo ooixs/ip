@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 /** Tests task-list capacity, ordering, completion, and deletion behavior. */
 class TaskListTest {
+    /** Verifies that task operations preserve state and display order. */
     @Test
     void addMarkUnmarkAndDeleteMaintainTaskStateAndOrder() throws NotMarthException {
         Task first = new ToDo("first");
@@ -36,6 +37,7 @@ class TaskListTest {
         assertEquals(second, tasks.get(0));
     }
 
+    /** Verifies that the configured task-list capacity is enforced. */
     @Test
     void addRejectsTasksBeyondTheConfiguredCapacity() throws NotMarthException {
         TaskList tasks = new TaskList(List.of(), 1);
@@ -48,6 +50,7 @@ class TaskListTest {
         assertEquals(1, tasks.size());
     }
 
+    /** Verifies that empty and out-of-range task numbers are rejected. */
     @Test
     void taskOperationsRejectEmptyAndOutOfRangeNumbers() {
         TaskList empty = new TaskList(List.of(), 2);
@@ -61,6 +64,7 @@ class TaskListTest {
         assertThrows(NotMarthException.class, () -> tasks.delete(-1));
     }
 
+    /** Verifies that construction and the read-only list view protect invariants. */
     @Test
     void constructorAndListViewProtectTaskListInvariants() throws NotMarthException {
         assertThrows(IllegalArgumentException.class, () -> new TaskList(List.of(), 0));
@@ -75,6 +79,7 @@ class TaskListTest {
         assertTrue(tasks.isEmpty());
     }
 
+    /** Verifies that iteration follows the task list's display order. */
     @Test
     void iterator_tasksAdded_returnsTasksInDisplayOrder() throws NotMarthException {
         Task first = new ToDo("first");

@@ -80,7 +80,11 @@ public final class Ui {
         return scanner.nextLine().trim();
     }
 
-    /** Displays a command before its result. */
+    /**
+     * Displays a command before its result.
+     *
+     * @param command the command entered by the user
+     */
     public void showCommand(String command) {
         showSeparator();
         System.out.println("     " + command);
@@ -169,14 +173,22 @@ public final class Ui {
         System.out.println("     No deadlines or events are scheduled for " + displayDate + ".");
     }
 
-    /** Displays the result of marking a task complete. */
+    /**
+     * Displays the result of marking a task complete.
+     *
+     * @param task the task that was marked complete
+     */
     public void showTaskMarked(Task task) {
         System.out.println(MARK_TASK_MESSAGE);
         System.out.println(ENGAGE_MESSAGE);
         System.out.println("       " + task);
     }
 
-    /** Displays the result of marking a task incomplete. */
+    /**
+     * Displays the result of marking a task incomplete.
+     *
+     * @param task the task that was marked incomplete
+     */
     public void showTaskUnmarked(Task task) {
         System.out.println(UNMARK_TASK_MESSAGE);
         System.out.println("       " + task);

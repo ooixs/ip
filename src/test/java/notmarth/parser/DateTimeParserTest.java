@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 /** Tests the supported date/time input formats and archive/display formats. */
 class DateTimeParserTest {
+    /** Verifies parsing of compact date-time and date-only values. */
     @Test
     void parseSupportsCompactDateTimeAndDateOnlyValues() {
         DateTimeParser.ParsedDateTime dateTime = DateTimeParser.parse("2/12/2019 1800");
@@ -24,6 +25,7 @@ class DateTimeParserTest {
         assertFalse(date.includesTime());
     }
 
+    /** Verifies parsing of ISO date-time values and clock values with a colon. */
     @Test
     void parseSupportsIsoDateTimeAndClockWithColon() {
         assertEquals(LocalDateTime.of(2019, 10, 15, 14, 5),
@@ -32,6 +34,7 @@ class DateTimeParserTest {
                 DateTimeParser.parse("2019-10-15T14:05").value());
     }
 
+    /** Verifies rejection of date-time input where a date-only value is required. */
     @Test
     void parseDateRejectsDateTimeInputAndInvalidValues() {
         assertThrows(DateTimeParseException.class,
@@ -40,6 +43,7 @@ class DateTimeParserTest {
                 () -> DateTimeParser.parse("31/2/2019"));
     }
 
+    /** Verifies that display and storage formatting preserve time presence. */
     @Test
     void formatPreservesWhetherTimeWasProvided() {
         LocalDateTime value = LocalDateTime.of(2019, 10, 15, 14, 0);

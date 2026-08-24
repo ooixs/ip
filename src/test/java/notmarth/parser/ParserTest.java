@@ -31,6 +31,7 @@ class ParserTest {
     @TempDir
     Path temporaryDirectory;
 
+    /** Verifies creation of each supported task subtype and its typed values. */
     @Test
     void parseCreatesTheCorrectTaskSubtypeAndValues() throws Exception {
         TaskList tasks = new TaskList(List.of(), 3);
@@ -53,6 +54,7 @@ class ParserTest {
         assertEquals(LocalDateTime.of(2019, 10, 15, 16, 0), ((Event) event).getTo());
     }
 
+    /** Verifies parsing of control commands and date queries. */
     @Test
     void parseRecognizesControlCommandsAndDateQueries() throws NotMarthException {
         assertInstanceOf(ExitCommand.class, parser.parse("bye"));
@@ -60,6 +62,7 @@ class ParserTest {
         assertInstanceOf(OnCommand.class, parser.parse("on 2019-10-15"));
     }
 
+    /** Verifies rejection of empty and unknown commands. */
     @Test
     void parseRejectsMissingAndUnknownCommands() {
         NotMarthException empty = assertThrows(NotMarthException.class, () -> parser.parse(""));
@@ -71,6 +74,7 @@ class ParserTest {
                 unknown.getMessage());
     }
 
+    /** Verifies rejection of malformed task and task-number commands. */
     @Test
     void parseRejectsMalformedTaskAndTaskNumberCommands() {
         assertThrows(NotMarthException.class, () -> parser.parse("todo"));
@@ -81,6 +85,7 @@ class ParserTest {
         assertThrows(NotMarthException.class, () -> parser.parse("on 2019-10-15 1400"));
     }
 
+    /** Executes a command against the supplied test application state. */
     private void execute(Command command, TaskList tasks, Ui ui, Storage storage) throws NotMarthException {
         command.execute(tasks, ui, storage);
     }

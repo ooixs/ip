@@ -275,6 +275,13 @@ public final class Storage {
         return fields;
     }
 
+    /**
+     * Converts the archive's completion marker into a boolean state.
+     *
+     * @param status the saved {@code open} or {@code done} marker
+     * @return {@code true} when the task is complete
+     * @throws CorruptTaskDataException if the marker is not recognised
+     */
     private static boolean parseCompletion(String status) throws CorruptTaskDataException {
         if ("open".equals(status)) {
             return false;
@@ -285,6 +292,13 @@ public final class Storage {
         throw new CorruptTaskDataException();
     }
 
+    /**
+     * Validates the number of fields in a saved task record.
+     *
+     * @param fields the decoded record fields
+     * @param expected the number of fields required for the task type
+     * @throws CorruptTaskDataException if the field count is unexpected
+     */
     private static void requireFieldCount(List<String> fields, int expected)
             throws CorruptTaskDataException {
         if (fields.size() != expected) {
@@ -292,6 +306,13 @@ public final class Storage {
         }
     }
 
+    /**
+     * Ensures that a required archive field is not empty.
+     *
+     * @param value the decoded field value
+     * @return the unchanged, non-empty value
+     * @throws CorruptTaskDataException if the value is empty
+     */
     private static String requireText(String value) throws CorruptTaskDataException {
         if (value.isEmpty()) {
             throw new CorruptTaskDataException();
@@ -299,6 +320,12 @@ public final class Storage {
         return value;
     }
 
+    /**
+     * Escapes characters that have structural meaning in the archive format.
+     *
+     * @param value the text to encode
+     * @return the encoded text safe to place in one archive field
+     */
     private static String escape(String value) {
         return value.replace("\\", "\\\\")
                 .replace("|", "\\|")
