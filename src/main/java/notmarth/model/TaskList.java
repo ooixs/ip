@@ -14,6 +14,16 @@ public final class TaskList implements Iterable<Task> {
     private final ArrayList<Task> tasks;
 
     /**
+     * Creates a task list from zero or more initial tasks.
+     *
+     * @param maximumTasks the largest number of tasks this list can contain
+     * @param loadedTasks the tasks to place in the list initially
+     */
+    public TaskList(int maximumTasks, Task... loadedTasks) {
+        this(List.of(loadedTasks), maximumTasks);
+    }
+
+    /**
      * Creates a task list from tasks loaded at startup.
      *
      * @param loadedTasks the tasks recovered from storage

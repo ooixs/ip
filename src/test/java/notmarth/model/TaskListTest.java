@@ -79,6 +79,19 @@ class TaskListTest {
         assertTrue(tasks.isEmpty());
     }
 
+    /** Verifies that the varargs constructor accepts an initial task sequence. */
+    @Test
+    void varargsConstructorAcceptsInitialTasks() {
+        Task first = new ToDo("first");
+        Task second = new ToDo("second");
+
+        TaskList tasks = new TaskList(2, first, second);
+
+        assertEquals(2, tasks.size());
+        assertSame(first, tasks.get(0));
+        assertSame(second, tasks.get(1));
+    }
+
     /** Verifies that iteration follows the task list's display order. */
     @Test
     void iteratorTasksAddedReturnsTasksInDisplayOrder() throws NotMarthException {
