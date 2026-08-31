@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.LocalDateTime;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import notmarth.command.Command;
@@ -21,16 +21,15 @@ import notmarth.model.TaskList;
 import notmarth.model.ToDo;
 import notmarth.storage.Storage;
 import notmarth.ui.Ui;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /** Tests conversion of user command text into commands and typed task values. */
 class ParserTest {
-    private final Parser parser = new Parser();
-
     @TempDir
-    Path temporaryDirectory;
+    private Path temporaryDirectory;
+
+    private final Parser parser = new Parser();
 
     /** Verifies creation of each supported task subtype and its typed values. */
     @Test

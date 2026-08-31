@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import notmarth.exception.NotMarthException;
-
 import org.junit.jupiter.api.Test;
 
 /** Tests task-list capacity, ordering, completion, and deletion behavior. */
@@ -82,7 +81,7 @@ class TaskListTest {
 
     /** Verifies that iteration follows the task list's display order. */
     @Test
-    void iterator_tasksAdded_returnsTasksInDisplayOrder() throws NotMarthException {
+    void iteratorTasksAddedReturnsTasksInDisplayOrder() throws NotMarthException {
         Task first = new ToDo("first");
         Task second = new ToDo("second");
         TaskList tasks = new TaskList(List.of(), 2);

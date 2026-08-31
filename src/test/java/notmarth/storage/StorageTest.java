@@ -12,16 +12,14 @@ import java.util.List;
 
 import notmarth.model.Deadline;
 import notmarth.model.Event;
-import notmarth.model.Task;
 import notmarth.model.ToDo;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 /** Tests persistence of every supported task type and recovery from bad files. */
 class StorageTest {
     @TempDir
-    Path temporaryDirectory;
+    private Path temporaryDirectory;
 
     /** Verifies that saving and loading preserves task data, state, and escaped text. */
     @Test

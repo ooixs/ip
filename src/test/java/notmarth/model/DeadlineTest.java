@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 class DeadlineTest {
     /** Verifies that date-only deadlines preserve date-only display and storage formats. */
     @Test
-    void dateOnlyDeadline_preservesDateOnlyFormatting() {
+    void dateOnlyDeadlinePreservesDateOnlyFormatting() {
         Deadline deadline = new Deadline("submit report", "2019-10-15");
 
         assertEquals(LocalDateTime.of(2019, 10, 15, 0, 0), deadline.getBy());
@@ -23,7 +23,7 @@ class DeadlineTest {
 
     /** Verifies that timed deadlines match only their calendar date. */
     @Test
-    void timedDeadline_matchesOnlyItsCalendarDate() {
+    void timedDeadlineMatchesOnlyItsCalendarDate() {
         Deadline deadline = new Deadline("return book", "2/12/2019 1800");
 
         assertTrue(deadline.isDueOn(LocalDate.of(2019, 12, 2)));
@@ -34,7 +34,7 @@ class DeadlineTest {
 
     /** Verifies that a deadline can be created from a typed date-time value. */
     @Test
-    void localDateTimeDeadline_acceptsTypedValue() {
+    void localDateTimeDeadlineAcceptsTypedValue() {
         Deadline deadline = new Deadline("meeting", LocalDateTime.of(2019, 10, 15, 14, 30));
 
         assertEquals(LocalDateTime.of(2019, 10, 15, 14, 30), deadline.getBy());
