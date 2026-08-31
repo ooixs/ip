@@ -8,7 +8,7 @@ import notmarth.model.TaskList;
 /**
  * Handles console input and output for the NotMarth chatbot.
  */
-public final class Ui {
+public class Ui {
     private static final String ADD_TASK_MESSAGE = "     Order received. I've added it to the battle plan:";
     private static final String LIST_TASKS_MESSAGE = "     Here are your current mission orders:";
     private static final String FIND_TASKS_MESSAGE = "     Here are the matching tasks in your list:";
