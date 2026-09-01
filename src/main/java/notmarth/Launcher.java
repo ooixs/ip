@@ -9,6 +9,6 @@ public final class Launcher {
 
     /** Launches the JavaFX application. */
     public static void main(String[] args) {
-        Application.launch(NotMarthGui.class, args);
+        Application.launch(Main.class, args);
     }
 }
