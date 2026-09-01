@@ -15,37 +15,41 @@ import notmarth.ui.Ui;
 public final class NotMarthGui {
     private static final int MAX_TASKS = 100;
     private static final String DEFAULT_FILE_PATH = "data/notmarth.txt";
-    private static final String WELCOME_MESSAGE = "Hello! I'm NotMarth, your tactical companion.";
+    private static final String WELCOME_MESSAGE = "Hello! I'm NotMarth, your tactical companion.\n"
+            + "Enter a command below to update your battle plan.\n\n";
 
     private final Parser parser = new Parser();
     private final Storage storage = new Storage(DEFAULT_FILE_PATH);
     private final Ui ui = new Ui();
     private final TaskList tasks;
-    private final String startupWarning;
+    private boolean exitRequested;
 
     /** Creates the command-processing backend and loads the saved battle plan. */
     public NotMarthGui() {
         Storage.LoadResult loadResult = storage.load(MAX_TASKS);
         tasks = new TaskList(loadResult.getTasks(), MAX_TASKS);
-        startupWarning = loadResult.getWarning();
     }
 
     /** Returns the opening message shown in the graphical conversation. */
     public String getWelcomeMessage() {
-        if (startupWarning == null) {
-            return WELCOME_MESSAGE;
-        }
-        return WELCOME_MESSAGE + "\nI couldn't process that, Divine One: " + startupWarning;
+        return WELCOME_MESSAGE;
     }
 
     /** Executes a command and returns the same response used by the console UI. */
     public String getResponse(String input) {
+        exitRequested = false;
         try {
             Command command = parser.parse(input);
+            exitRequested = command.isExit();
             return captureCommandOutput(command);
         } catch (NotMarthException exception) {
             return "I couldn't process that, Divine One: " + exception.getMessage();
         }
+    }
+
+    /** Returns whether the most recent command requested that the window close. */
+    public boolean isExitRequested() {
+        return exitRequested;
     }
 
     private String captureCommandOutput(Command command) throws NotMarthException {
@@ -57,6 +61,6 @@ public final class NotMarthGui {
         } finally {
             System.setOut(originalOutput);
         }
-        return output.toString(StandardCharsets.UTF_8).trim();
+        return output.toString(StandardCharsets.UTF_8);
     }
 }

@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import notmarth.NotMarthGui;
 
 /** Controller for the FXML-defined NotMarth chat window. */
@@ -48,5 +49,9 @@ public final class MainWindow extends AnchorPane {
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getNotMarthDialog(response, notMarthImage));
         userInput.clear();
+        if (notMarth.isExitRequested()) {
+            Stage stage = (Stage) userInput.getScene().getWindow();
+            stage.close();
+        }
     }
 }
