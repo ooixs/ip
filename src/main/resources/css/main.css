@@ -1,0 +1,50 @@
+.root {
+    main-color: #f4efe2;
+    -fx-background-color: main-color;
+    -fx-background-image: url("../images/somniel.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}
+
+.text-field {
+    -fx-background-color: #fffaf0;
+    -fx-border-color: #c9a227;
+    -fx-border-radius: 5px;
+    -fx-font: 15px "Arial";
+}
+
+.button {
+    -fx-background-color: #9d2933;
+    -fx-background-radius: 5px;
+    -fx-font: bold 15px "Arial";
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: #c23b45;
+}
+
+.button:pressed {
+    -fx-background-color: #6e1d25;
+}
+
+.scroll-pane,
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar {
+    -fx-background-color: main-color;
+    -fx-font-size: 10px;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #c9a227;
+    -fx-background-radius: 1em;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}

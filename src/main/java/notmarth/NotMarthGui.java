@@ -4,16 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import notmarth.command.Command;
 import notmarth.exception.NotMarthException;
 import notmarth.model.TaskList;
@@ -21,76 +11,45 @@ import notmarth.parser.Parser;
 import notmarth.storage.Storage;
 import notmarth.ui.Ui;
 
-/** Provides a graphical interface for entering NotMarth mission orders. */
-public final class NotMarthGui extends Application {
+/** Provides the command-processing backend for the NotMarth graphical interface. */
+public final class NotMarthGui {
     private static final int MAX_TASKS = 100;
     private static final String DEFAULT_FILE_PATH = "data/notmarth.txt";
-    private static final String WINDOW_TITLE = "NotMarth — Tactical Assistant";
+    private static final String WELCOME_MESSAGE = "Hello! I'm NotMarth, your tactical companion.\n"
+            + "Enter a command below to update your battle plan.\n\n";
 
     private final Parser parser = new Parser();
     private final Storage storage = new Storage(DEFAULT_FILE_PATH);
     private final Ui ui = new Ui();
-    private TaskList tasks;
-    private TextArea conversation;
-    private TextField commandInput;
+    private final TaskList tasks;
+    private boolean exitRequested;
 
-    /** Creates the graphical application and loads its saved battle plan. */
+    /** Creates the command-processing backend and loads the saved battle plan. */
     public NotMarthGui() {
         Storage.LoadResult loadResult = storage.load(MAX_TASKS);
         tasks = new TaskList(loadResult.getTasks(), MAX_TASKS);
     }
 
-    /** Builds and displays the NotMarth command window. */
-    @Override
-    public void start(Stage stage) {
-        conversation = new TextArea();
-        conversation.setEditable(false);
-        conversation.setWrapText(true);
-        conversation.setText("Hello! I'm NotMarth, your tactical companion.\n"
-                + "Enter a command below to update your battle plan.\n\n");
-
-        commandInput = new TextField();
-        commandInput.setPromptText("Enter a mission order, e.g. todo review notes");
-        commandInput.setOnAction(event -> executeCommand(stage));
-
-        Button engageButton = new Button("Engage");
-        engageButton.setDefaultButton(true);
-        engageButton.setOnAction(event -> executeCommand(stage));
-
-        HBox commandBar = new HBox(8, commandInput, engageButton);
-        commandBar.setPadding(new Insets(10));
-        HBox.setHgrow(commandInput, javafx.scene.layout.Priority.ALWAYS);
-
-        BorderPane root = new BorderPane();
-        root.setTop(new Label("  NotMarth — Your battle plan awaits"));
-        root.setCenter(conversation);
-        root.setBottom(commandBar);
-        BorderPane.setMargin(root.getTop(), new Insets(10, 10, 0, 10));
-
-        stage.setTitle(WINDOW_TITLE);
-        stage.setScene(new Scene(root, 720, 480));
-        stage.show();
-        commandInput.requestFocus();
+    /** Returns the opening message shown in the graphical conversation. */
+    public String getWelcomeMessage() {
+        return WELCOME_MESSAGE;
     }
 
-    private void executeCommand(Stage stage) {
-        String fullCommand = commandInput.getText().trim();
-        if (fullCommand.isEmpty()) {
-            return;
-        }
-
-        conversation.appendText("> " + fullCommand + "\n");
-        commandInput.clear();
+    /** Executes a command and returns the same response used by the console UI. */
+    public String getResponse(String input) {
+        exitRequested = false;
         try {
-            Command command = parser.parse(fullCommand);
-            String output = captureCommandOutput(command);
-            conversation.appendText(output);
-            if (command.isExit()) {
-                stage.close();
-            }
+            Command command = parser.parse(input);
+            exitRequested = command.isExit();
+            return captureCommandOutput(command);
         } catch (NotMarthException exception) {
-            conversation.appendText("I couldn't process that, Divine One: " + exception.getMessage() + "\n");
+            return "I couldn't process that, Divine One: " + exception.getMessage();
         }
+    }
+
+    /** Returns whether the most recent command requested that the window close. */
+    public boolean isExitRequested() {
+        return exitRequested;
     }
 
     private String captureCommandOutput(Command command) throws NotMarthException {
