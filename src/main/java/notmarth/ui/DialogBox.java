@@ -26,6 +26,8 @@ public final class DialogBox extends HBox {
             fxmlLoader.setController(this);
             fxmlLoader.setRoot(this);
             fxmlLoader.load();
+            getStylesheets().add(
+                    DialogBox.class.getResource("/css/dialog-box.css").toExternalForm());
         } catch (IOException exception) {
             throw new IllegalStateException("Unable to load a dialog box.", exception);
         }
