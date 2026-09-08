@@ -107,62 +107,86 @@ public final class Parser {
      */
     private Task createTask(String command) throws NotMarthException {
         if (isCommand(command, "todo")) {
-            String description = command.substring("todo".length()).trim();
-            if (description.isEmpty()) {
-                throw new NotMarthException("A todo needs a description. Try: todo <description>");
-            }
-            return new ToDo(description);
+            return createTodo(command);
         }
 
         if (isCommand(command, "deadline")) {
-            String details = command.substring("deadline".length()).trim();
-            int byMarker = details.indexOf("/by");
-            if (byMarker > 0) {
-                String description = details.substring(0, byMarker).trim();
-                String by = details.substring(byMarker + "/by".length()).trim();
-                if (!description.isEmpty() && !by.isEmpty()) {
-                    try {
-                        return new Deadline(description, by);
-                    } catch (DateTimeParseException exception) {
-                        throw new NotMarthException(
-                                "That deadline date or time is not valid." + DATE_TIME_FORMAT_HINT,
-                                exception);
-                    }
-                }
-            }
+            return createDeadline(command);
+        }
+
+        if (isCommand(command, "event")) {
+            return createEvent(command);
+        }
+
+        throw new NotMarthException("I don't recognize that task type.");
+    }
+
+    private Task createTodo(String command) throws NotMarthException {
+        String description = command.substring("todo".length()).trim();
+        if (description.isEmpty()) {
+            throw new NotMarthException("A todo needs a description. Try: todo <description>");
+        }
+        return new ToDo(description);
+    }
+
+    private Task createDeadline(String command) throws NotMarthException {
+        String details = command.substring("deadline".length()).trim();
+        int byMarker = details.indexOf("/by");
+        if (byMarker <= 0) {
             throw new NotMarthException(
                     "A deadline needs a description and a due time. Try: deadline <description> "
                             + "/by <date or time>");
         }
 
-        if (isCommand(command, "event")) {
-            String details = command.substring("event".length()).trim();
-            int fromMarker = details.indexOf("/from");
-            int toMarker = details.indexOf("/to");
-            if (fromMarker > 0 && toMarker > fromMarker) {
-                String description = details.substring(0, fromMarker).trim();
-                String from = details.substring(fromMarker + "/from".length(), toMarker).trim();
-                String to = details.substring(toMarker + "/to".length()).trim();
-                if (!description.isEmpty() && !from.isEmpty() && !to.isEmpty()) {
-                    try {
-                        return new Event(description, from, to);
-                    } catch (DateTimeParseException exception) {
-                        throw new NotMarthException(
-                                "That event date or time is not valid." + DATE_TIME_FORMAT_HINT,
-                                exception);
-                    } catch (IllegalArgumentException exception) {
-                        throw new NotMarthException(
-                                "An event cannot end before it starts. Check the /from and /to values.",
-                                exception);
-                    }
-                }
-            }
+        String description = details.substring(0, byMarker).trim();
+        String by = details.substring(byMarker + "/by".length()).trim();
+        if (description.isEmpty() || by.isEmpty()) {
             throw new NotMarthException(
-                    "An event needs a description, start time, and end time. Try: event <description> "
-                            + "/from <start> /to <end>");
+                    "A deadline needs a description and a due time. Try: deadline <description> "
+                            + "/by <date or time>");
         }
 
-        throw new NotMarthException("I don't recognize that task type.");
+        try {
+            return new Deadline(description, by);
+        } catch (DateTimeParseException exception) {
+            throw new NotMarthException(
+                    "That deadline date or time is not valid." + DATE_TIME_FORMAT_HINT,
+                    exception);
+        }
+    }
+
+    private Task createEvent(String command) throws NotMarthException {
+        String details = command.substring("event".length()).trim();
+        int fromMarker = details.indexOf("/from");
+        int toMarker = details.indexOf("/to");
+        if (fromMarker <= 0 || toMarker <= fromMarker) {
+            throw invalidEventMessage();
+        }
+
+        String description = details.substring(0, fromMarker).trim();
+        String from = details.substring(fromMarker + "/from".length(), toMarker).trim();
+        String to = details.substring(toMarker + "/to".length()).trim();
+        if (description.isEmpty() || from.isEmpty() || to.isEmpty()) {
+            throw invalidEventMessage();
+        }
+
+        try {
+            return new Event(description, from, to);
+        } catch (DateTimeParseException exception) {
+            throw new NotMarthException(
+                    "That event date or time is not valid." + DATE_TIME_FORMAT_HINT,
+                    exception);
+        } catch (IllegalArgumentException exception) {
+            throw new NotMarthException(
+                    "An event cannot end before it starts. Check the /from and /to values.",
+                    exception);
+        }
+    }
+
+    private NotMarthException invalidEventMessage() {
+        return new NotMarthException(
+                "An event needs a description, start time, and end time. Try: event <description> "
+                        + "/from <start> /to <end>");
     }
 
     /**
