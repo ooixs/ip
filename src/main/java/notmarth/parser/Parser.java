@@ -23,6 +23,8 @@ import notmarth.model.ToDo;
  * Interprets user commands and converts their arguments into typed values.
  */
 public final class Parser {
+    private static final String COMMANDS_HINT =
+            "todo, deadline, event, list, find, on, mark, unmark, or delete";
     private static final String DATE_TIME_FORMAT_HINT =
             " Try yyyy-mm-dd or dd/MM/yyyy HHmm, for example: 2019-10-15 or 02/12/2019 1800";
 
@@ -63,11 +65,10 @@ public final class Parser {
         }
         if (fullCommand.isEmpty()) {
             throw new NotMarthException(
-                    "Please enter a command. Try todo, deadline, event, list, find, on, mark, unmark, or delete.");
+                    "Please enter a command. Try " + COMMANDS_HINT + ".");
         }
         throw new NotMarthException(
-                "I don't recognize that command. Try todo, deadline, event, list, find, on, mark, unmark, "
-                        + "or delete.");
+                "I don't recognize that command. Try " + COMMANDS_HINT + ".");
     }
 
     /**
