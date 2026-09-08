@@ -38,6 +38,7 @@ public final class TaskList implements Iterable<Task> {
         }
         this.maximumTasks = maximumTasks;
         this.tasks = new ArrayList<>(loadedTasks);
+        assert this.tasks.size() <= this.maximumTasks;
     }
 
     /**
@@ -137,6 +138,7 @@ public final class TaskList implements Iterable<Task> {
             throw new NotMarthException(
                     "That task number is not in your list. Use a number from 1 to " + tasks.size() + ".");
         }
+        assert taskNumber >= 1 && taskNumber <= tasks.size();
         return tasks.get(taskNumber - 1);
     }
 
