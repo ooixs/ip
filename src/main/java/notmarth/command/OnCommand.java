@@ -1,6 +1,8 @@
 package notmarth.command;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.IntStream;
 
 import notmarth.model.Deadline;
 import notmarth.model.Event;
@@ -33,21 +35,20 @@ public final class OnCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         String displayDate = DateTimeParser.format(date.atStartOfDay(), false);
-        boolean foundMatch = false;
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            boolean matches = task instanceof Deadline deadline && deadline.isDueOn(date)
-                    || task instanceof Event event && event.occursOn(date);
-            if (matches) {
-                if (!foundMatch) {
-                    ui.showDateTasksHeader(displayDate);
-                    foundMatch = true;
-                }
-                ui.showNumberedTask(i + 1, task);
-            }
-        }
-        if (!foundMatch) {
+        List<Integer> matchingIndexes = IntStream.range(0, tasks.size())
+                .filter(index -> isMatch(tasks.get(index)))
+                .boxed()
+                .toList();
+        if (matchingIndexes.isEmpty()) {
             ui.showNoDateTasks(displayDate);
+            return;
         }
+        ui.showDateTasksHeader(displayDate);
+        matchingIndexes.forEach(index -> ui.showNumberedTask(index + 1, tasks.get(index)));
+    }
+
+    private boolean isMatch(Task task) {
+        return task instanceof Deadline deadline && deadline.isDueOn(date)
+                || task instanceof Event event && event.occursOn(date);
     }
 }

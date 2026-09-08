@@ -1,6 +1,8 @@
 package notmarth.command;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 import notmarth.model.Task;
 import notmarth.model.TaskList;
@@ -30,20 +32,16 @@ public final class FindCommand extends Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
-        boolean foundMatch = false;
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            boolean matches = task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword);
-            if (matches) {
-                if (!foundMatch) {
-                    ui.showFindTasksHeader();
-                    foundMatch = true;
-                }
-                ui.showNumberedTask(i + 1, task);
-            }
-        }
-        if (!foundMatch) {
+        List<Integer> matchingIndexes = IntStream.range(0, tasks.size())
+                .filter(index -> tasks.get(index).getDescription().toLowerCase(Locale.ROOT)
+                        .contains(normalizedKeyword))
+                .boxed()
+                .toList();
+        if (matchingIndexes.isEmpty()) {
             ui.showNoFindTasks(keyword);
+            return;
         }
+        ui.showFindTasksHeader();
+        matchingIndexes.forEach(index -> ui.showNumberedTask(index + 1, tasks.get(index)));
     }
 }
