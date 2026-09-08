@@ -36,6 +36,8 @@ public final class Parser {
      * @throws NotMarthException if the input is empty, unknown, or malformed
      */
     public Command parse(String fullCommand) throws NotMarthException {
+        // The console trims input before calling the parser, so a command object is always expected.
+        assert fullCommand != null : "Parser input must be a non-null command";
         if (fullCommand.equals("bye")) {
             return new ExitCommand();
         }

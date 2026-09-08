@@ -219,10 +219,14 @@ public final class Storage {
         case TODO:
             return String.join("|", "todo", status, escape(task.getDescription()));
         case DEADLINE:
+            // TaskType and the concrete class must stay aligned for this cast to be safe.
+            assert task instanceof Deadline : "Deadline task type must use the Deadline class";
             Deadline deadline = (Deadline) task;
             return String.join("|", "deadline", status, escape(task.getDescription()),
                     escape(deadline.getByForStorage()));
         case EVENT:
+            // TaskType and the concrete class must stay aligned for this cast to be safe.
+            assert task instanceof Event : "Event task type must use the Event class";
             Event event = (Event) task;
             return String.join("|", "event", status, escape(task.getDescription()),
                     escape(event.getFromForStorage()), escape(event.getToForStorage()));
