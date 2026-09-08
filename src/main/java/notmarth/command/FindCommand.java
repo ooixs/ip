@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.IntStream;
 
-import notmarth.model.Task;
 import notmarth.model.TaskList;
 import notmarth.storage.Storage;
 import notmarth.ui.Ui;

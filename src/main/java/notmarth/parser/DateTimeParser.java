@@ -7,6 +7,7 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Parses and formats the date and time values used by NotMarth tasks.
@@ -39,21 +40,36 @@ public final class DateTimeParser {
      * @throws DateTimeParseException if the value is not supported
      */
     public static ParsedDateTime parse(String input) {
-        for (DateTimeFormatter formatter : DATE_TIME_FORMATTERS) {
-            try {
-                return new ParsedDateTime(LocalDateTime.parse(input, formatter), true);
-            } catch (DateTimeParseException exception) {
-                // Try the next supported date/time format.
-            }
+        Optional<ParsedDateTime> dateTime = DATE_TIME_FORMATTERS.stream()
+                .map(formatter -> tryParseDateTime(input, formatter))
+                .flatMap(Optional::stream)
+                .findFirst();
+        if (dateTime.isPresent()) {
+            return dateTime.get();
         }
-        for (DateTimeFormatter formatter : DATE_FORMATTERS) {
-            try {
-                return new ParsedDateTime(LocalDate.parse(input, formatter).atStartOfDay(), false);
-            } catch (DateTimeParseException exception) {
-                // Try the next supported date-only format.
-            }
+
+        return DATE_FORMATTERS.stream()
+                .map(formatter -> tryParseDate(input, formatter))
+                .flatMap(Optional::stream)
+                .findFirst()
+                .orElseThrow(() -> new DateTimeParseException(
+                        "Unsupported date or time format", input, 0));
+    }
+
+    private static Optional<ParsedDateTime> tryParseDateTime(String input, DateTimeFormatter formatter) {
+        try {
+            return Optional.of(new ParsedDateTime(LocalDateTime.parse(input, formatter), true));
+        } catch (DateTimeParseException exception) {
+            return Optional.empty();
         }
-        throw new DateTimeParseException("Unsupported date or time format", input, 0);
+    }
+
+    private static Optional<ParsedDateTime> tryParseDate(String input, DateTimeFormatter formatter) {
+        try {
+            return Optional.of(new ParsedDateTime(LocalDate.parse(input, formatter).atStartOfDay(), false));
+        } catch (DateTimeParseException exception) {
+            return Optional.empty();
+        }
     }
 
     /**
