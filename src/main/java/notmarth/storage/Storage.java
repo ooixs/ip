@@ -175,8 +175,16 @@ public final class Storage {
             throw new CorruptTaskDataException();
         }
 
-        String type = fields.get(0);
         boolean isDone = parseCompletion(fields.get(1));
+        Task task = createTask(fields);
+        if (isDone) {
+            task.markAsDone();
+        }
+        return task;
+    }
+
+    private static Task createTask(List<String> fields) throws CorruptTaskDataException {
+        String type = fields.get(0);
         Task task;
         try {
             switch (type) {
@@ -198,10 +206,6 @@ public final class Storage {
             }
         } catch (DateTimeException | IllegalArgumentException exception) {
             throw new CorruptTaskDataException();
-        }
-
-        if (isDone) {
-            task.markAsDone();
         }
         return task;
     }
@@ -249,22 +253,7 @@ public final class Storage {
         for (int i = 0; i < line.length(); i++) {
             char character = line.charAt(i);
             if (escaping) {
-                switch (character) {
-                case '\\':
-                    field.append('\\');
-                    break;
-                case '|':
-                    field.append('|');
-                    break;
-                case 'n':
-                    field.append('\n');
-                    break;
-                case 'r':
-                    field.append('\r');
-                    break;
-                default:
-                    throw new CorruptTaskDataException();
-                }
+                appendEscapedCharacter(field, character);
                 escaping = false;
             } else if (character == '\\') {
                 escaping = true;
@@ -280,6 +269,26 @@ public final class Storage {
         }
         fields.add(field.toString());
         return fields;
+    }
+
+    private static void appendEscapedCharacter(StringBuilder field, char character)
+            throws CorruptTaskDataException {
+        switch (character) {
+        case '\\':
+            field.append('\\');
+            break;
+        case '|':
+            field.append('|');
+            break;
+        case 'n':
+            field.append('\n');
+            break;
+        case 'r':
+            field.append('\r');
+            break;
+        default:
+            throw new CorruptTaskDataException();
+        }
     }
 
     /**
