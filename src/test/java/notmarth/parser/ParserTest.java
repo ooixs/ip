@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import notmarth.command.AddContactCommand;
 import notmarth.command.Command;
 import notmarth.command.ExitCommand;
 import notmarth.command.FindCommand;
@@ -61,6 +62,8 @@ class ParserTest {
         assertInstanceOf(FindCommand.class, parser.parse("find book"));
         assertInstanceOf(MarkCommand.class, parser.parse("mark 2"));
         assertInstanceOf(OnCommand.class, parser.parse("on 2019-10-15"));
+        assertInstanceOf(AddContactCommand.class,
+                parser.parse("contact Mrs Tan /phone 81234567 /address 12 Engage Road #04-05"));
     }
 
     /** Verifies rejection of empty and unknown commands. */
@@ -88,6 +91,7 @@ class ParserTest {
         assertThrows(NotMarthException.class, () -> parser.parse("mark two"));
         assertThrows(NotMarthException.class, () -> parser.parse("on 2019-10-15 1400"));
         assertThrows(NotMarthException.class, () -> parser.parse("find"));
+        assertThrows(NotMarthException.class, () -> parser.parse("contact Mrs Tan /phone 81234567"));
     }
 
     /** Executes a command against the supplied test application state. */

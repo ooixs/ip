@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.IntStream;
 
+import notmarth.model.ContactList;
 import notmarth.model.TaskList;
 import notmarth.storage.Storage;
 import notmarth.ui.Ui;
@@ -29,7 +30,7 @@ public final class FindCommand extends Command {
      * @param storage the task archive handler, which is unused
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) {
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
         List<Integer> matchingIndexes = IntStream.range(0, tasks.size())
                 .filter(index -> tasks.get(index).getDescription().toLowerCase(Locale.ROOT)

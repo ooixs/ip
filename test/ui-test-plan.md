@@ -873,3 +873,66 @@ No tasks in your list match "dragon".
 I couldn't process that, Divine One: The find command needs a keyword. Try: find <keyword>
 1.[T][ ] plan mission
 ```
+
+## Test case 29: Add, find, list, and delete contacts
+
+### Aim
+
+Verify that contacts can be added, searched by name, listed, and deleted using numbers separate
+from task numbers.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+contact Mrs Tan /phone 81234567 /address 12 Engage Road #04-05
+findcontact tan
+listcontacts
+deletecontact 1
+listcontacts
+```
+
+### Expected output
+
+```text
+Contact added to the battle plan:
+Mrs Tan (phone: 81234567, address: 12 Engage Road #04-05)
+Now you have 1 contacts in the list.
+Here are the matching contacts in your list:
+1.Mrs Tan (phone: 81234567, address: 12 Engage Road #04-05)
+Here are your current contacts:
+1.Mrs Tan (phone: 81234567, address: 12 Engage Road #04-05)
+This contact has been withdrawn:
+Mrs Tan (phone: 81234567, address: 12 Engage Road #04-05)
+Now you have 0 contacts in the list.
+Here are your current contacts:
+```
+
+## Test case 30: Reject incomplete contact commands
+
+### Aim
+
+Verify that a contact requires a name, phone number, and address.
+
+### Comparison
+
+`contains`
+
+### Input
+
+```text
+contact Mrs Tan /phone 81234567
+findcontact
+deletecontact 1
+```
+
+### Expected output
+
+```text
+I couldn't process that, Divine One: A contact needs a name, phone number, and address. Try: contact <name> /phone <number> /address <address>
+I couldn't process that, Divine One: Findcontact needs a name or keyword. Try: findcontact <keyword>
+I couldn't process that, Divine One: There are no contacts yet. Add a contact before deleting one.
+```

@@ -1,30 +1,40 @@
 # NotMarth User Guide
 
-// Update the title above to match the actual product name
+NotMarth is a tactical companion for managing tasks and tutor contacts offline.
 
 // Product screenshot goes here
 
 // Product intro goes here
 
-## Adding deadlines
+## Adding a contact
 
-// Describe the action and its outcome.
+Use `contact` to save a person's name, phone number, and address.
 
-// Give examples of usage
+Example:
 
-Example: `keyword (optional arguments)`
+`contact Mrs Tan /phone 81234567 /address 12 Engage Road #04-05`
 
-// A description of the expected outcome goes here
+NotMarth confirms the new contact and keeps it in the shared archive.
 
 ```
-expected output
+Contact added to the battle plan:
+Mrs Tan (phone: 81234567, address: 12 Engage Road #04-05)
+Now you have 1 contacts in the list.
 ```
 
-## Feature ABC
+## Managing contacts
 
-// Feature details
+Use `listcontacts` to display all contacts, `findcontact <keyword>` to search
+contact names, and `deletecontact <number>` to remove a contact by its number.
+Contact numbers are separate from task numbers.
 
+Examples:
 
-## Feature XYZ
+```text
+listcontacts
+findcontact Tan
+deletecontact 1
+```
 
-// Feature details
+The existing task commands (`todo`, `deadline`, `event`, `list`, `find`, `on`,
+`mark`, `unmark`, and `delete`) continue to work unchanged.

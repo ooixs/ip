@@ -2,6 +2,7 @@ package notmarth;
 
 import notmarth.command.Command;
 import notmarth.exception.NotMarthException;
+import notmarth.model.ContactList;
 import notmarth.model.TaskList;
 import notmarth.parser.Parser;
 import notmarth.storage.Storage;
@@ -17,6 +18,7 @@ public class NotMarth {
     private final Parser parser;
     private final Storage storage;
     private final TaskList tasks;
+    private final ContactList contacts;
     private final String startupWarning;
 
     /**
@@ -31,6 +33,7 @@ public class NotMarth {
 
         Storage.LoadResult loadResult = storage.load(MAX_TASKS);
         tasks = new TaskList(loadResult.getTasks(), MAX_TASKS);
+        contacts = new ContactList(loadResult.getContacts());
         startupWarning = loadResult.getWarning();
     }
 
@@ -51,7 +54,7 @@ public class NotMarth {
                     ui.showCommand(fullCommand);
                 }
                 Command command = parser.parse(fullCommand);
-                command.execute(tasks, ui, storage);
+                command.execute(tasks, contacts, ui, storage);
                 isExit = command.isExit();
             } catch (NotMarthException exception) {
                 ui.showError(exception.getMessage());

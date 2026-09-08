@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import notmarth.model.Contact;
 import notmarth.model.Deadline;
 import notmarth.model.Event;
 import notmarth.model.ToDo;
@@ -30,9 +31,10 @@ class StorageTest {
         Deadline deadline = new Deadline("return book", "2/12/2019 1800");
         Event event = new Event("project meeting", LocalDateTime.of(2019, 10, 15, 14, 0),
                 LocalDateTime.of(2019, 10, 15, 16, 0));
+        Contact contact = new Contact("Mrs Tan", "81234567", "12 Engage Road | #04-05");
         deadline.markAsDone();
 
-        storage.save(List.of(todo, deadline, event));
+        storage.save(List.of(todo, deadline, event), List.of(contact));
         Storage.LoadResult result = storage.load(3);
 
         assertFalse(result.hasWarning());
@@ -43,6 +45,8 @@ class StorageTest {
         assertEquals(deadline.getBy(), ((Deadline) result.getTasks().get(1)).getBy());
         assertEquals(event.getFrom(), ((Event) result.getTasks().get(2)).getFrom());
         assertEquals(event.getTo(), ((Event) result.getTasks().get(2)).getTo());
+        assertEquals(contact.getName(), result.getContacts().get(0).getName());
+        assertEquals(contact.getAddress(), result.getContacts().get(0).getAddress());
         assertTrue(Files.exists(archive));
     }
 

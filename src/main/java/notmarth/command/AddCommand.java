@@ -1,6 +1,7 @@
 package notmarth.command;
 
 import notmarth.exception.NotMarthException;
+import notmarth.model.ContactList;
 import notmarth.model.Task;
 import notmarth.model.TaskList;
 import notmarth.storage.Storage;
@@ -28,9 +29,9 @@ public final class AddCommand extends Command {
      * @throws NotMarthException if the task list cannot accept another task
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws NotMarthException {
+    public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
         tasks.add(task);
-        saveTasks(tasks, ui, storage);
+        saveTasks(tasks, contacts, ui, storage);
         ui.showTaskAdded(task, tasks.size());
     }
 }

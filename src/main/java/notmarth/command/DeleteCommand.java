@@ -1,6 +1,7 @@
 package notmarth.command;
 
 import notmarth.exception.NotMarthException;
+import notmarth.model.ContactList;
 import notmarth.model.Task;
 import notmarth.model.TaskList;
 import notmarth.storage.Storage;
@@ -28,9 +29,9 @@ public final class DeleteCommand extends Command {
      * @throws NotMarthException if the task number is invalid
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws NotMarthException {
+    public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
         Task deletedTask = tasks.delete(taskNumber);
-        saveTasks(tasks, ui, storage);
+        saveTasks(tasks, contacts, ui, storage);
         ui.showTaskDeleted(deletedTask, tasks.size());
     }
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import notmarth.model.ContactList;
 import notmarth.model.Deadline;
 import notmarth.model.Event;
 import notmarth.model.Task;
@@ -33,7 +34,7 @@ public final class OnCommand extends Command {
      * @param storage the task archive handler, which is unused
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) {
         String displayDate = DateTimeParser.format(date.atStartOfDay(), false);
         List<Integer> matchingIndexes = IntStream.range(0, tasks.size())
                 .filter(index -> isMatch(tasks.get(index)))

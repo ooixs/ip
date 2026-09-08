@@ -10,6 +10,7 @@ import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.List;
 
+import notmarth.model.Contact;
 import notmarth.model.Deadline;
 import notmarth.model.Event;
 import notmarth.model.Task;
@@ -55,7 +56,7 @@ public final class Storage {
      */
     public LoadResult load(int maximumTasks) {
         if (!Files.exists(dataFile)) {
-            return new LoadResult(new ArrayList<>(), null);
+            return new LoadResult(new ArrayList<>(), new ArrayList<>(), null);
         }
 
         try {
@@ -65,22 +66,28 @@ public final class Storage {
             }
 
             ArrayList<Task> tasks = new ArrayList<>();
+            ArrayList<Contact> contacts = new ArrayList<>();
             for (int i = 1; i < lines.size(); i++) {
                 if (lines.get(i).isBlank()) {
                     continue;
                 }
-                if (tasks.size() == maximumTasks) {
-                    throw new CorruptTaskDataException();
+                String record = lines.get(i);
+                if (record.startsWith("contact|")) {
+                    contacts.add(parseContact(record));
+                } else {
+                    if (tasks.size() == maximumTasks) {
+                        throw new CorruptTaskDataException();
+                    }
+                    tasks.add(parseTask(record));
                 }
-                tasks.add(parseTask(lines.get(i)));
             }
-            return new LoadResult(tasks, null);
+            return new LoadResult(tasks, contacts, null);
         } catch (CorruptTaskDataException exception) {
-            return new LoadResult(new ArrayList<>(),
+            return new LoadResult(new ArrayList<>(), new ArrayList<>(),
                     "The saved battle plan is corrupted. Repair or remove the file before starting "
                             + "NotMarth again.");
         } catch (IOException exception) {
-            return new LoadResult(new ArrayList<>(),
+            return new LoadResult(new ArrayList<>(), new ArrayList<>(),
                     "I couldn't read the saved battle plan from disk. Fix the file before starting "
                             + "NotMarth again.");
         }
@@ -91,10 +98,12 @@ public final class Storage {
      */
     public static final class LoadResult {
         private final ArrayList<Task> tasks;
+        private final ArrayList<Contact> contacts;
         private final String warning;
 
-        private LoadResult(ArrayList<Task> tasks, String warning) {
+        private LoadResult(ArrayList<Task> tasks, ArrayList<Contact> contacts, String warning) {
             this.tasks = tasks;
+            this.contacts = contacts;
             this.warning = warning;
         }
 
@@ -105,6 +114,11 @@ public final class Storage {
          */
         public ArrayList<Task> getTasks() {
             return tasks;
+        }
+
+        /** @return the contacts loaded from disk */
+        public ArrayList<Contact> getContacts() {
+            return contacts;
         }
 
         /**
@@ -135,6 +149,11 @@ public final class Storage {
      * @throws IOException if the archive cannot be written
      */
     public void save(List<Task> tasks) throws IOException {
+        save(tasks, List.of());
+    }
+
+    /** Saves tasks and contacts in the shared archive. */
+    public void save(List<Task> tasks, List<Contact> contacts) throws IOException {
         Path parent = dataFile.getParent();
         if (parent == null) {
             parent = Path.of(".");
@@ -145,6 +164,9 @@ public final class Storage {
         lines.add(HEADER);
         for (Task task : tasks) {
             lines.add(serializeTask(task));
+        }
+        for (Contact contact : contacts) {
+            lines.add(serializeContact(contact));
         }
 
         Path temporaryFile = Files.createTempFile(parent, "notmarth-", ".tmp");
@@ -181,6 +203,19 @@ public final class Storage {
             task.markAsDone();
         }
         return task;
+    }
+
+    private static Contact parseContact(String line) throws CorruptTaskDataException {
+        List<String> fields = splitRecord(line);
+        requireFieldCount(fields, 4);
+        if (!"contact".equals(fields.get(0))) {
+            throw new CorruptTaskDataException();
+        }
+        try {
+            return new Contact(requireText(fields.get(1)), requireText(fields.get(2)), requireText(fields.get(3)));
+        } catch (IllegalArgumentException exception) {
+            throw new CorruptTaskDataException();
+        }
     }
 
     private static Task createTask(List<String> fields) throws CorruptTaskDataException {
@@ -237,6 +272,11 @@ public final class Storage {
         default:
             throw new IllegalStateException("Unsupported task type");
         }
+    }
+
+    private static String serializeContact(Contact contact) {
+        return String.join("|", "contact", escape(contact.getName()), escape(contact.getPhone()),
+                escape(contact.getAddress()));
     }
 
     /**

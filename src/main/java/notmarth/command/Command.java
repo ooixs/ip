@@ -3,6 +3,7 @@ package notmarth.command;
 import java.io.IOException;
 
 import notmarth.exception.NotMarthException;
+import notmarth.model.ContactList;
 import notmarth.model.TaskList;
 import notmarth.storage.Storage;
 import notmarth.ui.Ui;
@@ -23,7 +24,20 @@ public abstract class Command {
      * @param storage the task archive handler
      * @throws NotMarthException if the command cannot be completed
      */
-    public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws NotMarthException;
+    public abstract void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage)
+            throws NotMarthException;
+
+    /**
+     * Executes a command with no contacts, retained for callers of the original task-only API.
+     *
+     * @param tasks the current task list
+     * @param ui the console interaction handler
+     * @param storage the task archive handler
+     * @throws NotMarthException if the command cannot be completed
+     */
+    public void execute(TaskList tasks, Ui ui, Storage storage) throws NotMarthException {
+        execute(tasks, new ContactList(), ui, storage);
+    }
 
     /**
      * Returns whether this command ends the application loop.
@@ -42,9 +56,9 @@ public abstract class Command {
      * @param ui the console interaction handler
      * @param storage the task archive handler
      */
-    protected void saveTasks(TaskList tasks, Ui ui, Storage storage) {
+    protected void saveTasks(TaskList tasks, ContactList contacts, Ui ui, Storage storage) {
         try {
-            storage.save(tasks.asList());
+            storage.save(tasks.asList(), contacts.asList());
         } catch (IOException exception) {
             ui.showError("I couldn't save the battle plan to disk. Your current session is still active.");
         }

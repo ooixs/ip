@@ -4,16 +4,21 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 import notmarth.command.AddCommand;
+import notmarth.command.AddContactCommand;
 import notmarth.command.Command;
 import notmarth.command.DeleteCommand;
+import notmarth.command.DeleteContactCommand;
 import notmarth.command.ExitCommand;
 import notmarth.command.FindCommand;
+import notmarth.command.FindContactCommand;
 import notmarth.command.ListCommand;
+import notmarth.command.ListContactsCommand;
 import notmarth.command.MarkCommand;
 import notmarth.command.OnCommand;
 import notmarth.command.SommieCommand;
 import notmarth.command.UnmarkCommand;
 import notmarth.exception.NotMarthException;
+import notmarth.model.Contact;
 import notmarth.model.Deadline;
 import notmarth.model.Event;
 import notmarth.model.Task;
@@ -46,6 +51,18 @@ public final class Parser {
         }
         if (fullCommand.equals("list")) {
             return new ListCommand();
+        }
+        if (fullCommand.equals("listcontacts")) {
+            return new ListContactsCommand();
+        }
+        if (isCommand(fullCommand, "findcontact")) {
+            return new FindContactCommand(parseContactKeyword(fullCommand));
+        }
+        if (isCommand(fullCommand, "deletecontact")) {
+            return new DeleteContactCommand(parseTaskNumber(fullCommand, "deletecontact"));
+        }
+        if (isCommand(fullCommand, "contact")) {
+            return new AddContactCommand(createContact(fullCommand));
         }
         if (isCommand(fullCommand, "find")) {
             return new FindCommand(parseFindKeyword(fullCommand));
@@ -95,6 +112,36 @@ public final class Parser {
         return isCommand(command, "todo")
                 || isCommand(command, "deadline")
                 || isCommand(command, "event");
+    }
+
+    private Contact createContact(String command) throws NotMarthException {
+        String details = command.substring("contact".length()).trim();
+        int phoneMarker = details.indexOf("/phone");
+        int addressMarker = details.indexOf("/address");
+        if (phoneMarker <= 0 || addressMarker <= phoneMarker) {
+            throw invalidContactMessage();
+        }
+        String name = details.substring(0, phoneMarker).trim();
+        String phone = details.substring(phoneMarker + "/phone".length(), addressMarker).trim();
+        String address = details.substring(addressMarker + "/address".length()).trim();
+        if (name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
+            throw invalidContactMessage();
+        }
+        return new Contact(name, phone, address);
+    }
+
+    private NotMarthException invalidContactMessage() {
+        return new NotMarthException(
+                "A contact needs a name, phone number, and address. Try: contact <name> /phone <number> "
+                        + "/address <address>");
+    }
+
+    private String parseContactKeyword(String command) throws NotMarthException {
+        String keyword = command.substring("findcontact".length()).trim();
+        if (keyword.isEmpty()) {
+            throw new NotMarthException("Findcontact needs a name or keyword. Try: findcontact <keyword>");
+        }
+        return keyword;
     }
 
     /**

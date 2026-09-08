@@ -1,5 +1,6 @@
 package notmarth.command;
 
+import notmarth.model.ContactList;
 import notmarth.model.TaskList;
 import notmarth.storage.Storage;
 import notmarth.ui.Ui;
@@ -18,7 +19,7 @@ public final class SommieCommand extends Command {
      * @param storage the task archive handler, which is unused
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) {
+    public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) {
         ui.showSommieMessage();
     }
 }

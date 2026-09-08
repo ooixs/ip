@@ -2,6 +2,8 @@ package notmarth.ui;
 
 import java.util.Scanner;
 
+import notmarth.model.Contact;
+import notmarth.model.ContactList;
 import notmarth.model.Task;
 import notmarth.model.TaskList;
 
@@ -17,7 +19,8 @@ public class Ui {
     private static final String UNMARK_TASK_MESSAGE = "     This order is back on the map:";
     private static final String DELETE_TASK_MESSAGE = "     This order has been withdrawn:";
     private static final String AVAILABLE_COMMANDS_MESSAGE =
-            "Available commands: todo, deadline, event, list, find, on, mark, unmark, delete, bye";
+            "Available commands: todo, deadline, event, list, find, on, mark, unmark, delete, contact, "
+                    + "listcontacts, findcontact, deletecontact, bye";
     private static final String ERROR_MESSAGE_TEXT_PREFIX = "I couldn't process that, Divine One: ";
     private static final String ERROR_MESSAGE_PREFIX = "     " + ERROR_MESSAGE_TEXT_PREFIX;
     private static final String SOMMIE_MESSAGE =
@@ -186,6 +189,43 @@ public class Ui {
      */
     public void showNoDateTasks(String displayDate) {
         System.out.println("     No deadlines or events are scheduled for " + displayDate + ".");
+    }
+
+    /** Displays all contacts in their current order. */
+    public void showContacts(ContactList contacts) {
+        System.out.println("     Here are your current contacts:");
+        for (int i = 0; i < contacts.size(); i++) {
+            showNumberedContact(i + 1, contacts.get(i));
+        }
+    }
+
+    /** Displays a numbered contact. */
+    public void showNumberedContact(int contactNumber, Contact contact) {
+        System.out.println("     " + contactNumber + "." + contact);
+    }
+
+    /** Displays the result of adding a contact. */
+    public void showContactAdded(Contact contact, int contactCount) {
+        System.out.println("     Contact added to the battle plan:");
+        System.out.println("       " + contact);
+        System.out.println("     Now you have " + contactCount + " contacts in the list.");
+    }
+
+    /** Displays the heading for matching contacts. */
+    public void showFindContactsHeader() {
+        System.out.println("     Here are the matching contacts in your list:");
+    }
+
+    /** Displays the result for a contact search with no matches. */
+    public void showNoFindContacts(String keyword) {
+        System.out.println("     No contacts in your list match \"" + keyword + "\".");
+    }
+
+    /** Displays the result of deleting a contact. */
+    public void showContactDeleted(Contact contact, int remainingContactCount) {
+        System.out.println("     This contact has been withdrawn:");
+        System.out.println("       " + contact);
+        System.out.println("     Now you have " + remainingContactCount + " contacts in the list.");
     }
 
     /**
