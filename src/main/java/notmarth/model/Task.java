@@ -27,6 +27,10 @@ public class Task {
      * @param type the kind of task
      */
     protected Task(String description, TaskType type) {
+        // All callers validate descriptions before constructing a task.
+        assert description != null && !description.isBlank()
+                : "Tasks must have a nonblank description";
+        assert type != null : "Tasks must have a task type";
         this.description = description;
         this.isDone = false;
         this.type = type;
