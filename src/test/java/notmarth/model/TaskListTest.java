@@ -92,6 +92,14 @@ class TaskListTest {
         assertTrue(tasks.isEmpty());
     }
 
+    /** Verifies that construction rejects null and duplicate initial tasks. */
+    @Test
+    void taskListConstruction_nullOrDuplicateTasks_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new TaskList(null, 2));
+        assertThrows(IllegalArgumentException.class,
+                () -> new TaskList(List.of(new ToDo("same"), new ToDo("same")), 2));
+    }
+
     /** Verifies that the varargs constructor accepts an initial task sequence. */
     @Test
     void taskListConstruction_varargsInput_acceptsInitialTasks() {

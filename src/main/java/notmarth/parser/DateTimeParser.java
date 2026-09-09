@@ -42,7 +42,8 @@ public final class DateTimeParser {
     public static ParsedDateTime parse(String input) {
         if (input == null || input.isBlank() || !input.equals(input.trim())
                 || input.matches(".*\\s{2,}.*")) {
-            throw new DateTimeParseException("Date or time contains invalid whitespace", input, 0);
+            String reportedInput = input == null ? "" : input;
+            throw new DateTimeParseException("Date or time contains invalid whitespace", reportedInput, 0);
         }
         Optional<ParsedDateTime> dateTime = DATE_TIME_FORMATTERS.stream()
                 .map(formatter -> tryParseDateTime(input, formatter))

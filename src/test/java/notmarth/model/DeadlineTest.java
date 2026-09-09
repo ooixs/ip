@@ -2,6 +2,7 @@ package notmarth.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -39,5 +40,14 @@ class DeadlineTest {
 
         assertEquals(LocalDateTime.of(2019, 10, 15, 14, 30), deadline.getBy());
         assertEquals("2019-10-15T14:30", deadline.getByForStorage());
+    }
+
+    /** Verifies that a typed deadline cannot contain a missing date-time value. */
+    @Test
+    void deadlineCreation_nullTypedValue_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new Deadline("missing", (LocalDateTime) null));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Deadline("missing", (LocalDate) null));
     }
 }

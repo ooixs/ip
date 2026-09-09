@@ -43,6 +43,14 @@ class DateTimeParserTest {
                 () -> DateTimeParser.parse("31/2/2019"));
     }
 
+    /** Verifies that missing and irregularly spaced date values are rejected. */
+    @Test
+    void parse_missingOrIrregularWhitespace_throwsDateTimeParseException() {
+        assertThrows(DateTimeParseException.class, () -> DateTimeParser.parse(null));
+        assertThrows(DateTimeParseException.class, () -> DateTimeParser.parse(" 2019-10-15"));
+        assertThrows(DateTimeParseException.class, () -> DateTimeParser.parse("2019-10-15  1400"));
+    }
+
     /** Verifies that display and storage formatting preserve time presence. */
     @Test
     void format_valuesWithOrWithoutTime_preservesTimePresence() {

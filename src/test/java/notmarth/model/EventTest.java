@@ -51,5 +51,9 @@ class EventTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new Event("same time", LocalDateTime.of(2019, 2, 5, 14, 0),
                         LocalDateTime.of(2019, 2, 5, 14, 0)));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Event("missing", (LocalDateTime) null, LocalDateTime.now()));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Event("missing", LocalDate.now(), null));
     }
 }

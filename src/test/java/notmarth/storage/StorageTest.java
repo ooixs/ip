@@ -3,6 +3,7 @@ package notmarth.storage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
@@ -103,5 +104,40 @@ class StorageTest {
 
         assertTrue(result.hasWarning());
         assertTrue(result.getTasks().isEmpty());
+    }
+
+    /** Verifies that malformed statuses, escapes, and field counts are rejected together. */
+    @Test
+    void load_malformedRecords_returnsWarningAndNoTasks() throws Exception {
+        Path archive = temporaryDirectory.resolve("malformed.txt");
+        Files.writeString(archive, "# NotMarth battle plan v1\n"
+                + "todo|maybe|task\n");
+
+        Storage.LoadResult result = new Storage(archive.toString()).load(10);
+
+        assertTrue(result.hasWarning());
+        assertTrue(result.getTasks().isEmpty());
+
+        Files.writeString(archive, "# NotMarth battle plan v1\n"
+                + "todo|open|bad\\qescape\n");
+        assertTrue(new Storage(archive.toString()).load(10).hasWarning());
+    }
+
+    /** Verifies that invalid archive limits and non-file paths do not crash startup. */
+    @Test
+    void load_invalidLimitOrDirectory_returnsWarning() throws Exception {
+        Storage storage = new Storage(temporaryDirectory.resolve("missing.txt").toString());
+        assertTrue(storage.load(0).hasWarning());
+
+        Path directory = temporaryDirectory.resolve("archive-directory");
+        Files.createDirectory(directory);
+        assertTrue(new Storage(directory.toString()).load(10).hasWarning());
+    }
+
+    /** Verifies that an empty or null archive path is rejected at construction. */
+    @Test
+    void storageCreation_missingPath_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new Storage(null));
+        assertThrows(IllegalArgumentException.class, () -> new Storage(" "));
     }
 }
