@@ -19,7 +19,8 @@ public final class DeleteContactCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
+    public void execute(
+            TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
         Contact deletedContact = contacts.delete(contactNumber);
         try {
             storage.save(tasks.asList(), contacts.asList());

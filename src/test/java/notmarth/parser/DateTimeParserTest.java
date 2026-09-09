@@ -20,9 +20,9 @@ class DateTimeParserTest {
         DateTimeParser.ParsedDateTime date = DateTimeParser.parse("2019-10-15");
 
         assertEquals(LocalDateTime.of(2019, 12, 2, 18, 0), dateTime.value());
-        assertTrue(dateTime.includesTime());
+        assertTrue(dateTime.hasTime());
         assertEquals(LocalDateTime.of(2019, 10, 15, 0, 0), date.value());
-        assertFalse(date.includesTime());
+        assertFalse(date.hasTime());
     }
 
     /** Verifies parsing of ISO date-time values and clock values with a colon. */

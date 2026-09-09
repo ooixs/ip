@@ -11,51 +11,51 @@ import notmarth.parser.DateTimeParser;
  */
 public class Deadline extends Task {
     private final LocalDateTime by;
-    private final boolean includesTime;
+    private final boolean hasTime;
 
     /**
      * Creates an unfinished deadline task from a supported date or time text.
      *
-     * @param description the task description
-     * @param by the date or time by which the task should be completed
+     * @param description the task description.
+     * @param by the date or time by which the task should be completed.
      * @throws DateTimeParseException if {@code by} is not a supported date
-     *                                or date-time format
+     *                                or date-time format.
      */
     public Deadline(String description, String by) {
         super(description, TaskType.DEADLINE);
         DateTimeParser.ParsedDateTime parsedDateTime = DateTimeParser.parse(by);
         this.by = parsedDateTime.value();
-        this.includesTime = parsedDateTime.includesTime();
+        this.hasTime = parsedDateTime.hasTime();
     }
 
     /**
      * Creates a deadline from an already parsed date and time.
      *
-     * @param description the task description
-     * @param by the deadline date and time
+     * @param description the task description.
+     * @param by the deadline date and time.
      */
     public Deadline(String description, LocalDateTime by) {
         super(description, TaskType.DEADLINE);
         this.by = by;
-        this.includesTime = true;
+        this.hasTime = true;
     }
 
     /**
      * Creates a date-only deadline from an already parsed date.
      *
-     * @param description the task description
-     * @param by the deadline date
+     * @param description the task description.
+     * @param by the deadline date.
      */
     public Deadline(String description, LocalDate by) {
         super(description, TaskType.DEADLINE);
         this.by = by.atStartOfDay();
-        this.includesTime = false;
+        this.hasTime = false;
     }
 
     /**
      * Returns the typed deadline value.
      *
-     * @return the deadline date and time, at midnight for a date-only deadline
+     * @return the deadline date and time, at midnight for a date-only deadline.
      */
     public LocalDateTime getBy() {
         return by;
@@ -64,17 +64,17 @@ public class Deadline extends Task {
     /**
      * Returns the unambiguous value used in the task archive.
      *
-     * @return an ISO date or ISO local date-time
+     * @return an ISO date or ISO local date-time.
      */
     public String getByForStorage() {
-        return DateTimeParser.formatForStorage(by, includesTime);
+        return DateTimeParser.formatForStorage(by, hasTime);
     }
 
     /**
      * Checks whether this deadline falls on a calendar date.
      *
-     * @param date the date to check
-     * @return {@code true} when the deadline is due on the date
+     * @param date the date to check.
+     * @return {@code true} when the deadline is due on the date.
      */
     public boolean isDueOn(LocalDate date) {
         return by.toLocalDate().equals(date);
@@ -83,10 +83,10 @@ public class Deadline extends Task {
     /**
      * Returns this task with its formatted deadline and type marker.
      *
-     * @return the formatted deadline task
+     * @return the formatted deadline task.
      */
     @Override
     public String toString() {
-        return super.toString() + " (by: " + DateTimeParser.format(by, includesTime) + ")";
+        return super.toString() + " (by: " + DateTimeParser.format(by, hasTime) + ")";
     }
 }

@@ -13,7 +13,10 @@ for topics that the SE-EDU guide does not cover.
 ## Required conventions
 
 - Use lowercase package names; PascalCase nouns for classes, enums, and records; camelCase verbs for methods; camelCase variables; and SCREAMING_SNAKE_CASE constants.
-- Keep names in English, avoid uppercase abbreviations in identifiers, use descriptive names for large-scope variables, and use boolean-sounding names such as `isDone`, `hasTasks`, or `canRun`. Collection names should be plural.
+- Keep names in English, avoid uppercase abbreviations in identifiers, and use
+  descriptive names for large-scope variables. Prefix every boolean variable,
+  field, parameter, record component, and method with a boolean verb such as
+  `is`, `has`, `was`, `can`, or `should`. Collection names should be plural.
 - Name every test method using exactly three meaningful parts separated by underscores:
   `featureUnderTest_testScenario_expectedBehavior`. Keep each part in camelCase and
   audit every `@Test` method after adding or renaming tests. Do not use a single

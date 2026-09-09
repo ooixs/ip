@@ -14,7 +14,7 @@ public class Task {
     /**
      * Creates a task that is initially not done.
      *
-     * @param description the task description
+     * @param description the task description.
      */
     public Task(String description) {
         this(description, TaskType.GENERIC);
@@ -23,8 +23,8 @@ public class Task {
     /**
      * Creates a task with a specific task type.
      *
-     * @param description the task description
-     * @param type the kind of task
+     * @param description the task description.
+     * @param type the kind of task.
      */
     protected Task(String description, TaskType type) {
         // All callers validate descriptions before constructing a task.
@@ -39,7 +39,7 @@ public class Task {
     /**
      * Returns the icon representing this task's completion state.
      *
-     * @return {@code X} when the task is done, otherwise a blank space
+     * @return {@code X} when the task is done, otherwise a blank space.
      */
     public String getStatusIcon() {
         return isDone ? "X" : " ";
@@ -62,7 +62,7 @@ public class Task {
     /**
      * Returns whether this task is complete.
      *
-     * @return {@code true} when this task has been marked as done
+     * @return {@code true} when this task has been marked as done.
      */
     public boolean isDone() {
         return isDone;
@@ -71,7 +71,7 @@ public class Task {
     /**
      * Returns the task's description for persistence.
      *
-     * @return the task description
+     * @return the task description.
      */
     public String getDescription() {
         return description;
@@ -80,7 +80,7 @@ public class Task {
     /**
      * Returns the task's kind for persistence.
      *
-     * @return the task type
+     * @return the task type.
      */
     public TaskType getTaskType() {
         return type;
@@ -89,7 +89,7 @@ public class Task {
     /**
      * Returns the task in the format used when displaying it.
      *
-     * @return the optional type marker, status icon, and task description
+     * @return the optional type marker, status icon, and task description.
      */
     @Override
     public String toString() {

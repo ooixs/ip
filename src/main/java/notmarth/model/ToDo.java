@@ -7,7 +7,7 @@ public class ToDo extends Task {
     /**
      * Creates an unfinished ToDo task.
      *
-     * @param description the task description
+     * @param description the task description.
      */
     public ToDo(String description) {
         super(description, TaskType.TODO);

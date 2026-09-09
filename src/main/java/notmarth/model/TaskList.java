@@ -16,8 +16,8 @@ public final class TaskList implements Iterable<Task> {
     /**
      * Creates a task list from zero or more initial tasks.
      *
-     * @param maximumTasks the largest number of tasks this list can contain
-     * @param loadedTasks the tasks to place in the list initially
+     * @param maximumTasks the largest number of tasks this list can contain.
+     * @param loadedTasks the tasks to place in the list initially.
      */
     public TaskList(int maximumTasks, Task... loadedTasks) {
         this(List.of(loadedTasks), maximumTasks);
@@ -26,8 +26,8 @@ public final class TaskList implements Iterable<Task> {
     /**
      * Creates a task list from tasks loaded at startup.
      *
-     * @param loadedTasks the tasks recovered from storage
-     * @param maximumTasks the largest number of tasks this list can contain
+     * @param loadedTasks the tasks recovered from storage.
+     * @param maximumTasks the largest number of tasks this list can contain.
      */
     public TaskList(List<Task> loadedTasks, int maximumTasks) {
         // Loading and construction both provide a concrete collection of tasks.
@@ -41,14 +41,15 @@ public final class TaskList implements Iterable<Task> {
         this.maximumTasks = maximumTasks;
         this.tasks = new ArrayList<>(loadedTasks);
         // The public checks above establish this invariant for every new task list.
-        assert this.tasks.size() <= this.maximumTasks : "Loaded tasks must fit within the task-list capacity";
+        assert this.tasks.size() <= this.maximumTasks
+                : "Loaded tasks must fit within the task-list capacity";
     }
 
     /**
      * Adds a task if the list still has room.
      *
-     * @param task the task to add
-     * @throws NotMarthException if the task list is full
+     * @param task the task to add.
+     * @throws NotMarthException if the task list is full.
      */
     public void add(Task task) throws NotMarthException {
         // Null tasks would break display, persistence, and task-type operations.
@@ -65,9 +66,9 @@ public final class TaskList implements Iterable<Task> {
     /**
      * Marks a task as complete.
      *
-     * @param taskNumber the one-based task number
-     * @return the task that was marked
-     * @throws NotMarthException if the task number is invalid
+     * @param taskNumber the one-based task number.
+     * @return the task that was marked.
+     * @throws NotMarthException if the task number is invalid.
      */
     public Task mark(int taskNumber) throws NotMarthException {
         Task task = requireTask(taskNumber, "marking");
@@ -78,9 +79,9 @@ public final class TaskList implements Iterable<Task> {
     /**
      * Marks a task as incomplete.
      *
-     * @param taskNumber the one-based task number
-     * @return the task that was unmarked
-     * @throws NotMarthException if the task number is invalid
+     * @param taskNumber the one-based task number.
+     * @return the task that was unmarked.
+     * @throws NotMarthException if the task number is invalid.
      */
     public Task unmark(int taskNumber) throws NotMarthException {
         Task task = requireTask(taskNumber, "unmarking");
@@ -91,9 +92,9 @@ public final class TaskList implements Iterable<Task> {
     /**
      * Removes a task and closes the numbering gap left behind.
      *
-     * @param taskNumber the one-based task number
-     * @return the removed task
-     * @throws NotMarthException if the task number is invalid
+     * @param taskNumber the one-based task number.
+     * @return the removed task.
+     * @throws NotMarthException if the task number is invalid.
      */
     public Task delete(int taskNumber) throws NotMarthException {
         requireTask(taskNumber, "deleting");
@@ -103,8 +104,8 @@ public final class TaskList implements Iterable<Task> {
     /**
      * Returns a task by its zero-based position for display and date filtering.
      *
-     * @param index the zero-based position
-     * @return the task at that position
+     * @param index the zero-based position.
+     * @return the task at that position.
      */
     public Task get(int index) {
         return tasks.get(index);
@@ -113,7 +114,7 @@ public final class TaskList implements Iterable<Task> {
     /**
      * Returns the number of stored tasks.
      *
-     * @return the current task count
+     * @return the current task count.
      */
     public int size() {
         return tasks.size();
@@ -122,7 +123,7 @@ public final class TaskList implements Iterable<Task> {
     /**
      * Returns whether this list has no tasks.
      *
-     * @return {@code true} when no tasks are stored
+     * @return {@code true} when no tasks are stored.
      */
     public boolean isEmpty() {
         return tasks.isEmpty();
@@ -131,7 +132,7 @@ public final class TaskList implements Iterable<Task> {
     /**
      * Exposes a read-only view for persistence without exposing list mutation.
      *
-     * @return the tasks in their current order
+     * @return the tasks in their current order.
      */
     public List<Task> asList() {
         return Collections.unmodifiableList(tasks);
@@ -154,7 +155,7 @@ public final class TaskList implements Iterable<Task> {
     /**
      * Returns a read-only iterator over tasks in display order.
      *
-     * @return an iterator that cannot modify this task list
+     * @return an iterator that cannot modify this task list.
      */
     @Override
     public java.util.Iterator<Task> iterator() {

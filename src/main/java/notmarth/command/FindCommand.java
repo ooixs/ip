@@ -16,7 +16,7 @@ public final class FindCommand extends Command {
     /**
      * Creates a find command for a keyword.
      *
-     * @param keyword the keyword to search for
+     * @param keyword the keyword to search for.
      */
     public FindCommand(String keyword) {
         this.keyword = keyword;
@@ -25,9 +25,9 @@ public final class FindCommand extends Command {
     /**
      * Displays tasks whose descriptions contain the keyword, ignoring letter case.
      *
-     * @param tasks the task list to search
-     * @param ui the console interaction handler
-     * @param storage the task archive handler, which is unused
+     * @param tasks the task list to search.
+     * @param ui the console interaction handler.
+     * @param storage the task archive handler, which is unused.
      */
     @Override
     public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) {

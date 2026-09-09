@@ -14,7 +14,7 @@ public final class DeleteCommand extends Command {
     /**
      * Creates a delete command for a one-based task number.
      *
-     * @param taskNumber the task number to remove
+     * @param taskNumber the task number to remove.
      */
     public DeleteCommand(int taskNumber) {
         this.taskNumber = taskNumber;
@@ -23,13 +23,14 @@ public final class DeleteCommand extends Command {
     /**
      * Removes the selected task, persists the updated battle plan, and reports the result.
      *
-     * @param tasks the current task list
-     * @param ui the console interaction handler
-     * @param storage the task archive handler
-     * @throws NotMarthException if the task number is invalid
+     * @param tasks the current task list.
+     * @param ui the console interaction handler.
+     * @param storage the task archive handler.
+     * @throws NotMarthException if the task number is invalid.
      */
     @Override
-    public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
+    public void execute(
+            TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
         Task deletedTask = tasks.delete(taskNumber);
         saveTasks(tasks, contacts, ui, storage);
         ui.showTaskDeleted(deletedTask, tasks.size());

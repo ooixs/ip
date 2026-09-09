@@ -14,9 +14,9 @@ public final class ListCommand extends Command {
     /**
      * Displays every task in its current battle-plan order.
      *
-     * @param tasks the task list to display
-     * @param ui the console interaction handler
-     * @param storage the task archive handler, which is unused
+     * @param tasks the task list to display.
+     * @param ui the console interaction handler.
+     * @param storage the task archive handler, which is unused.
      */
     @Override
     public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) {

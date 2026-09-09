@@ -14,9 +14,9 @@ public final class ExitCommand extends Command {
     /**
      * Displays the farewell message for the ending session.
      *
-     * @param tasks the current task list, which is unchanged
-     * @param ui the console interaction handler
-     * @param storage the task archive handler, which is unused
+     * @param tasks the current task list, which is unchanged.
+     * @param ui the console interaction handler.
+     * @param storage the task archive handler, which is unused.
      */
     @Override
     public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) {
@@ -26,7 +26,7 @@ public final class ExitCommand extends Command {
     /**
      * Reports that this command ends the command loop.
      *
-     * @return always {@code true}
+     * @return always {@code true}.
      */
     @Override
     public boolean isExit() {

@@ -14,7 +14,7 @@ public final class MarkCommand extends Command {
     /**
      * Creates a mark command for a one-based task number.
      *
-     * @param taskNumber the task number to complete
+     * @param taskNumber the task number to complete.
      */
     public MarkCommand(int taskNumber) {
         this.taskNumber = taskNumber;
@@ -23,13 +23,14 @@ public final class MarkCommand extends Command {
     /**
      * Marks the selected task complete, persists the change, and reports the result.
      *
-     * @param tasks the current task list
-     * @param ui the console interaction handler
-     * @param storage the task archive handler
-     * @throws NotMarthException if the task number is invalid
+     * @param tasks the current task list.
+     * @param ui the console interaction handler.
+     * @param storage the task archive handler.
+     * @throws NotMarthException if the task number is invalid.
      */
     @Override
-    public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
+    public void execute(
+            TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
         Task task = tasks.mark(taskNumber);
         saveTasks(tasks, contacts, ui, storage);
         ui.showTaskMarked(task);

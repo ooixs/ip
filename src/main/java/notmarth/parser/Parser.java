@@ -36,9 +36,9 @@ public final class Parser {
     /**
      * Converts a complete user command into an executable command object.
      *
-     * @param fullCommand the trimmed command entered by the user
-     * @return the command represented by the input
-     * @throws NotMarthException if the input is empty, unknown, or malformed
+     * @param fullCommand the trimmed command entered by the user.
+     * @return the command represented by the input.
+     * @throws NotMarthException if the input is empty, unknown, or malformed.
      */
     public Command parse(String fullCommand) throws NotMarthException {
         // The console trims input before calling the parser, so a command object is always expected.
@@ -94,9 +94,9 @@ public final class Parser {
      * Checks whether a command is exactly a keyword or starts with that keyword
      * followed by at least one space.
      *
-     * @param command the complete command entered by the user
-     * @param keyword the command keyword to look for
-     * @return whether the command uses the keyword at its beginning
+     * @param command the complete command entered by the user.
+     * @param keyword the command keyword to look for.
+     * @return whether the command uses the keyword at its beginning.
      */
     private boolean isCommand(String command, String keyword) {
         return command.equals(keyword) || command.startsWith(keyword + " ");
@@ -105,8 +105,8 @@ public final class Parser {
     /**
      * Checks whether the command is one of the supported task-creation commands.
      *
-     * @param command the complete command entered by the user
-     * @return whether the command starts with a supported task keyword
+     * @param command the complete command entered by the user.
+     * @return whether the command starts with a supported task keyword.
      */
     private boolean isTaskCommand(String command) {
         return isCommand(command, "todo")
@@ -148,9 +148,9 @@ public final class Parser {
      * Creates a task from a user command. Deadline values are parsed into
      * typed {@code java.time} values before the task is created.
      *
-     * @param command the command entered by the user
-     * @return the parsed task
-     * @throws NotMarthException if the command is missing or has invalid information
+     * @param command the command entered by the user.
+     * @return the parsed task.
+     * @throws NotMarthException if the command is missing or has invalid information.
      */
     private Task createTask(String command) throws NotMarthException {
         if (isCommand(command, "todo")) {
@@ -239,9 +239,9 @@ public final class Parser {
     /**
      * Parses the date from an {@code on <date>} command.
      *
-     * @param command the command containing the requested date
-     * @return the requested calendar date
-     * @throws NotMarthException if the command has no valid date
+     * @param command the command containing the requested date.
+     * @return the requested calendar date.
+     * @throws NotMarthException if the command has no valid date.
      */
     private LocalDate parseOnDate(String command) throws NotMarthException {
         String dateText = command.substring("on".length()).trim();
@@ -262,9 +262,9 @@ public final class Parser {
     /**
      * Parses the keyword from a {@code find <keyword>} command.
      *
-     * @param command the command containing the search keyword
-     * @return the keyword to search for
-     * @throws NotMarthException if the command has no keyword
+     * @param command the command containing the search keyword.
+     * @return the keyword to search for.
+     * @throws NotMarthException if the command has no keyword.
      */
     private String parseFindKeyword(String command) throws NotMarthException {
         String keyword = command.substring("find".length()).trim();
@@ -277,10 +277,10 @@ public final class Parser {
     /**
      * Parses a task number from a command that operates on a task.
      *
-     * @param command the complete command entered by the user
-     * @param commandName the command keyword used in the error message
-     * @return the requested task number
-     * @throws NotMarthException if the command does not contain an integer
+     * @param command the complete command entered by the user.
+     * @param commandName the command keyword used in the error message.
+     * @return the requested task number.
+     * @throws NotMarthException if the command does not contain an integer.
      */
     private int parseTaskNumber(String command, String commandName) throws NotMarthException {
         try {

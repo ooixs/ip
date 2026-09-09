@@ -9,9 +9,9 @@ public final class Contact {
     /**
      * Creates a contact.
      *
-     * @param name the contact's name
-     * @param phone the contact's phone number
-     * @param address the contact's address
+     * @param name the contact's name.
+     * @param phone the contact's phone number.
+     * @param address the contact's address.
      */
     public Contact(String name, String phone, String address) {
         if (name == null || name.isBlank() || phone == null || phone.isBlank()

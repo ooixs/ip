@@ -51,7 +51,7 @@ public class Ui {
     /**
      * Displays a startup warning after the opening banner.
      *
-     * @param message the storage warning to display
+     * @param message the storage warning to display.
      */
     public void showStartupWarning(String message) {
         System.out.println();
@@ -69,7 +69,7 @@ public class Ui {
     /**
      * Returns whether another command is available from standard input.
      *
-     * @return {@code true} when another input line can be read
+     * @return {@code true} when another input line can be read.
      */
     public boolean hasNextLine() {
         return scanner.hasNextLine();
@@ -78,7 +78,7 @@ public class Ui {
     /**
      * Reads and trims the next command.
      *
-     * @return the next command without surrounding whitespace
+     * @return the next command without surrounding whitespace.
      */
     public String readCommand() {
         return scanner.nextLine().trim();
@@ -87,7 +87,7 @@ public class Ui {
     /**
      * Displays a command before its result.
      *
-     * @param command the command entered by the user
+     * @param command the command entered by the user.
      */
     public void showCommand(String command) {
         showSeparator();
@@ -114,7 +114,7 @@ public class Ui {
     /**
      * Displays a command-processing error.
      *
-     * @param message the explanation of the invalid command or failed action
+     * @param message the explanation of the invalid command or failed action.
      */
     public void showError(String message) {
         System.out.println(ERROR_MESSAGE_PREFIX + message);
@@ -128,8 +128,8 @@ public class Ui {
     /**
      * Displays a newly added task and the updated count.
      *
-     * @param task the task that was added
-     * @param taskCount the new number of tasks
+     * @param task the task that was added.
+     * @param taskCount the new number of tasks.
      */
     public void showTaskAdded(Task task, int taskCount) {
         System.out.println(ADD_TASK_MESSAGE);
@@ -140,7 +140,7 @@ public class Ui {
     /**
      * Displays all tasks in their current order.
      *
-     * @param tasks the task list to display
+     * @param tasks the task list to display.
      */
     public void showTasks(TaskList tasks) {
         System.out.println(LIST_TASKS_MESSAGE);
@@ -157,7 +157,7 @@ public class Ui {
     /**
      * Displays the result for a keyword with no matching tasks.
      *
-     * @param keyword the keyword that was searched for
+     * @param keyword the keyword that was searched for.
      */
     public void showNoFindTasks(String keyword) {
         System.out.println("     No tasks in your list match \"" + keyword + "\".");
@@ -166,7 +166,7 @@ public class Ui {
     /**
      * Displays the heading for matching deadlines and events.
      *
-     * @param displayDate the formatted date in the heading
+     * @param displayDate the formatted date in the heading.
      */
     public void showDateTasksHeader(String displayDate) {
         System.out.println("     Here are the deadlines and events for " + displayDate + ":");
@@ -175,8 +175,8 @@ public class Ui {
     /**
      * Displays a matching task using its original task number.
      *
-     * @param taskNumber the one-based task number
-     * @param task the matching task
+     * @param taskNumber the one-based task number.
+     * @param task the matching task.
      */
     public void showNumberedTask(int taskNumber, Task task) {
         System.out.println("     " + taskNumber + "." + task);
@@ -185,7 +185,7 @@ public class Ui {
     /**
      * Displays the result for a date with no matching deadlines or events.
      *
-     * @param displayDate the formatted date in the message
+     * @param displayDate the formatted date in the message.
      */
     public void showNoDateTasks(String displayDate) {
         System.out.println("     No deadlines or events are scheduled for " + displayDate + ".");
@@ -231,7 +231,7 @@ public class Ui {
     /**
      * Displays the result of marking a task complete.
      *
-     * @param task the task that was marked complete
+     * @param task the task that was marked complete.
      */
     public void showTaskMarked(Task task) {
         System.out.println(MARK_TASK_MESSAGE);
@@ -242,7 +242,7 @@ public class Ui {
     /**
      * Displays the result of marking a task incomplete.
      *
-     * @param task the task that was marked incomplete
+     * @param task the task that was marked incomplete.
      */
     public void showTaskUnmarked(Task task) {
         System.out.println(UNMARK_TASK_MESSAGE);
@@ -252,8 +252,8 @@ public class Ui {
     /**
      * Displays the result of deleting a task.
      *
-     * @param task the deleted task
-     * @param remainingTaskCount the number of tasks left
+     * @param task the deleted task.
+     * @param remainingTaskCount the number of tasks left.
      */
     public void showTaskDeleted(Task task, int remainingTaskCount) {
         System.out.println(DELETE_TASK_MESSAGE);

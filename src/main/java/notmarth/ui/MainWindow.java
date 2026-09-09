@@ -33,7 +33,8 @@ public final class MainWindow extends AnchorPane {
     /** Injects the command-processing backend used by the graphical interface. */
     public void setNotMarth(NotMarthGui notMarth) {
         this.notMarth = notMarth;
-        dialogContainer.getChildren().add(DialogBox.getNotMarthDialog(notMarth.getWelcomeMessage(), notMarthImage));
+        dialogContainer.getChildren().add(
+                DialogBox.getNotMarthDialog(notMarth.getWelcomeMessage(), notMarthImage));
     }
 
     /** Adds the user's command and NotMarth's response to the conversation. */

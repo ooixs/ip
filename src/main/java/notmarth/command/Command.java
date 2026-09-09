@@ -19,10 +19,10 @@ public abstract class Command {
     /**
      * Executes this command against the application state.
      *
-     * @param tasks the current task list
-     * @param ui the console interaction handler
-     * @param storage the task archive handler
-     * @throws NotMarthException if the command cannot be completed
+     * @param tasks the current task list.
+     * @param ui the console interaction handler.
+     * @param storage the task archive handler.
+     * @throws NotMarthException if the command cannot be completed.
      */
     public abstract void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage)
             throws NotMarthException;
@@ -30,10 +30,10 @@ public abstract class Command {
     /**
      * Executes a command with no contacts, retained for callers of the original task-only API.
      *
-     * @param tasks the current task list
-     * @param ui the console interaction handler
-     * @param storage the task archive handler
-     * @throws NotMarthException if the command cannot be completed
+     * @param tasks the current task list.
+     * @param ui the console interaction handler.
+     * @param storage the task archive handler.
+     * @throws NotMarthException if the command cannot be completed.
      */
     public void execute(TaskList tasks, Ui ui, Storage storage) throws NotMarthException {
         execute(tasks, new ContactList(), ui, storage);
@@ -42,7 +42,7 @@ public abstract class Command {
     /**
      * Returns whether this command ends the application loop.
      *
-     * @return {@code true} only for the exit command
+     * @return {@code true} only for the exit command.
      */
     public boolean isExit() {
         return false;
@@ -52,9 +52,9 @@ public abstract class Command {
      * Saves a changed task list while keeping a storage failure non-fatal to
      * the current session.
      *
-     * @param tasks the changed task list
-     * @param ui the console interaction handler
-     * @param storage the task archive handler
+     * @param tasks the changed task list.
+     * @param ui the console interaction handler.
+     * @param storage the task archive handler.
      */
     protected void saveTasks(TaskList tasks, ContactList contacts, Ui ui, Storage storage) {
         try {

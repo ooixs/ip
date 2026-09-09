@@ -14,7 +14,7 @@ public final class AddCommand extends Command {
     /**
      * Creates an add command for a parsed task.
      *
-     * @param task the task to add
+     * @param task the task to add.
      */
     public AddCommand(Task task) {
         this.task = task;
@@ -23,13 +23,14 @@ public final class AddCommand extends Command {
     /**
      * Adds the task, persists the updated battle plan, and reports the result.
      *
-     * @param tasks the current task list
-     * @param ui the console interaction handler
-     * @param storage the task archive handler
-     * @throws NotMarthException if the task list cannot accept another task
+     * @param tasks the current task list.
+     * @param ui the console interaction handler.
+     * @param storage the task archive handler.
+     * @throws NotMarthException if the task list cannot accept another task.
      */
     @Override
-    public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
+    public void execute(
+            TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
         tasks.add(task);
         saveTasks(tasks, contacts, ui, storage);
         ui.showTaskAdded(task, tasks.size());

@@ -18,7 +18,7 @@ public final class ContactList {
     /**
      * Creates a contact list from saved contacts.
      *
-     * @param loadedContacts the contacts recovered from storage
+     * @param loadedContacts the contacts recovered from storage.
      */
     public ContactList(List<Contact> loadedContacts) {
         assert loadedContacts != null : "A contact list needs a contact collection";
@@ -34,9 +34,9 @@ public final class ContactList {
     /**
      * Removes a contact by its one-based number.
      *
-     * @param contactNumber the contact number to remove
-     * @return the removed contact
-     * @throws NotMarthException if the number is invalid
+     * @param contactNumber the contact number to remove.
+     * @return the removed contact.
+     * @throws NotMarthException if the number is invalid.
      */
     public Contact delete(int contactNumber) throws NotMarthException {
         if (contacts.isEmpty()) {

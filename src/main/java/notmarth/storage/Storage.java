@@ -37,7 +37,7 @@ public final class Storage {
     /**
      * Creates storage using a caller-supplied archive path.
      *
-     * @param filePath the path of the task archive
+     * @param filePath the path of the task archive.
      */
     public Storage(String filePath) {
         this(Path.of(filePath));
@@ -51,8 +51,8 @@ public final class Storage {
      * Loads the saved tasks and reports whether startup had to recover from a
      * storage problem.
      *
-     * @param maximumTasks the largest valid number of tasks
-     * @return the loaded tasks and an optional startup warning
+     * @param maximumTasks the largest valid number of tasks.
+     * @return the loaded tasks and an optional startup warning.
      */
     public LoadResult load(int maximumTasks) {
         if (!Files.exists(dataFile)) {
@@ -110,7 +110,7 @@ public final class Storage {
         /**
          * Returns the tasks recovered from disk.
          *
-         * @return the loaded tasks, or an empty list after a storage problem
+         * @return the loaded tasks, or an empty list after a storage problem.
          */
         public ArrayList<Task> getTasks() {
             return tasks;
@@ -124,7 +124,7 @@ public final class Storage {
         /**
          * Returns whether startup should show a storage warning.
          *
-         * @return {@code true} when the archive could not be used
+         * @return {@code true} when the archive could not be used.
          */
         public boolean hasWarning() {
             return warning != null;
@@ -133,7 +133,7 @@ public final class Storage {
         /**
          * Returns the warning that explains a storage problem.
          *
-         * @return the warning text, or {@code null} when loading succeeded
+         * @return the warning text, or {@code null} when loading succeeded.
          */
         public String getWarning() {
             return warning;
@@ -145,8 +145,8 @@ public final class Storage {
      * A temporary file is moved into place so an interrupted write is less
      * likely to destroy the previous valid archive.
      *
-     * @param tasks the current task list
-     * @throws IOException if the archive cannot be written
+     * @param tasks the current task list.
+     * @throws IOException if the archive cannot be written.
      */
     public void save(List<Task> tasks) throws IOException {
         save(tasks, List.of());
@@ -187,9 +187,9 @@ public final class Storage {
     /**
      * Converts one saved record into a task object.
      *
-     * @param line the saved record
-     * @return the parsed task
-     * @throws CorruptTaskDataException if the record is not valid
+     * @param line the saved record.
+     * @return the parsed task.
+     * @throws CorruptTaskDataException if the record is not valid.
      */
     private static Task parseTask(String line) throws CorruptTaskDataException {
         List<String> fields = splitRecord(line);
@@ -197,7 +197,7 @@ public final class Storage {
             throw new CorruptTaskDataException();
         }
 
-        boolean isDone = parseCompletion(fields.get(1));
+        boolean isDone = isCompletedStatus(fields.get(1));
         Task task = createTask(fields);
         if (isDone) {
             task.markAsDone();
@@ -212,7 +212,8 @@ public final class Storage {
             throw new CorruptTaskDataException();
         }
         try {
-            return new Contact(requireText(fields.get(1)), requireText(fields.get(2)), requireText(fields.get(3)));
+            return new Contact(
+                    requireText(fields.get(1)), requireText(fields.get(2)), requireText(fields.get(3)));
         } catch (IllegalArgumentException exception) {
             throw new CorruptTaskDataException();
         }
@@ -248,9 +249,9 @@ public final class Storage {
     /**
      * Converts a task to the custom archive format.
      *
-     * @param task the task to serialize
-     * @return one archive record
-     * @throws IllegalStateException if an unsupported task subtype is found
+     * @param task the task to serialize.
+     * @return one archive record.
+     * @throws IllegalStateException if an unsupported task subtype is found.
      */
     private static String serializeTask(Task task) {
         String status = task.isDone() ? "done" : "open";
@@ -282,21 +283,21 @@ public final class Storage {
     /**
      * Splits a record while respecting escaped pipes and backslashes.
      *
-     * @param line the record to split
-     * @return decoded fields
-     * @throws CorruptTaskDataException if an escape sequence is incomplete
+     * @param line the record to split.
+     * @return decoded fields.
+     * @throws CorruptTaskDataException if an escape sequence is incomplete.
      */
     private static List<String> splitRecord(String line) throws CorruptTaskDataException {
         ArrayList<String> fields = new ArrayList<>();
         StringBuilder field = new StringBuilder();
-        boolean escaping = false;
+        boolean isEscaping = false;
         for (int i = 0; i < line.length(); i++) {
             char character = line.charAt(i);
-            if (escaping) {
+            if (isEscaping) {
                 appendEscapedCharacter(field, character);
-                escaping = false;
+                isEscaping = false;
             } else if (character == '\\') {
-                escaping = true;
+                isEscaping = true;
             } else if (character == '|') {
                 fields.add(field.toString());
                 field.setLength(0);
@@ -304,7 +305,7 @@ public final class Storage {
                 field.append(character);
             }
         }
-        if (escaping) {
+        if (isEscaping) {
             throw new CorruptTaskDataException();
         }
         fields.add(field.toString());
@@ -334,11 +335,11 @@ public final class Storage {
     /**
      * Converts the archive's completion marker into a boolean state.
      *
-     * @param status the saved {@code open} or {@code done} marker
-     * @return {@code true} when the task is complete
-     * @throws CorruptTaskDataException if the marker is not recognised
+     * @param status the saved {@code open} or {@code done} marker.
+     * @return {@code true} when the task is complete.
+     * @throws CorruptTaskDataException if the marker is not recognized.
      */
-    private static boolean parseCompletion(String status) throws CorruptTaskDataException {
+    private static boolean isCompletedStatus(String status) throws CorruptTaskDataException {
         if ("open".equals(status)) {
             return false;
         }
@@ -351,9 +352,9 @@ public final class Storage {
     /**
      * Validates the number of fields in a saved task record.
      *
-     * @param fields the decoded record fields
-     * @param expected the number of fields required for the task type
-     * @throws CorruptTaskDataException if the field count is unexpected
+     * @param fields the decoded record fields.
+     * @param expected the number of fields required for the task type.
+     * @throws CorruptTaskDataException if the field count is unexpected.
      */
     private static void requireFieldCount(List<String> fields, int expected)
             throws CorruptTaskDataException {
@@ -365,9 +366,9 @@ public final class Storage {
     /**
      * Ensures that a required archive field is not empty.
      *
-     * @param value the decoded field value
-     * @return the unchanged, non-empty value
-     * @throws CorruptTaskDataException if the value is empty
+     * @param value the decoded field value.
+     * @return the unchanged, non-empty value.
+     * @throws CorruptTaskDataException if the value is empty.
      */
     private static String requireText(String value) throws CorruptTaskDataException {
         if (value.isEmpty()) {
@@ -379,8 +380,8 @@ public final class Storage {
     /**
      * Escapes characters that have structural meaning in the archive format.
      *
-     * @param value the text to encode
-     * @return the encoded text safe to place in one archive field
+     * @param value the text to encode.
+     * @return the encoded text safe to place in one archive field.
      */
     private static String escape(String value) {
         return value.replace("\\", "\\\\")

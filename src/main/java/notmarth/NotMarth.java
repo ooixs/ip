@@ -24,7 +24,7 @@ public class NotMarth {
     /**
      * Creates a NotMarth session using the supplied task archive path.
      *
-     * @param filePath the path of the task archive
+     * @param filePath the path of the task archive.
      */
     public NotMarth(String filePath) {
         ui = new Ui();
@@ -69,7 +69,7 @@ public class NotMarth {
     /**
      * Starts NotMarth with its default battle-plan archive.
      *
-     * @param args command-line arguments, which are currently unused
+     * @param args command-line arguments, which are currently unused.
      */
     public static void main(String[] args) {
         new NotMarth("data/notmarth.txt").run();

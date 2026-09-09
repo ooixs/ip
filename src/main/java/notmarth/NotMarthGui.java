@@ -22,7 +22,7 @@ public final class NotMarthGui {
     private final Storage storage = new Storage(DEFAULT_FILE_PATH);
     private final Ui ui = new Ui();
     private final TaskList tasks;
-    private boolean exitRequested;
+    private boolean isExitRequested;
 
     /** Creates the command-processing backend and loads the saved battle plan. */
     public NotMarthGui() {
@@ -37,10 +37,10 @@ public final class NotMarthGui {
 
     /** Executes a command and returns the same response used by the console UI. */
     public String getResponse(String input) {
-        exitRequested = false;
+        isExitRequested = false;
         try {
             Command command = parser.parse(input);
-            exitRequested = command.isExit();
+            isExitRequested = command.isExit();
             return captureCommandOutput(command);
         } catch (NotMarthException exception) {
             return "I couldn't process that, Divine One: " + exception.getMessage();
@@ -49,7 +49,7 @@ public final class NotMarthGui {
 
     /** Returns whether the most recent command requested that the window close. */
     public boolean isExitRequested() {
-        return exitRequested;
+        return isExitRequested;
     }
 
     private String captureCommandOutput(Command command) throws NotMarthException {

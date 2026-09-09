@@ -14,14 +14,14 @@ import org.junit.jupiter.api.Test;
 class EventTest {
     /** Verifies that a multi-day event matches every date in its inclusive range. */
     @Test
-    void occursOn_eventSpanningSeveralDates_matchesEveryInclusiveDate() {
+    void isOccurringOn_eventSpanningSeveralDates_matchesEveryInclusiveDate() {
         Event event = new Event("planning", "2019-10-14 1400", "2019-10-16 1600");
 
-        assertFalse(event.occursOn(LocalDate.of(2019, 10, 13)));
-        assertTrue(event.occursOn(LocalDate.of(2019, 10, 14)));
-        assertTrue(event.occursOn(LocalDate.of(2019, 10, 15)));
-        assertTrue(event.occursOn(LocalDate.of(2019, 10, 16)));
-        assertFalse(event.occursOn(LocalDate.of(2019, 10, 17)));
+        assertFalse(event.isOccurringOn(LocalDate.of(2019, 10, 13)));
+        assertTrue(event.isOccurringOn(LocalDate.of(2019, 10, 14)));
+        assertTrue(event.isOccurringOn(LocalDate.of(2019, 10, 15)));
+        assertTrue(event.isOccurringOn(LocalDate.of(2019, 10, 16)));
+        assertFalse(event.isOccurringOn(LocalDate.of(2019, 10, 17)));
         assertEquals("2019-10-14T14:00", event.getFromForStorage());
         assertEquals("2019-10-16T16:00", event.getToForStorage());
         assertEquals("[E][ ] planning (from: Oct 14 2019 2:00 PM to: Oct 16 2019 4:00 PM)",

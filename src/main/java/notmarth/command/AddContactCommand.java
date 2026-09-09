@@ -19,7 +19,8 @@ public final class AddContactCommand extends Command {
     }
 
     @Override
-    public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
+    public void execute(
+            TaskList tasks, ContactList contacts, Ui ui, Storage storage) throws NotMarthException {
         contacts.add(contact);
         saveState(tasks, contacts, ui, storage);
         ui.showContactAdded(contact, contacts.size());

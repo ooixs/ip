@@ -20,7 +20,7 @@ public final class OnCommand extends Command {
     /**
      * Creates a date-query command.
      *
-     * @param date the date to inspect
+     * @param date the date to inspect.
      */
     public OnCommand(LocalDate date) {
         this.date = date;
@@ -29,9 +29,9 @@ public final class OnCommand extends Command {
     /**
      * Displays deadlines and events that match the command's requested date.
      *
-     * @param tasks the task list to search
-     * @param ui the console interaction handler
-     * @param storage the task archive handler, which is unused
+     * @param tasks the task list to search.
+     * @param ui the console interaction handler.
+     * @param storage the task archive handler, which is unused.
      */
     @Override
     public void execute(TaskList tasks, ContactList contacts, Ui ui, Storage storage) {
@@ -50,6 +50,6 @@ public final class OnCommand extends Command {
 
     private boolean isMatch(Task task) {
         return task instanceof Deadline deadline && deadline.isDueOn(date)
-                || task instanceof Event event && event.occursOn(date);
+                || task instanceof Event event && event.isOccurringOn(date);
     }
 }
