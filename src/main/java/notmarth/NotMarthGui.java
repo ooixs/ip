@@ -15,8 +15,8 @@ import notmarth.ui.Ui;
 public final class NotMarthGui {
     private static final int MAX_TASKS = 100;
     private static final String DEFAULT_FILE_PATH = "data/notmarth.txt";
-    private static final String WELCOME_MESSAGE = "Hello! I'm NotMarth, your tactical companion.\n"
-            + "Enter a command below to update your battle plan.\n\n";
+    private static final String WELCOME_MESSAGE = "Greetings, Divine One. I'm NotMarth, your tactical companion.\n"
+            + "Issue a mission order below, and we'll move your battle plan forward.\n\n";
 
     private final Parser parser = new Parser();
     private final Storage storage = new Storage(DEFAULT_FILE_PATH);

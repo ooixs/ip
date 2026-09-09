@@ -9,6 +9,7 @@
 
 <AnchorPane minHeight="420.0" minWidth="360.0"
             prefHeight="680.0" prefWidth="500.0"
+            styleClass="main-window"
             xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="notmarth.ui.MainWindow">
@@ -45,7 +46,7 @@
                     onAction="#handleUserInput"
                     prefHeight="44.0"
                     prefWidth="86.0"
-                    text="Engage" />
+                    text="Engage!" />
         </HBox>
     </children>
 </AnchorPane>

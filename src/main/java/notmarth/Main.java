@@ -22,7 +22,7 @@ public final class Main extends Application {
             MainWindow controller = fxmlLoader.getController();
             controller.setNotMarth(notMarth);
 
-            stage.setTitle("NotMarth — Tactical Assistant");
+            stage.setTitle("NotMarth");
             stage.setMinHeight(420.0);
             stage.setMinWidth(360.0);
             stage.setScene(new Scene(mainWindow, 500.0, 680.0));
