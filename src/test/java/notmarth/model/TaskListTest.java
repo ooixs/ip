@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 class TaskListTest {
     /** Verifies that task operations preserve state and display order. */
     @Test
-    void addMarkUnmarkAndDeleteMaintainTaskStateAndOrder() throws NotMarthException {
+    void taskOperations_validTasks_maintainStateAndOrder() throws NotMarthException {
         Task first = new ToDo("first");
         Task second = new ToDo("second");
         TaskList tasks = new TaskList(List.of(), 2);
@@ -38,7 +38,7 @@ class TaskListTest {
 
     /** Verifies that the configured task-list capacity is enforced. */
     @Test
-    void addRejectsTasksBeyondTheConfiguredCapacity() throws NotMarthException {
+    void add_taskBeyondConfiguredCapacity_throwsNotMarthException() throws NotMarthException {
         TaskList tasks = new TaskList(List.of(), 1);
         tasks.add(new ToDo("only task"));
 
@@ -52,7 +52,7 @@ class TaskListTest {
 
     /** Verifies that empty and out-of-range task numbers are rejected. */
     @Test
-    void taskOperationsRejectEmptyAndOutOfRangeNumbers() {
+    void taskOperations_emptyOrOutOfRangeNumber_throwNotMarthException() {
         TaskList empty = new TaskList(List.of(), 2);
         assertThrows(NotMarthException.class, () -> empty.mark(1));
         assertThrows(NotMarthException.class, () -> empty.unmark(1));
@@ -66,7 +66,7 @@ class TaskListTest {
 
     /** Verifies that construction and the read-only list view protect invariants. */
     @Test
-    void constructorAndListViewProtectTaskListInvariants() throws NotMarthException {
+    void taskListApi_invalidConstructionOrMutation_protectsInvariants() throws NotMarthException {
         assertThrows(IllegalArgumentException.class, () -> new TaskList(List.of(), 0));
         assertThrows(IllegalArgumentException.class,
                 () -> new TaskList(List.of(new ToDo("one")), 0));
@@ -81,7 +81,7 @@ class TaskListTest {
 
     /** Verifies that the varargs constructor accepts an initial task sequence. */
     @Test
-    void varargsConstructorAcceptsInitialTasks() {
+    void taskListConstruction_varargsInput_acceptsInitialTasks() {
         Task first = new ToDo("first");
         Task second = new ToDo("second");
 
@@ -94,7 +94,7 @@ class TaskListTest {
 
     /** Verifies that iteration follows the task list's display order. */
     @Test
-    void iteratorTasksAddedReturnsTasksInDisplayOrder() throws NotMarthException {
+    void iterator_tasksAdded_returnsTasksInDisplayOrder() throws NotMarthException {
         Task first = new ToDo("first");
         Task second = new ToDo("second");
         TaskList tasks = new TaskList(List.of(), 2);

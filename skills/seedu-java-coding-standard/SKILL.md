@@ -14,7 +14,11 @@ for topics that the SE-EDU guide does not cover.
 
 - Use lowercase package names; PascalCase nouns for classes, enums, and records; camelCase verbs for methods; camelCase variables; and SCREAMING_SNAKE_CASE constants.
 - Keep names in English, avoid uppercase abbreviations in identifiers, use descriptive names for large-scope variables, and use boolean-sounding names such as `isDone`, `hasTasks`, or `canRun`. Collection names should be plural.
-- In tests, underscores may separate the feature, scenario, and expected behavior: `featureUnderTest_testScenario_expectedBehavior`.
+- Name every test method using exactly three meaningful parts separated by underscores:
+  `featureUnderTest_testScenario_expectedBehavior`. Keep each part in camelCase and
+  audit every `@Test` method after adding or renaming tests. Do not use a single
+  camelCase phrase for a test method, even though the upstream guide permits
+  omitting parts in limited cases; this project requires the full form.
 - Use four spaces for indentation, K&R braces, and spaces around operators, commas, keywords, and `for` separators. Keep lines at 120 characters or fewer, preferably below 110; wrap continuation lines with eight additional spaces and break at readable boundaries.
 - Separate logical units in a block with one blank line. Always use braces for loops and conditionals. Mark intentional switch fall-through with `// Fallthrough`.
 - Put every class in a package. Keep imports explicit and consistently ordered; do not use wildcard imports. Put array brackets on the type, initialize variables at declaration when practical, keep variables in the smallest useful scope, and do not expose mutable class fields publicly.

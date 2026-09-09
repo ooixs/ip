@@ -24,7 +24,7 @@ class StorageTest {
 
     /** Verifies that saving and loading preserves task data, state, and escaped text. */
     @Test
-    void saveAndLoadRoundTripPreservesTypesStateAndEscapedText() throws Exception {
+    void saveAndLoad_validData_preservesTypesStateAndEscapedText() throws Exception {
         Path archive = temporaryDirectory.resolve("nested").resolve("battle-plan.txt");
         Storage storage = new Storage(archive.toString());
         ToDo todo = new ToDo("borrow | book\\bag\nsoon");
@@ -52,7 +52,7 @@ class StorageTest {
 
     /** Verifies that a missing archive starts as an empty plan without a warning. */
     @Test
-    void loadMissingArchiveReturnsAnEmptyPlanWithoutWarning() {
+    void load_missingArchive_returnsEmptyPlanWithoutWarning() {
         Storage.LoadResult result = new Storage(
                 temporaryDirectory.resolve("missing.txt").toString()).load(10);
 
@@ -63,7 +63,7 @@ class StorageTest {
 
     /** Verifies that a corrupt archive produces a warning and no loaded tasks. */
     @Test
-    void loadReportsCorruptArchiveAndReturnsNoTasks() throws Exception {
+    void load_corruptArchive_returnsWarningAndNoTasks() throws Exception {
         Path archive = temporaryDirectory.resolve("corrupt.txt");
         Files.writeString(archive, "not a NotMarth archive\n");
 
@@ -79,7 +79,7 @@ class StorageTest {
 
     /** Verifies that archives exceeding the configured capacity are rejected. */
     @Test
-    void loadRejectsArchivesThatExceedTheMaximumTaskCount() throws Exception {
+    void load_archiveBeyondTaskCapacity_returnsWarningAndNoTasks() throws Exception {
         Path archive = temporaryDirectory.resolve("too-many.txt");
         Files.writeString(archive, "# NotMarth battle plan v1\n"
                 + "todo|open|one\n"

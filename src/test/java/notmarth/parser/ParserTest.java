@@ -34,7 +34,7 @@ class ParserTest {
 
     /** Verifies creation of each supported task subtype and its typed values. */
     @Test
-    void parseCreatesTheCorrectTaskSubtypeAndValues() throws Exception {
+    void parse_taskCreationCommands_returnsTypedTasks() throws Exception {
         TaskList tasks = new TaskList(List.of(), 3);
         Storage storage = new Storage(temporaryDirectory.resolve("battle-plan.txt").toString());
         Ui ui = new Ui();
@@ -57,7 +57,7 @@ class ParserTest {
 
     /** Verifies parsing of control commands and date queries. */
     @Test
-    void parseRecognizesControlCommandsAndDateQueries() throws NotMarthException {
+    void parse_controlAndContactCommands_returnsCorrectCommands() throws NotMarthException {
         assertInstanceOf(ExitCommand.class, parser.parse("bye"));
         assertInstanceOf(FindCommand.class, parser.parse("find book"));
         assertInstanceOf(MarkCommand.class, parser.parse("mark 2"));
@@ -68,7 +68,7 @@ class ParserTest {
 
     /** Verifies rejection of empty and unknown commands. */
     @Test
-    void parseRejectsMissingAndUnknownCommands() {
+    void parse_emptyOrUnknownCommand_throwsNotMarthException() {
         NotMarthException empty = assertThrows(NotMarthException.class, () -> parser.parse(""));
         NotMarthException unknown = assertThrows(
                 NotMarthException.class, () -> parser.parse("launch mission"));
@@ -83,7 +83,7 @@ class ParserTest {
 
     /** Verifies rejection of malformed task and task-number commands. */
     @Test
-    void parseRejectsMalformedTaskAndTaskNumberCommands() {
+    void parse_malformedCommand_throwsNotMarthException() {
         assertThrows(NotMarthException.class, () -> parser.parse("todo"));
         assertThrows(NotMarthException.class, () -> parser.parse("deadline report /by"));
         assertThrows(NotMarthException.class,

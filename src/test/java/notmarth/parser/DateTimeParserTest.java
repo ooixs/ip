@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 class DateTimeParserTest {
     /** Verifies parsing of compact date-time and date-only values. */
     @Test
-    void parseSupportsCompactDateTimeAndDateOnlyValues() {
+    void parse_compactDateTimeAndDateOnlyInput_returnsParsedValues() {
         DateTimeParser.ParsedDateTime dateTime = DateTimeParser.parse("2/12/2019 1800");
         DateTimeParser.ParsedDateTime date = DateTimeParser.parse("2019-10-15");
 
@@ -27,7 +27,7 @@ class DateTimeParserTest {
 
     /** Verifies parsing of ISO date-time values and clock values with a colon. */
     @Test
-    void parseSupportsIsoDateTimeAndClockWithColon() {
+    void parse_isoDateTimeAndColonClockInput_returnsParsedValues() {
         assertEquals(LocalDateTime.of(2019, 10, 15, 14, 5),
                 DateTimeParser.parse("2019-10-15 14:05").value());
         assertEquals(LocalDateTime.of(2019, 10, 15, 14, 5),
@@ -36,7 +36,7 @@ class DateTimeParserTest {
 
     /** Verifies rejection of date-time input where a date-only value is required. */
     @Test
-    void parseDateRejectsDateTimeInputAndInvalidValues() {
+    void dateParsing_timedOrInvalidInput_throwsDateTimeParseException() {
         assertThrows(DateTimeParseException.class,
                 () -> DateTimeParser.parseDate("2019-10-15 1400"));
         assertThrows(DateTimeParseException.class,
@@ -45,7 +45,7 @@ class DateTimeParserTest {
 
     /** Verifies that display and storage formatting preserve time presence. */
     @Test
-    void formatPreservesWhetherTimeWasProvided() {
+    void format_valuesWithOrWithoutTime_preservesTimePresence() {
         LocalDateTime value = LocalDateTime.of(2019, 10, 15, 14, 0);
 
         assertEquals("Oct 15 2019", DateTimeParser.format(value, false));

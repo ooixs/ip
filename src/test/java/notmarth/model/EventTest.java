@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 class EventTest {
     /** Verifies that a multi-day event matches every date in its inclusive range. */
     @Test
-    void eventSpanningSeveralDatesMatchesEveryInclusiveDate() {
+    void occursOn_eventSpanningSeveralDates_matchesEveryInclusiveDate() {
         Event event = new Event("planning", "2019-10-14 1400", "2019-10-16 1600");
 
         assertFalse(event.occursOn(LocalDate.of(2019, 10, 13)));
@@ -30,7 +30,7 @@ class EventTest {
 
     /** Verifies that date-only events preserve date-only display and storage formats. */
     @Test
-    void dateOnlyEventPreservesDateOnlyFormatting() {
+    void eventCreation_dateOnlyInput_preservesDateOnlyFormatting() {
         Event event = new Event("conference", LocalDate.of(2019, 10, 15), LocalDate.of(2019, 10, 16));
 
         assertEquals(LocalDateTime.of(2019, 10, 15, 0, 0), event.getFrom());
@@ -42,7 +42,7 @@ class EventTest {
 
     /** Verifies that an event ending before its start is rejected. */
     @Test
-    void eventEndingBeforeStartThrowsAnException() {
+    void eventCreation_endBeforeStart_throwsIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class,
                 () -> new Event("backwards", "2019-02-05", "2019-01-04"));
         assertThrows(IllegalArgumentException.class,
