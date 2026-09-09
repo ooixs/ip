@@ -2,6 +2,7 @@ package notmarth.ui;
 
 import java.util.Scanner;
 
+import notmarth.command.CommandCatalog;
 import notmarth.model.Contact;
 import notmarth.model.ContactList;
 import notmarth.model.Task;
@@ -19,8 +20,7 @@ public class Ui {
     private static final String UNMARK_TASK_MESSAGE = "     This order is back on the map:";
     private static final String DELETE_TASK_MESSAGE = "     This order has been withdrawn:";
     private static final String AVAILABLE_COMMANDS_MESSAGE =
-            "Available commands: todo, deadline, event, list, find, on, mark, unmark, delete, contact, "
-                    + "listcontacts, findcontact, deletecontact, bye";
+            "Available commands: " + CommandCatalog.getVisibleCommandList();
     private static final String ERROR_MESSAGE_TEXT_PREFIX = "I couldn't process that, Divine One: ";
     private static final String ERROR_MESSAGE_PREFIX = "     " + ERROR_MESSAGE_TEXT_PREFIX;
     private static final String SOMMIE_MESSAGE =

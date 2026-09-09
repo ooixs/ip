@@ -74,11 +74,11 @@ class ParserTest {
                 NotMarthException.class, () -> parser.parse("launch mission"));
 
         assertEquals("Please enter a command. Try todo, deadline, event, list, find, on, mark, unmark, "
-                        + "or delete.",
+                        + "delete, contact, listcontacts, findcontact, deletecontact, bye.",
                 empty.getMessage());
         assertEquals(
                 "I don't recognize that command. Try todo, deadline, event, list, find, on, mark, unmark, "
-                        + "or delete.",
+                        + "delete, contact, listcontacts, findcontact, deletecontact, bye.",
                 unknown.getMessage());
     }
 

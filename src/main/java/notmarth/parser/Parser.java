@@ -6,6 +6,7 @@ import java.time.format.DateTimeParseException;
 import notmarth.command.AddCommand;
 import notmarth.command.AddContactCommand;
 import notmarth.command.Command;
+import notmarth.command.CommandCatalog;
 import notmarth.command.DeleteCommand;
 import notmarth.command.DeleteContactCommand;
 import notmarth.command.ExitCommand;
@@ -28,8 +29,6 @@ import notmarth.model.ToDo;
  * Interprets user commands and converts their arguments into typed values.
  */
 public final class Parser {
-    private static final String COMMANDS_HINT =
-            "todo, deadline, event, list, find, on, mark, unmark, or delete";
     private static final String DATE_TIME_FORMAT_HINT =
             " Try yyyy-mm-dd or dd/MM/yyyy HHmm, for example: 2019-10-15 or 02/12/2019 1800";
 
@@ -42,57 +41,57 @@ public final class Parser {
      */
     public Command parse(String fullCommand) throws NotMarthException {
         validateCommandText(fullCommand);
-        if (fullCommand.equals("bye")) {
+        if (fullCommand.equals(CommandCatalog.BYE)) {
             return new ExitCommand();
         }
         if (fullCommand.equals("sommie")) {
             return new SommieCommand();
         }
-        if (fullCommand.equals("list")) {
+        if (fullCommand.equals(CommandCatalog.LIST)) {
             return new ListCommand();
         }
-        if (fullCommand.equals("listcontacts")) {
+        if (fullCommand.equals(CommandCatalog.LIST_CONTACTS)) {
             return new ListContactsCommand();
         }
-        if (isCommand(fullCommand, "findcontact")) {
+        if (isCommand(fullCommand, CommandCatalog.FIND_CONTACT)) {
             return new FindContactCommand(parseContactKeyword(fullCommand));
         }
-        if (isCommand(fullCommand, "deletecontact")) {
-            return new DeleteContactCommand(parseTaskNumber(fullCommand, "deletecontact"));
+        if (isCommand(fullCommand, CommandCatalog.DELETE_CONTACT)) {
+            return new DeleteContactCommand(parseTaskNumber(fullCommand, CommandCatalog.DELETE_CONTACT));
         }
-        if (isCommand(fullCommand, "contact")) {
+        if (isCommand(fullCommand, CommandCatalog.CONTACT)) {
             return new AddContactCommand(createContact(fullCommand));
         }
-        if (isCommand(fullCommand, "find")) {
+        if (isCommand(fullCommand, CommandCatalog.FIND)) {
             return new FindCommand(parseFindKeyword(fullCommand));
         }
-        if (isCommand(fullCommand, "on")) {
+        if (isCommand(fullCommand, CommandCatalog.ON)) {
             return new OnCommand(parseOnDate(fullCommand));
         }
-        if (isCommand(fullCommand, "mark")) {
-            return new MarkCommand(parseTaskNumber(fullCommand, "mark"));
+        if (isCommand(fullCommand, CommandCatalog.MARK)) {
+            return new MarkCommand(parseTaskNumber(fullCommand, CommandCatalog.MARK));
         }
-        if (isCommand(fullCommand, "unmark")) {
-            return new UnmarkCommand(parseTaskNumber(fullCommand, "unmark"));
+        if (isCommand(fullCommand, CommandCatalog.UNMARK)) {
+            return new UnmarkCommand(parseTaskNumber(fullCommand, CommandCatalog.UNMARK));
         }
-        if (isCommand(fullCommand, "delete")) {
-            return new DeleteCommand(parseTaskNumber(fullCommand, "delete"));
+        if (isCommand(fullCommand, CommandCatalog.DELETE)) {
+            return new DeleteCommand(parseTaskNumber(fullCommand, CommandCatalog.DELETE));
         }
         if (isTaskCommand(fullCommand)) {
             return new AddCommand(createTask(fullCommand));
         }
         if (fullCommand.isEmpty()) {
             throw new NotMarthException(
-                    "Please enter a command. Try " + COMMANDS_HINT + ".");
+                    "Please enter a command. Try " + CommandCatalog.getVisibleCommandList() + ".");
         }
         throw new NotMarthException(
-                "I don't recognize that command. Try " + COMMANDS_HINT + ".");
+                "I don't recognize that command. Try " + CommandCatalog.getVisibleCommandList() + ".");
     }
 
     private void validateCommandText(String command) throws NotMarthException {
         if (command == null || command.isBlank()) {
             throw new NotMarthException(
-                    "Please enter a command. Try " + COMMANDS_HINT + ".");
+                    "Please enter a command. Try " + CommandCatalog.getVisibleCommandList() + ".");
         }
         if (!command.equals(command.trim()) || command.matches(".*\\s{2,}.*")
                 || command.chars().anyMatch(Character::isISOControl)) {
@@ -120,13 +119,13 @@ public final class Parser {
      * @return whether the command starts with a supported task keyword.
      */
     private boolean isTaskCommand(String command) {
-        return isCommand(command, "todo")
-                || isCommand(command, "deadline")
-                || isCommand(command, "event");
+        return isCommand(command, CommandCatalog.TODO)
+                || isCommand(command, CommandCatalog.DEADLINE)
+                || isCommand(command, CommandCatalog.EVENT);
     }
 
     private Contact createContact(String command) throws NotMarthException {
-        String details = command.substring("contact".length()).trim();
+        String details = command.substring(CommandCatalog.CONTACT.length()).trim();
         int phoneMarker = findSingleMarker(details, "/phone");
         int addressMarker = findSingleMarker(details, "/address");
         if (phoneMarker <= 0 || addressMarker <= phoneMarker) {
@@ -163,7 +162,7 @@ public final class Parser {
     }
 
     private String parseContactKeyword(String command) throws NotMarthException {
-        String keyword = command.substring("findcontact".length()).trim();
+        String keyword = command.substring(CommandCatalog.FIND_CONTACT.length()).trim();
         if (keyword.isEmpty()) {
             throw new NotMarthException("Findcontact needs a name or keyword. Try: findcontact <keyword>");
         }
@@ -179,15 +178,15 @@ public final class Parser {
      * @throws NotMarthException if the command is missing or has invalid information.
      */
     private Task createTask(String command) throws NotMarthException {
-        if (isCommand(command, "todo")) {
+        if (isCommand(command, CommandCatalog.TODO)) {
             return createTodo(command);
         }
 
-        if (isCommand(command, "deadline")) {
+        if (isCommand(command, CommandCatalog.DEADLINE)) {
             return createDeadline(command);
         }
 
-        if (isCommand(command, "event")) {
+        if (isCommand(command, CommandCatalog.EVENT)) {
             return createEvent(command);
         }
 
@@ -195,7 +194,7 @@ public final class Parser {
     }
 
     private Task createTodo(String command) throws NotMarthException {
-        String description = command.substring("todo".length()).trim();
+        String description = command.substring(CommandCatalog.TODO.length()).trim();
         if (description.isEmpty()) {
             throw new NotMarthException("A todo needs a description. Try: todo <description>");
         }
@@ -203,7 +202,7 @@ public final class Parser {
     }
 
     private Task createDeadline(String command) throws NotMarthException {
-        String details = command.substring("deadline".length()).trim();
+        String details = command.substring(CommandCatalog.DEADLINE.length()).trim();
         int byMarker = findSingleMarker(details, "/by");
         if (byMarker <= 0) {
             throw new NotMarthException(
@@ -229,7 +228,7 @@ public final class Parser {
     }
 
     private Task createEvent(String command) throws NotMarthException {
-        String details = command.substring("event".length()).trim();
+        String details = command.substring(CommandCatalog.EVENT.length()).trim();
         int fromMarker = findSingleMarker(details, "/from");
         int toMarker = findSingleMarker(details, "/to");
         if (fromMarker <= 0 || toMarker <= fromMarker) {
@@ -270,7 +269,7 @@ public final class Parser {
      * @throws NotMarthException if the command has no valid date.
      */
     private LocalDate parseOnDate(String command) throws NotMarthException {
-        String dateText = command.substring("on".length()).trim();
+        String dateText = command.substring(CommandCatalog.ON.length()).trim();
         if (dateText.isEmpty()) {
             throw new NotMarthException("The on command needs a date. Try: on <date>");
         }
@@ -293,7 +292,7 @@ public final class Parser {
      * @throws NotMarthException if the command has no keyword.
      */
     private String parseFindKeyword(String command) throws NotMarthException {
-        String keyword = command.substring("find".length()).trim();
+        String keyword = command.substring(CommandCatalog.FIND.length()).trim();
         if (keyword.isEmpty()) {
             throw new NotMarthException("The find command needs a keyword. Try: find <keyword>");
         }

@@ -228,7 +228,7 @@ list
 
 ```text
 Order received. I've added it to the battle plan:
-I couldn't process that, Divine One: I don't recognize that command. Try todo, deadline, event, list, find, on, mark, unmark, or delete.
+I couldn't process that, Divine One: I don't recognize that command. Try todo, deadline, event, list, find, on, mark, unmark, delete, contact, listcontacts, findcontact, deletecontact, bye.
 Order received. I've added it to the battle plan:
 1.[T][ ] first task
 2.[D][ ] second task (by: Oct 16 2019)
@@ -293,7 +293,7 @@ list
 
 ```text
 Order received. I've added it to the battle plan:
-I couldn't process that, Divine One: Please enter a command. Try todo, deadline, event, list, find, on, mark, unmark, or delete.
+I couldn't process that, Divine One: Please enter a command. Try todo, deadline, event, list, find, on, mark, unmark, delete, contact, listcontacts, findcontact, deletecontact, bye.
 Order received. I've added it to the battle plan:
 1.[T][ ] first task
 2.[T][ ] second task

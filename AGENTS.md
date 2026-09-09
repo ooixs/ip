@@ -13,6 +13,8 @@ NotMarth is named after the player's avatar in the prologue of *Fire Emblem Enga
 * Keep Sommie as a small hidden Easter egg, preferably through a dedicated command, rather than adding Sommie commentary to every response.
 * “Divine One,” “battle plan,” “mission orders,” “Fell Dragon,” and “Engage” are appropriate thematic references when they fit naturally.
 * Keep the existing command names, task markers, parsing rules, and underlying functionality stable unless the user explicitly requests a behavior change.
+* Register every new user-facing command in `CommandCatalog`. The normal command prompt and all unknown or empty-command errors must obtain their complete command list from that shared catalog; never maintain a separate hard-coded list. Keep deliberately hidden Easter-egg commands, such as `sommie`, out of the visible catalog.
+* When adding or removing a command, update parser tests and the complete UI test plan to verify that the prompt and command-error messages remain synchronized with `CommandCatalog`.
 * Prefer shared constants or small helper methods for repeated user-facing messages so the theme remains consistent and easy to revise.
 * When console wording changes, update the corresponding expected output in `test/ui-test-plan.md` and run the complete UI test plan.
 
