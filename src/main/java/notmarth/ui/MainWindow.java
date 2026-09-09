@@ -11,6 +11,8 @@ import notmarth.NotMarthGui;
 
 /** Controller for the FXML-defined NotMarth chat window. */
 public final class MainWindow extends AnchorPane {
+    private static final String ERROR_MESSAGE_PREFIX = "I couldn't process that";
+
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -48,11 +50,17 @@ public final class MainWindow extends AnchorPane {
         String response = notMarth.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getNotMarthDialog(response, notMarthImage));
+                isErrorResponse(response)
+                        ? DialogBox.getErrorDialog(response, notMarthImage)
+                        : DialogBox.getNotMarthDialog(response, notMarthImage));
         userInput.clear();
         if (notMarth.isExitRequested()) {
             Stage stage = (Stage) userInput.getScene().getWindow();
             stage.close();
         }
+    }
+
+    private boolean isErrorResponse(String response) {
+        return response.startsWith(ERROR_MESSAGE_PREFIX);
     }
 }

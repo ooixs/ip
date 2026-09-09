@@ -1,19 +1,47 @@
 .label {
-    -fx-background-color: linear-gradient(to bottom right, #fff1bd, #f2cf6b);
-    -fx-border-color: #9d2933;
-    -fx-border-width: 2px;
-    -fx-background-radius: 1em 1em 0 1em;
-    -fx-border-radius: 1em 1em 0 1em;
-    -fx-border-insets: 0px 7px 0px 7px;
-    -fx-background-insets: 0px 7px 0px 7px;
-}
-
-.reply-label {
-    -fx-background-color: linear-gradient(to bottom right, #d9e9ff, #a9c9f5);
-    -fx-background-radius: 1em 1em 1em 0;
-    -fx-border-radius: 1em 1em 1em 0;
+    -fx-font-size: 14px;
+    -fx-line-spacing: 2px;
+    -fx-text-fill: #2f2b24;
 }
 
 #displayPicture {
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 10, 0.5, 3, 3);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.22), 6, 0.35, 1, 1);
+}
+
+.user-dialog,
+.notmarth-dialog,
+.error-dialog {
+    -fx-spacing: 8px;
+}
+
+.user-dialog {
+    -fx-alignment: center-right;
+}
+
+.user-dialog .label {
+    -fx-background-color: #9d2933;
+    -fx-background-radius: 14px 14px 3px 14px;
+    -fx-text-fill: white;
+}
+
+.notmarth-dialog,
+.error-dialog {
+    -fx-alignment: center-left;
+}
+
+.notmarth-dialog .label {
+    -fx-background-color: #fff1bd;
+    -fx-background-radius: 14px 14px 14px 3px;
+    -fx-border-color: #d9b83f;
+    -fx-border-radius: 14px 14px 14px 3px;
+    -fx-border-width: 1px;
+}
+
+.error-dialog .label {
+    -fx-background-color: #fff0ed;
+    -fx-background-radius: 10px;
+    -fx-border-color: #c23b45;
+    -fx-border-radius: 10px;
+    -fx-border-width: 1.5px;
+    -fx-text-fill: #8b1e2b;
 }

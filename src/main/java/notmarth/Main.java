@@ -23,9 +23,9 @@ public final class Main extends Application {
             controller.setNotMarth(notMarth);
 
             stage.setTitle("NotMarth — Tactical Assistant");
-            stage.setMinHeight(220.0);
-            stage.setMinWidth(417.0);
-            stage.setScene(new Scene(mainWindow));
+            stage.setMinHeight(420.0);
+            stage.setMinWidth(360.0);
+            stage.setScene(new Scene(mainWindow, 500.0, 680.0));
             stage.getScene().getStylesheets().add(
                     Main.class.getResource("/css/main.css").toExternalForm());
             stage.show();

@@ -1,31 +1,9 @@
 .root {
-    main-color: #f4efe2;
-    -fx-background-color: main-color;
+    -fx-background-color: #f4efe2;
     -fx-background-image: url("../images/somniel.jpg");
     -fx-background-size: cover;
     -fx-background-position: center center;
-}
-
-.text-field {
-    -fx-background-color: #fffaf0;
-    -fx-border-color: #c9a227;
-    -fx-border-radius: 5px;
-    -fx-font: 15px "Arial";
-}
-
-.button {
-    -fx-background-color: #9d2933;
-    -fx-background-radius: 5px;
-    -fx-font: bold 15px "Arial";
-    -fx-text-fill: white;
-}
-
-.button:hover {
-    -fx-background-color: #c23b45;
-}
-
-.button:pressed {
-    -fx-background-color: #6e1d25;
+    -fx-font-family: "System";
 }
 
 .scroll-pane,
@@ -33,9 +11,13 @@
     -fx-background-color: transparent;
 }
 
+.scroll-pane {
+    -fx-padding: 0;
+}
+
 .scroll-bar {
-    -fx-background-color: main-color;
-    -fx-font-size: 10px;
+    -fx-background-color: transparent;
+    -fx-padding: 2px;
 }
 
 .scroll-bar .thumb {
@@ -47,4 +29,42 @@
 .scroll-bar .decrement-button {
     -fx-pref-height: 0;
     -fx-opacity: 0;
+}
+
+.input-bar {
+    -fx-background-color: #fffaf0;
+    -fx-background-radius: 12px;
+    -fx-border-color: #d9c99b;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-padding: 7px;
+}
+
+.text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #8a8170;
+}
+
+.text-field:focused {
+    -fx-background-color: #fffdf8;
+    -fx-background-radius: 7px;
+    -fx-border-color: #c9a227;
+    -fx-border-radius: 7px;
+}
+
+.button {
+    -fx-background-color: #9d2933;
+    -fx-background-radius: 8px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: #b53642;
+}
+
+.button:pressed {
+    -fx-background-color: #6e1d25;
 }
