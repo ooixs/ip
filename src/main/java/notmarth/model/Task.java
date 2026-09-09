@@ -27,10 +27,12 @@ public class Task {
      * @param type the kind of task.
      */
     protected Task(String description, TaskType type) {
-        // All callers validate descriptions before constructing a task.
-        assert description != null && !description.isBlank()
-                : "Tasks must have a nonblank description";
-        assert type != null : "Tasks must have a task type";
+        if (description == null || description.isBlank()) {
+            throw new IllegalArgumentException("Tasks must have a nonblank description.");
+        }
+        if (type == null) {
+            throw new IllegalArgumentException("Tasks must have a task type.");
+        }
         this.description = description;
         this.isDone = false;
         this.type = type;
@@ -84,6 +86,11 @@ public class Task {
      */
     public TaskType getTaskType() {
         return type;
+    }
+
+    /** Checks whether another task has the same type and description. */
+    public boolean hasSameDetailsAs(Task other) {
+        return other != null && type == other.type && description.equals(other.description);
     }
 
     /**

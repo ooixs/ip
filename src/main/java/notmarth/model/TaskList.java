@@ -31,7 +31,9 @@ public final class TaskList implements Iterable<Task> {
      */
     public TaskList(List<Task> loadedTasks, int maximumTasks) {
         // Loading and construction both provide a concrete collection of tasks.
-        assert loadedTasks != null : "A task list must be constructed with a task collection";
+        if (loadedTasks == null) {
+            throw new IllegalArgumentException("A task list must be constructed with a task collection.");
+        }
         if (maximumTasks < 1) {
             throw new IllegalArgumentException("The maximum number of tasks must be positive.");
         }
@@ -40,6 +42,12 @@ public final class TaskList implements Iterable<Task> {
         }
         this.maximumTasks = maximumTasks;
         this.tasks = new ArrayList<>(loadedTasks);
+        if (tasks.stream().anyMatch(task -> task == null)) {
+            throw new IllegalArgumentException("A task list cannot contain null tasks.");
+        }
+        if (hasDuplicateTasks()) {
+            throw new IllegalArgumentException("A task list cannot contain duplicate tasks.");
+        }
         // The public checks above establish this invariant for every new task list.
         assert this.tasks.size() <= this.maximumTasks
                 : "Loaded tasks must fit within the task-list capacity";
@@ -53,10 +61,15 @@ public final class TaskList implements Iterable<Task> {
      */
     public void add(Task task) throws NotMarthException {
         // Null tasks would break display, persistence, and task-type operations.
-        assert task != null : "A task list cannot contain a null task";
+        if (task == null) {
+            throw new IllegalArgumentException("A task list cannot contain a null task.");
+        }
         if (tasks.size() == maximumTasks) {
             throw new NotMarthException(
                     "Your task list is full. Remove a task before adding another one.");
+        }
+        if (tasks.stream().anyMatch(existingTask -> existingTask.hasSameDetailsAs(task))) {
+            throw new NotMarthException("That task is already in your battle plan.");
         }
         tasks.add(task);
         // Adding a task should increase the list by one and place it at the end.
@@ -150,6 +163,17 @@ public final class TaskList implements Iterable<Task> {
         assert taskNumber >= 1 && taskNumber <= tasks.size()
                 : "A validated task number must refer to a stored task";
         return tasks.get(taskNumber - 1);
+    }
+
+    private boolean hasDuplicateTasks() {
+        for (int i = 0; i < tasks.size(); i++) {
+            for (int j = i + 1; j < tasks.size(); j++) {
+                if (tasks.get(i).hasSameDetailsAs(tasks.get(j))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**

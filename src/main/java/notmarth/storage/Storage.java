@@ -40,11 +40,18 @@ public final class Storage {
      * @param filePath the path of the task archive.
      */
     public Storage(String filePath) {
-        this(Path.of(filePath));
+        this(Path.of(requireFilePath(filePath)));
     }
 
     private Storage(Path dataFile) {
         this.dataFile = dataFile;
+    }
+
+    private static String requireFilePath(String filePath) {
+        if (filePath == null || filePath.isBlank()) {
+            throw new IllegalArgumentException("The archive path must not be blank.");
+        }
+        return filePath;
     }
 
     /**
@@ -55,8 +62,18 @@ public final class Storage {
      * @return the loaded tasks and an optional startup warning.
      */
     public LoadResult load(int maximumTasks) {
-        if (!Files.exists(dataFile)) {
-            return new LoadResult(new ArrayList<>(), new ArrayList<>(), null);
+        if (maximumTasks < 1) {
+            return unusableArchiveWarning();
+        }
+        try {
+            if (!Files.exists(dataFile)) {
+                return new LoadResult(new ArrayList<>(), new ArrayList<>(), null);
+            }
+            if (!Files.isRegularFile(dataFile)) {
+                return unusableArchiveWarning();
+            }
+        } catch (SecurityException exception) {
+            return unreadableArchiveWarning();
         }
 
         try {
@@ -78,7 +95,11 @@ public final class Storage {
                     if (tasks.size() == maximumTasks) {
                         throw new CorruptTaskDataException();
                     }
-                    tasks.add(parseTask(record));
+                    Task task = parseTask(record);
+                    if (tasks.stream().anyMatch(existingTask -> existingTask.hasSameDetailsAs(task))) {
+                        throw new CorruptTaskDataException();
+                    }
+                    tasks.add(task);
                 }
             }
             return new LoadResult(tasks, contacts, null);
@@ -86,11 +107,21 @@ public final class Storage {
             return new LoadResult(new ArrayList<>(), new ArrayList<>(),
                     "The saved battle plan is corrupted. Repair or remove the file before starting "
                             + "NotMarth again.");
-        } catch (IOException exception) {
-            return new LoadResult(new ArrayList<>(), new ArrayList<>(),
-                    "I couldn't read the saved battle plan from disk. Fix the file before starting "
-                            + "NotMarth again.");
+        } catch (IOException | SecurityException exception) {
+            return unreadableArchiveWarning();
         }
+    }
+
+    private LoadResult unusableArchiveWarning() {
+        return new LoadResult(new ArrayList<>(), new ArrayList<>(),
+                "The saved battle plan path is not a readable file. Fix the path before starting "
+                        + "NotMarth again.");
+    }
+
+    private LoadResult unreadableArchiveWarning() {
+        return new LoadResult(new ArrayList<>(), new ArrayList<>(),
+                "I couldn't read the saved battle plan from disk. Fix the file before starting "
+                        + "NotMarth again.");
     }
 
     /**

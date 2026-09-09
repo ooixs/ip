@@ -50,6 +50,19 @@ class TaskListTest {
         assertEquals(1, tasks.size());
     }
 
+    /** Verifies that duplicate task details are rejected without changing the list. */
+    @Test
+    void add_duplicateTaskDetails_rejectsSecondTask() throws NotMarthException {
+        TaskList tasks = new TaskList(List.of(), 2);
+        tasks.add(new ToDo("same task"));
+
+        NotMarthException exception = assertThrows(NotMarthException.class,
+                () -> tasks.add(new ToDo("same task")));
+
+        assertEquals("That task is already in your battle plan.", exception.getMessage());
+        assertEquals(1, tasks.size());
+    }
+
     /** Verifies that empty and out-of-range task numbers are rejected. */
     @Test
     void taskOperations_emptyOrOutOfRangeNumber_throwNotMarthException() {

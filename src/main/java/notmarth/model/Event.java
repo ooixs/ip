@@ -44,6 +44,9 @@ public class Event extends Task {
      */
     public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description, TaskType.EVENT);
+        if (from == null || to == null) {
+            throw new IllegalArgumentException("An event needs both a start and end date or time.");
+        }
         this.from = from;
         this.to = to;
         this.hasStartTime = true;
@@ -60,6 +63,9 @@ public class Event extends Task {
      */
     public Event(String description, LocalDate from, LocalDate to) {
         super(description, TaskType.EVENT);
+        if (from == null || to == null) {
+            throw new IllegalArgumentException("An event needs both a start and end date.");
+        }
         this.from = from.atStartOfDay();
         this.to = to.atStartOfDay();
         this.hasStartTime = false;
@@ -103,6 +109,15 @@ public class Event extends Task {
         return DateTimeParser.formatForStorage(to, hasEndTime);
     }
 
+    /** Checks whether another task has the same description and event range. */
+    @Override
+    public boolean hasSameDetailsAs(Task other) {
+        return other instanceof Event event
+                && super.hasSameDetailsAs(other)
+                && getFromForStorage().equals(event.getFromForStorage())
+                && getToForStorage().equals(event.getToForStorage());
+    }
+
     /**
      * Checks whether this event is in progress on a calendar date. An event
      * spanning multiple dates matches every date in its inclusive range.
@@ -122,8 +137,8 @@ public class Event extends Task {
      * @throws IllegalArgumentException if the event range travels backwards.
      */
     private void validateRange() {
-        if (from.isAfter(to)) {
-            throw new IllegalArgumentException("An event cannot end before it starts.");
+        if (!from.isBefore(to)) {
+            throw new IllegalArgumentException("An event must end after it starts.");
         }
     }
 

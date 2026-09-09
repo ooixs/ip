@@ -95,6 +95,23 @@ class ParserTest {
         assertThrows(NotMarthException.class, () -> parser.parse("contact Mrs Tan /phone 81234567"));
     }
 
+    /** Verifies that unsafe whitespace and repeated command markers are rejected. */
+    @Test
+    void parse_invalidWhitespaceOrRepeatedMarker_throwsNotMarthException() {
+        assertThrows(NotMarthException.class, () -> parser.parse(" todo task"));
+        assertThrows(NotMarthException.class, () -> parser.parse("todo  task"));
+        assertThrows(NotMarthException.class,
+                () -> parser.parse("deadline report /by 2019-10-15 /by 2019-10-16"));
+        assertThrows(NotMarthException.class,
+                () -> parser.parse("contact Mrs Tan /phone abc /address road"));
+    }
+
+    /** Verifies that null input is reported as a command error rather than a null-pointer failure. */
+    @Test
+    void parse_nullInput_throwsNotMarthException() {
+        assertThrows(NotMarthException.class, () -> parser.parse(null));
+    }
+
     /** Executes a command against the supplied test application state. */
     private void execute(Command command, TaskList tasks, Ui ui, Storage storage) throws NotMarthException {
         command.execute(tasks, ui, storage);

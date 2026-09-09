@@ -36,6 +36,9 @@ public class Deadline extends Task {
      */
     public Deadline(String description, LocalDateTime by) {
         super(description, TaskType.DEADLINE);
+        if (by == null) {
+            throw new IllegalArgumentException("A deadline needs a date or time.");
+        }
         this.by = by;
         this.hasTime = true;
     }
@@ -48,6 +51,9 @@ public class Deadline extends Task {
      */
     public Deadline(String description, LocalDate by) {
         super(description, TaskType.DEADLINE);
+        if (by == null) {
+            throw new IllegalArgumentException("A deadline needs a date.");
+        }
         this.by = by.atStartOfDay();
         this.hasTime = false;
     }
@@ -68,6 +74,14 @@ public class Deadline extends Task {
      */
     public String getByForStorage() {
         return DateTimeParser.formatForStorage(by, hasTime);
+    }
+
+    /** Checks whether another task has the same description and deadline. */
+    @Override
+    public boolean hasSameDetailsAs(Task other) {
+        return other instanceof Deadline deadline
+                && super.hasSameDetailsAs(other)
+                && getByForStorage().equals(deadline.getByForStorage());
     }
 
     /**

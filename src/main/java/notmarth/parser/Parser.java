@@ -41,8 +41,7 @@ public final class Parser {
      * @throws NotMarthException if the input is empty, unknown, or malformed.
      */
     public Command parse(String fullCommand) throws NotMarthException {
-        // The console trims input before calling the parser, so a command object is always expected.
-        assert fullCommand != null : "Parser input must be a non-null command";
+        validateCommandText(fullCommand);
         if (fullCommand.equals("bye")) {
             return new ExitCommand();
         }
@@ -90,6 +89,18 @@ public final class Parser {
                 "I don't recognize that command. Try " + COMMANDS_HINT + ".");
     }
 
+    private void validateCommandText(String command) throws NotMarthException {
+        if (command == null || command.isBlank()) {
+            throw new NotMarthException(
+                    "Please enter a command. Try " + COMMANDS_HINT + ".");
+        }
+        if (!command.equals(command.trim()) || command.matches(".*\\s{2,}.*")
+                || command.chars().anyMatch(Character::isISOControl)) {
+            throw new NotMarthException(
+                    "Use one space between command parts, without leading or trailing spaces.");
+        }
+    }
+
     /**
      * Checks whether a command is exactly a keyword or starts with that keyword
      * followed by at least one space.
@@ -116,8 +127,8 @@ public final class Parser {
 
     private Contact createContact(String command) throws NotMarthException {
         String details = command.substring("contact".length()).trim();
-        int phoneMarker = details.indexOf("/phone");
-        int addressMarker = details.indexOf("/address");
+        int phoneMarker = findSingleMarker(details, "/phone");
+        int addressMarker = findSingleMarker(details, "/address");
         if (phoneMarker <= 0 || addressMarker <= phoneMarker) {
             throw invalidContactMessage();
         }
@@ -127,7 +138,22 @@ public final class Parser {
         if (name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
             throw invalidContactMessage();
         }
+        if (!phone.matches("\\+?[0-9][0-9 ()-]*")) {
+            throw new NotMarthException("A phone number may contain only digits, spaces, +, -, and parentheses.");
+        }
         return new Contact(name, phone, address);
+    }
+
+    private int findSingleMarker(String details, String marker) throws NotMarthException {
+        int firstIndex = details.indexOf(marker);
+        int lastIndex = details.lastIndexOf(marker);
+        if (firstIndex < 0 || firstIndex != lastIndex
+                || (firstIndex > 0 && details.charAt(firstIndex - 1) != ' ')
+                || (firstIndex + marker.length() < details.length()
+                && details.charAt(firstIndex + marker.length()) != ' ')) {
+            return -1;
+        }
+        return firstIndex;
     }
 
     private NotMarthException invalidContactMessage() {
@@ -178,7 +204,7 @@ public final class Parser {
 
     private Task createDeadline(String command) throws NotMarthException {
         String details = command.substring("deadline".length()).trim();
-        int byMarker = details.indexOf("/by");
+        int byMarker = findSingleMarker(details, "/by");
         if (byMarker <= 0) {
             throw new NotMarthException(
                     "A deadline needs a description and a due time. Try: deadline <description> "
@@ -204,8 +230,8 @@ public final class Parser {
 
     private Task createEvent(String command) throws NotMarthException {
         String details = command.substring("event".length()).trim();
-        int fromMarker = details.indexOf("/from");
-        int toMarker = details.indexOf("/to");
+        int fromMarker = findSingleMarker(details, "/from");
+        int toMarker = findSingleMarker(details, "/to");
         if (fromMarker <= 0 || toMarker <= fromMarker) {
             throw invalidEventMessage();
         }
@@ -225,7 +251,7 @@ public final class Parser {
                     exception);
         } catch (IllegalArgumentException exception) {
             throw new NotMarthException(
-                    "An event cannot end before it starts. Check the /from and /to values.",
+                    "An event must end after it starts. Check the /from and /to values.",
                     exception);
         }
     }

@@ -90,4 +90,18 @@ class StorageTest {
         assertTrue(result.hasWarning());
         assertTrue(result.getTasks().isEmpty());
     }
+
+    /** Verifies that duplicate saved tasks are treated as corrupt archive data. */
+    @Test
+    void load_duplicateTaskRecords_returnsWarningAndNoTasks() throws Exception {
+        Path archive = temporaryDirectory.resolve("duplicates.txt");
+        Files.writeString(archive, "# NotMarth battle plan v1\n"
+                + "todo|open|same\n"
+                + "todo|done|same\n");
+
+        Storage.LoadResult result = new Storage(archive.toString()).load(10);
+
+        assertTrue(result.hasWarning());
+        assertTrue(result.getTasks().isEmpty());
+    }
 }

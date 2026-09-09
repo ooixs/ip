@@ -40,6 +40,10 @@ public final class DateTimeParser {
      * @throws DateTimeParseException if the value is not supported.
      */
     public static ParsedDateTime parse(String input) {
+        if (input == null || input.isBlank() || !input.equals(input.trim())
+                || input.matches(".*\\s{2,}.*")) {
+            throw new DateTimeParseException("Date or time contains invalid whitespace", input, 0);
+        }
         Optional<ParsedDateTime> dateTime = DATE_TIME_FORMATTERS.stream()
                 .map(formatter -> tryParseDateTime(input, formatter))
                 .flatMap(Optional::stream)

@@ -21,13 +21,17 @@ public final class ContactList {
      * @param loadedContacts the contacts recovered from storage.
      */
     public ContactList(List<Contact> loadedContacts) {
-        assert loadedContacts != null : "A contact list needs a contact collection";
+        if (loadedContacts == null) {
+            throw new IllegalArgumentException("A contact list needs a contact collection.");
+        }
         contacts = new ArrayList<>(loadedContacts);
     }
 
     /** Adds a contact to the end of the list. */
     public void add(Contact contact) throws NotMarthException {
-        assert contact != null : "A contact list cannot contain null";
+        if (contact == null) {
+            throw new IllegalArgumentException("A contact list cannot contain null.");
+        }
         contacts.add(contact);
     }
 

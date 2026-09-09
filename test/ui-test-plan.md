@@ -720,7 +720,7 @@ I couldn't process that, Divine One: That event date or time is not valid. Try y
 Here are your current mission orders:
 ```
 
-## Test case 23: Reject backwards event ranges
+## Test case 23: Reject non-increasing event ranges
 
 ### Aim
 
@@ -740,7 +740,61 @@ list
 ### Expected output
 
 ```text
-I couldn't process that, Divine One: An event cannot end before it starts. Check the /from and /to values.
+I couldn't process that, Divine One: An event must end after it starts. Check the /from and /to values.
+Here are your current mission orders:
+```
+
+## Test case 31: Reject malformed command spacing and duplicate tasks
+
+### Aim
+
+Verify that leading or repeated spaces, repeated parameters, and duplicate task details are rejected.
+
+### Comparison
+`contains`
+
+### Input
+
+```text
+todo first task
+ todo first task
+todo  second task
+deadline report /by 2019-10-15 /by 2019-10-16
+todo first task
+list
+```
+
+### Expected output
+
+```text
+Order received. I've added it to the battle plan:
+I couldn't process that, Divine One: Use one space between command parts, without leading or trailing spaces.
+I couldn't process that, Divine One: Use one space between command parts, without leading or trailing spaces.
+I couldn't process that, Divine One: A deadline needs a description and a due time. Try: deadline <description> /by <date or time>
+I couldn't process that, Divine One: That task is already in your battle plan.
+1.[T][ ] first task
+```
+
+## Test case 32: Reject equal event endpoints
+
+### Aim
+
+Verify that an event must have a strictly later end date or time.
+
+### Comparison
+`contains`
+
+### Input
+
+```text
+event same time /from 2019-02-05 1400 /to 2019-02-05 1400
+list
+```
+
+### Expected output
+
+```text
+I couldn't process that, Divine One: An event must end after it starts. Check the /from and /to values.
 Here are your current mission orders:
 ```
 

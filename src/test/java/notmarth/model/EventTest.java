@@ -48,5 +48,8 @@ class EventTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new Event("backwards", LocalDateTime.of(2019, 2, 5, 14, 0),
                         LocalDateTime.of(2019, 2, 5, 13, 0)));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Event("same time", LocalDateTime.of(2019, 2, 5, 14, 0),
+                        LocalDateTime.of(2019, 2, 5, 14, 0)));
     }
 }

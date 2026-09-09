@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 
 import notmarth.command.Command;
 import notmarth.exception.NotMarthException;
+import notmarth.model.ContactList;
 import notmarth.model.TaskList;
 import notmarth.parser.Parser;
 import notmarth.storage.Storage;
@@ -22,12 +23,16 @@ public final class NotMarthGui {
     private final Storage storage = new Storage(DEFAULT_FILE_PATH);
     private final Ui ui = new Ui();
     private final TaskList tasks;
+    private final ContactList contacts;
+    private final String startupWarning;
     private boolean isExitRequested;
 
     /** Creates the command-processing backend and loads the saved battle plan. */
     public NotMarthGui() {
         Storage.LoadResult loadResult = storage.load(MAX_TASKS);
         tasks = new TaskList(loadResult.getTasks(), MAX_TASKS);
+        contacts = new ContactList(loadResult.getContacts());
+        startupWarning = loadResult.getWarning();
     }
 
     /** Returns the opening message shown in the graphical conversation. */
@@ -38,6 +43,9 @@ public final class NotMarthGui {
     /** Executes a command and returns the same response used by the console UI. */
     public String getResponse(String input) {
         isExitRequested = false;
+        if (startupWarning != null) {
+            return "I couldn't process that, Divine One: " + startupWarning;
+        }
         try {
             Command command = parser.parse(input);
             isExitRequested = command.isExit();
@@ -57,7 +65,7 @@ public final class NotMarthGui {
         PrintStream originalOutput = System.out;
         try {
             System.setOut(new PrintStream(output, true, StandardCharsets.UTF_8));
-            command.execute(tasks, ui, storage);
+            command.execute(tasks, contacts, ui, storage);
         } finally {
             System.setOut(originalOutput);
         }

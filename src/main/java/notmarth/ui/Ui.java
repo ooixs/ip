@@ -81,7 +81,7 @@ public class Ui {
      * @return the next command without surrounding whitespace.
      */
     public String readCommand() {
-        return scanner.nextLine().trim();
+        return scanner.nextLine();
     }
 
     /**
